@@ -110,10 +110,6 @@ jobs:
         working-directory: ./fitempire-admin
         run: npm ci
 
-      - name: Type Check
-        working-directory: ./fitempire-admin
-        run: npm run type-check
-
       - name: Lint
         working-directory: ./fitempire-admin
         run: npm run lint

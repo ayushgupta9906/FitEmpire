@@ -1,0 +1,237 @@
+name: FitEmpire CI/CD
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+env:
+  JAVA_VERSION: '21'
+  NODE_VERSION: '20'
+  REGISTRY: ghcr.io
+  IMAGE_NAME_BACKEND: ${{ github.repository }}/fitempire-backend
+  IMAGE_NAME_ADMIN: ${{ github.repository }}/fitempire-admin
+
+jobs:
+  # ────────────────────────────────────────────────────────────
+  # Backend Build & Test
+  # ────────────────────────────────────────────────────────────
+  backend-ci:
+    name: Backend — Build & Test
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: fitempire_test
+          POSTGRES_USER: fitempire_test
+          POSTGRES_PASSWORD: fitempire_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Java ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: temurin
+          cache: maven
+
+      - name: Run Tests
+        working-directory: ./fitempire-backend
+        env:
+          SPRING_PROFILES_ACTIVE: test
+          DB_HOST: localhost
+          DB_PORT: 5432
+          DB_NAME: fitempire_test
+          DB_USER: fitempire_test
+          DB_PASSWORD: fitempire_test
+          REDIS_HOST: localhost
+          REDIS_PORT: 6379
+          REDIS_PASSWORD: ""
+          JWT_SECRET: test_jwt_secret_key_that_is_at_least_256_bits_long_for_testing_purposes_only
+        run: mvn -B test --no-transfer-progress
+
+      - name: Build JAR
+        working-directory: ./fitempire-backend
+        run: mvn -B package -DskipTests --no-transfer-progress
+
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-jar
+          path: fitempire-backend/target/*.jar
+          retention-days: 7
+
+      - name: Upload Test Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-test-reports
+          path: fitempire-backend/target/surefire-reports/
+          retention-days: 7
+
+  # ────────────────────────────────────────────────────────────
+  # Admin Dashboard Build
+  # ────────────────────────────────────────────────────────────
+  admin-ci:
+    name: Admin Dashboard — Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: fitempire-admin/package-lock.json
+
+      - name: Install Dependencies
+        working-directory: ./fitempire-admin
+        run: npm ci
+
+      - name: Type Check
+        working-directory: ./fitempire-admin
+        run: npm run type-check
+
+      - name: Lint
+        working-directory: ./fitempire-admin
+        run: npm run lint
+
+      - name: Build
+        working-directory: ./fitempire-admin
+        env:
+          VITE_API_BASE_URL: https://api.fitempire.in
+        run: npm run build
+
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: admin-dist
+          path: fitempire-admin/dist/
+          retention-days: 7
+
+  # ────────────────────────────────────────────────────────────
+  # Docker Build & Push (main branch only)
+  # ────────────────────────────────────────────────────────────
+  docker-build-push:
+    name: Docker — Build & Push
+    runs-on: ubuntu-latest
+    needs: [backend-ci, admin-ci]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Download Backend JAR
+        uses: actions/download-artifact@v4
+        with:
+          name: backend-jar
+          path: fitempire-backend/target/
+
+      - name: Extract Metadata (Backend)
+        id: meta-backend
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_BACKEND }}
+          tags: |
+            type=sha,prefix=sha-
+            type=raw,value=latest
+
+      - name: Build & Push Backend Image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./fitempire-backend
+          push: true
+          tags: ${{ steps.meta-backend.outputs.tags }}
+          labels: ${{ steps.meta-backend.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Extract Metadata (Admin)
+        id: meta-admin
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_ADMIN }}
+          tags: |
+            type=sha,prefix=sha-
+            type=raw,value=latest
+
+      - name: Build & Push Admin Image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./fitempire-admin
+          push: true
+          tags: ${{ steps.meta-admin.outputs.tags }}
+          labels: ${{ steps.meta-admin.outputs.labels }}
+          build-args: |
+            VITE_API_BASE_URL=https://api.fitempire.in
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  # ────────────────────────────────────────────────────────────
+  # Deploy to Production (main branch, on Docker push success)
+  # ────────────────────────────────────────────────────────────
+  deploy-production:
+    name: Deploy — Production
+    runs-on: ubuntu-latest
+    needs: docker-build-push
+    if: github.ref == 'refs/heads/main'
+    environment:
+      name: production
+      url: https://api.fitempire.in
+
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.PROD_HOST }}
+          username: ${{ secrets.PROD_USER }}
+          key: ${{ secrets.PROD_SSH_KEY }}
+          script: |
+            cd /opt/fitempire
+            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+            docker compose pull
+            docker compose up -d --remove-orphans
+            docker system prune -f
+            echo "✅ FitEmpire deployed successfully"
+
+      - name: Health Check
+        run: |
+          sleep 30
+          curl -f https://api.fitempire.in/api/v1/actuator/health || exit 1
+          echo "✅ Health check passed"

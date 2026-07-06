@@ -1,0 +1,340 @@
+# ============================================================
+# FitEmpire — Application Configuration
+# ============================================================
+
+spring:
+  application:
+    name: FitEmpire
+
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+
+  # ── JPA ──────────────────────────────────────────────────
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        use_sql_comments: false
+        jdbc:
+          batch_size: 25
+        order_inserts: true
+        order_updates: true
+        default_schema: public
+    open-in-view: false
+
+  # ── Database ──────────────────────────────────────────────
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:fitempire}?reWriteBatchedInserts=true&ssl=false
+    username: ${DB_USER:fitempire_user}
+    password: ${DB_PASSWORD:fitempire_secret}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      pool-name: FitEmpirePool
+      maximum-pool-size: ${DB_POOL_SIZE:20}
+      minimum-idle: 5
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      connection-test-query: SELECT 1
+
+  # ── Flyway ───────────────────────────────────────────────
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+    baseline-version: 0
+    validate-on-migrate: true
+    out-of-order: false
+
+  # ── Redis ────────────────────────────────────────────────
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+      timeout: 5000ms
+      lettuce:
+        pool:
+          max-active: 16
+          max-idle: 8
+          min-idle: 2
+          max-wait: 1000ms
+
+  # ── Cache ────────────────────────────────────────────────
+  cache:
+    type: redis
+    redis:
+      time-to-live: ${REDIS_TTL_SECONDS:3600}000
+      cache-null-values: false
+
+  # ── Mail ─────────────────────────────────────────────────
+  mail:
+    host: ${SMTP_HOST:smtp.gmail.com}
+    port: ${SMTP_PORT:587}
+    username: ${SMTP_USER:}
+    password: ${SMTP_PASSWORD:}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+
+  # ── Jackson ──────────────────────────────────────────────
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+      write-date-timestamps-as-nanoseconds: false
+    deserialization:
+      fail-on-unknown-properties: false
+    default-property-inclusion: non_null
+    time-zone: Asia/Kolkata
+
+  # ── Async ─────────────────────────────────────────────────
+  task:
+    execution:
+      pool:
+        core-size: 8
+        max-size: 32
+        queue-capacity: 500
+      thread-name-prefix: fitempire-async-
+    scheduling:
+      pool:
+        size: 4
+      thread-name-prefix: fitempire-sched-
+
+  # ── Servlet ───────────────────────────────────────────────
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 50MB
+
+# ── Server ────────────────────────────────────────────────
+server:
+  port: ${APP_PORT:8080}
+  compression:
+    enabled: true
+    mime-types: application/json,application/xml,text/html,text/xml,text/plain
+    min-response-size: 1024
+  error:
+    include-message: never
+    include-binding-errors: never
+    include-stacktrace: never
+  servlet:
+    context-path: /api
+
+# ── Actuator ─────────────────────────────────────────────
+management:
+  endpoints:
+    web:
+      base-path: /v1/actuator
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: when-authorized
+      probes:
+        enabled: true
+  health:
+    redis:
+      enabled: true
+    db:
+      enabled: true
+  info:
+    env:
+      enabled: true
+    build:
+      enabled: true
+
+info:
+  app:
+    name: FitEmpire
+    version: '@project.version@'
+    description: India's next-generation fitness membership platform
+
+# ── SpringDoc / Swagger ────────────────────────────────────
+springdoc:
+  api-docs:
+    path: /v1/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: method
+    tags-sorter: alpha
+    try-it-out-enabled: true
+    filter: true
+  info:
+    title: FitEmpire API
+    version: v1
+    description: >
+      Production-ready REST API for FitEmpire — India's next-generation fitness membership platform.
+      Supports gym discovery, membership management, class booking, QR check-ins, payments, rewards, and AI recommendations.
+    contact:
+      name: FitEmpire Engineering
+      email: engineering@fitempire.in
+      url: https://fitempire.in
+    license:
+      name: Proprietary
+      url: https://fitempire.in/terms
+  show-actuator: false
+
+# ── Application Properties ────────────────────────────────
+app:
+  base-url: ${APP_BASE_URL:http://localhost:8080}
+  frontend-url: ${APP_FRONTEND_URL:http://localhost:3001}
+  admin-url: ${APP_ADMIN_URL:http://localhost:3000}
+
+  jwt:
+    secret: ${JWT_SECRET:FitEmpireDefaultSecretKeyThatMustBeChanged256BitsLongForProduction!!!!}
+    access-token-expiry-ms: ${JWT_ACCESS_TOKEN_EXPIRY_MS:900000}
+    refresh-token-expiry-ms: ${JWT_REFRESH_TOKEN_EXPIRY_MS:604800000}
+
+  oauth2:
+    google:
+      client-id: ${GOOGLE_CLIENT_ID:}
+      client-secret: ${GOOGLE_CLIENT_SECRET:}
+    apple:
+      client-id: ${APPLE_CLIENT_ID:com.fitempire.app}
+      team-id: ${APPLE_TEAM_ID:}
+      key-id: ${APPLE_KEY_ID:}
+      private-key: ${APPLE_PRIVATE_KEY:}
+
+  cors:
+    allowed-origins:
+      - ${APP_FRONTEND_URL:http://localhost:3001}
+      - ${APP_ADMIN_URL:http://localhost:3000}
+      - http://localhost:3001
+      - http://localhost:3000
+      - http://localhost:19006
+    allowed-methods: GET,POST,PUT,PATCH,DELETE,OPTIONS
+    allowed-headers: "*"
+    allow-credentials: true
+    max-age: 3600
+
+  rate-limit:
+    requests-per-minute: ${RATE_LIMIT_REQUESTS_PER_MINUTE:60}
+    burst-size: ${RATE_LIMIT_BURST_SIZE:100}
+
+  otp:
+    expiry-minutes: 10
+    length: 6
+    max-attempts: 5
+
+  razorpay:
+    key-id: ${RAZORPAY_KEY_ID:}
+    key-secret: ${RAZORPAY_KEY_SECRET:}
+    webhook-secret: ${RAZORPAY_WEBHOOK_SECRET:}
+
+  stripe:
+    secret-key: ${STRIPE_SECRET_KEY:}
+    publishable-key: ${STRIPE_PUBLISHABLE_KEY:}
+    webhook-secret: ${STRIPE_WEBHOOK_SECRET:}
+
+  aws:
+    access-key-id: ${AWS_ACCESS_KEY_ID:}
+    secret-access-key: ${AWS_SECRET_ACCESS_KEY:}
+    region: ${AWS_REGION:ap-south-1}
+    s3-bucket: ${AWS_S3_BUCKET:fitempire-media}
+    cdn-url: ${AWS_CDN_URL:https://cdn.fitempire.in}
+
+  firebase:
+    project-id: ${FIREBASE_PROJECT_ID:fitempire}
+    service-account-json: ${FIREBASE_SERVICE_ACCOUNT_JSON:/secrets/firebase-service-account.json}
+
+  twilio:
+    account-sid: ${TWILIO_ACCOUNT_SID:}
+    auth-token: ${TWILIO_AUTH_TOKEN:}
+    from-number: ${TWILIO_FROM_NUMBER:}
+
+  openai:
+    api-key: ${OPENAI_API_KEY:}
+    model: ${OPENAI_MODEL:gpt-4o}
+    max-tokens: 1000
+
+  google-maps:
+    api-key: ${GOOGLE_MAPS_API_KEY:}
+
+  email:
+    from: ${SMTP_FROM:noreply@fitempire.in}
+    from-name: ${SMTP_FROM_NAME:FitEmpire}
+
+  rewards:
+    points-per-rupee: 1
+    points-per-checkin: 50
+    points-per-review: 25
+    referral-points-referrer: 500
+    referral-points-referee: 200
+    points-expiry-days: 365
+
+  gst:
+    rate: 18.0
+    hsn-code: 999355
+
+---
+# ── Development Profile ───────────────────────────────────
+spring:
+  config:
+    activate:
+      on-profile: dev
+  jpa:
+    show-sql: true
+  flyway:
+    clean-disabled: false
+
+logging:
+  level:
+    com.fitempire: DEBUG
+    org.springframework.security: DEBUG
+    org.hibernate.SQL: DEBUG
+
+---
+# ── Test Profile ──────────────────────────────────────────
+spring:
+  config:
+    activate:
+      on-profile: test
+  datasource:
+    url: jdbc:tc:postgresql:16:///fitempire_test?TC_REUSABLE=true
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+  flyway:
+    clean-disabled: false
+    clean-on-validation-error: true
+  mail:
+    host: localhost
+    port: 1025
+  data:
+    redis:
+      host: localhost
+      port: 6380
+
+logging:
+  level:
+    com.fitempire: DEBUG
+
+---
+# ── Production Profile ────────────────────────────────────
+spring:
+  config:
+    activate:
+      on-profile: prod
+  jpa:
+    show-sql: false
+  flyway:
+    clean-disabled: true
+
+logging:
+  level:
+    root: WARN
+    com.fitempire: INFO
+  file:
+    name: /var/log/fitempire/app.log
+    max-history: 30
+    max-size: 100MB

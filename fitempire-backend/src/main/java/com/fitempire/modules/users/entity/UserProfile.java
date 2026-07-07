@@ -28,6 +28,7 @@ public class UserProfile {
     private String bio;
 
     @Enumerated(EnumType.STRING)
+    @org.hibernate.annotations.JdbcTypeCode(org.hibernate.type.SqlTypes.NAMED_ENUM)
     @Column(name = "fitness_goal")
     private FitnessGoal fitnessGoal;
 

@@ -55,6 +55,7 @@ public class Gym extends BaseEntity {
     private String panNumber;
 
     @Enumerated(EnumType.STRING)
+    @org.hibernate.annotations.JdbcTypeCode(org.hibernate.type.SqlTypes.NAMED_ENUM)
     @Column(name = "status", nullable = false, columnDefinition = "gym_status")
     private GymStatus status = GymStatus.PENDING_REVIEW;
 

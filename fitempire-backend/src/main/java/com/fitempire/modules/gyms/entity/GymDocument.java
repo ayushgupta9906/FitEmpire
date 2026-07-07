@@ -24,6 +24,7 @@ public class GymDocument {
     private Gym gym;
 
     @Enumerated(EnumType.STRING)
+    @org.hibernate.annotations.JdbcTypeCode(org.hibernate.type.SqlTypes.NAMED_ENUM)
     @Column(name = "document_type", nullable = false)
     private DocumentType documentType;
 

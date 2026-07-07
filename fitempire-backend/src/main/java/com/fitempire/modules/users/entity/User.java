@@ -44,6 +44,7 @@ public class User extends BaseEntity {
     private String profilePictureUrl;
 
     @Enumerated(EnumType.STRING)
+    @org.hibernate.annotations.JdbcTypeCode(org.hibernate.type.SqlTypes.NAMED_ENUM)
     @Column(name = "role", nullable = false, columnDefinition = "user_role")
     private UserRole role = UserRole.CUSTOMER;
 

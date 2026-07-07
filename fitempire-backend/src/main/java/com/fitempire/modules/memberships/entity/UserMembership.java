@@ -36,6 +36,7 @@ public class UserMembership extends BaseEntity {
     private GymBranch branch;
 
     @Enumerated(EnumType.STRING)
+    @org.hibernate.annotations.JdbcTypeCode(org.hibernate.type.SqlTypes.NAMED_ENUM)
     @Column(name = "status", nullable = false)
     private MembershipStatus status = MembershipStatus.PENDING;
 

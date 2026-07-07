@@ -29,10 +29,12 @@ public class WalletTransaction {
     private User user;
 
     @Enumerated(EnumType.STRING)
+    @org.hibernate.annotations.JdbcTypeCode(org.hibernate.type.SqlTypes.NAMED_ENUM)
     @Column(name = "type", nullable = false)
     private TransactionType type;
 
     @Enumerated(EnumType.STRING)
+    @org.hibernate.annotations.JdbcTypeCode(org.hibernate.type.SqlTypes.NAMED_ENUM)
     @Column(name = "txn_type", nullable = false)
     private WalletTxnType txnType;
 

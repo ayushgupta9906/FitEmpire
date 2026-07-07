@@ -46,10 +46,12 @@ public class Booking extends BaseEntity {
     private UUID trainerId;
 
     @Enumerated(EnumType.STRING)
+    @org.hibernate.annotations.JdbcTypeCode(org.hibernate.type.SqlTypes.NAMED_ENUM)
     @Column(name = "booking_type", nullable = false)
     private BookingType bookingType;
 
     @Enumerated(EnumType.STRING)
+    @org.hibernate.annotations.JdbcTypeCode(org.hibernate.type.SqlTypes.NAMED_ENUM)
     @Column(name = "status", nullable = false)
     private BookingStatus status = BookingStatus.CONFIRMED;
 

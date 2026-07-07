@@ -27,6 +27,7 @@ public class RewardTransaction {
     private int points;
 
     @Enumerated(EnumType.STRING)
+    @org.hibernate.annotations.JdbcTypeCode(org.hibernate.type.SqlTypes.NAMED_ENUM)
     @Column(name = "type", nullable = false)
     private TransactionType type;
 

@@ -49,6 +49,7 @@ public class FitnessClass extends BaseEntity {
     private int maxCapacity = 20;
 
     @Enumerated(EnumType.STRING)
+    @org.hibernate.annotations.JdbcTypeCode(org.hibernate.type.SqlTypes.NAMED_ENUM)
     @Column(name = "difficulty", nullable = false)
     private ClassDifficulty difficulty = ClassDifficulty.ALL_LEVELS;
 

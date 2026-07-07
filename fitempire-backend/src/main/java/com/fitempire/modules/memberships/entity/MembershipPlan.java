@@ -35,6 +35,7 @@ public class MembershipPlan extends BaseEntity {
     private String description;
 
     @Enumerated(EnumType.STRING)
+    @org.hibernate.annotations.JdbcTypeCode(org.hibernate.type.SqlTypes.NAMED_ENUM)
     @Column(name = "type", nullable = false)
     private MembershipType type;
 

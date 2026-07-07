@@ -47,12 +47,12 @@ public class Booking extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @org.hibernate.annotations.JdbcTypeCode(org.hibernate.type.SqlTypes.NAMED_ENUM)
-    @Column(name = "booking_type", nullable = false)
+    @Column(name = "booking_type", nullable = false, columnDefinition = "booking_type")
     private BookingType bookingType;
 
     @Enumerated(EnumType.STRING)
     @org.hibernate.annotations.JdbcTypeCode(org.hibernate.type.SqlTypes.NAMED_ENUM)
-    @Column(name = "status", nullable = false)
+    @Column(name = "status", nullable = false, columnDefinition = "booking_status")
     private BookingStatus status = BookingStatus.CONFIRMED;
 
     @Column(name = "booking_date", nullable = false)

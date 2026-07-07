@@ -30,12 +30,12 @@ public class WalletTransaction {
 
     @Enumerated(EnumType.STRING)
     @org.hibernate.annotations.JdbcTypeCode(org.hibernate.type.SqlTypes.NAMED_ENUM)
-    @Column(name = "type", nullable = false)
+    @Column(name = "type", nullable = false, columnDefinition = "transaction_type")
     private TransactionType type;
 
     @Enumerated(EnumType.STRING)
     @org.hibernate.annotations.JdbcTypeCode(org.hibernate.type.SqlTypes.NAMED_ENUM)
-    @Column(name = "txn_type", nullable = false)
+    @Column(name = "txn_type", nullable = false, columnDefinition = "wallet_txn_type")
     private WalletTxnType txnType;
 
     @Column(name = "amount", nullable = false, precision = 12, scale = 2)

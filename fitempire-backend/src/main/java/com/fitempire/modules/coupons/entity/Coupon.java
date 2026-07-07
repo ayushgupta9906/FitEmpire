@@ -21,7 +21,7 @@ public class Coupon extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @org.hibernate.annotations.JdbcTypeCode(org.hibernate.type.SqlTypes.NAMED_ENUM)
-    @Column(name = "type", nullable = false)
+    @Column(name = "type", nullable = false, columnDefinition = "coupon_type")
     private CouponType type;
 
     @Column(name = "value", nullable = false, precision = 10, scale = 2)

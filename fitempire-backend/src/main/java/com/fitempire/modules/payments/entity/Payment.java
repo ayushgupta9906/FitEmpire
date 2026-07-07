@@ -53,17 +53,17 @@ public class Payment {
 
     @Enumerated(EnumType.STRING)
     @org.hibernate.annotations.JdbcTypeCode(org.hibernate.type.SqlTypes.NAMED_ENUM)
-    @Column(name = "status", nullable = false)
+    @Column(name = "status", nullable = false, columnDefinition = "payment_status")
     private PaymentStatus status = PaymentStatus.PENDING;
 
     @Enumerated(EnumType.STRING)
     @org.hibernate.annotations.JdbcTypeCode(org.hibernate.type.SqlTypes.NAMED_ENUM)
-    @Column(name = "payment_method")
+    @Column(name = "payment_method", columnDefinition = "payment_method")
     private PaymentMethod paymentMethod;
 
     @Enumerated(EnumType.STRING)
     @org.hibernate.annotations.JdbcTypeCode(org.hibernate.type.SqlTypes.NAMED_ENUM)
-    @Column(name = "payment_gateway")
+    @Column(name = "payment_gateway", columnDefinition = "payment_gateway")
     private PaymentGateway paymentGateway;
 
     @Column(name = "gateway_order_id", length = 255)

@@ -35,7 +35,7 @@ public class OtpCode {
 
     @Enumerated(EnumType.STRING)
     @org.hibernate.annotations.JdbcTypeCode(org.hibernate.type.SqlTypes.NAMED_ENUM)
-    @Column(name = "purpose", nullable = false)
+    @Column(name = "purpose", nullable = false, columnDefinition = "otp_purpose")
     private OtpPurpose purpose;
 
     @Column(name = "expires_at", nullable = false)

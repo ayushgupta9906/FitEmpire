@@ -50,7 +50,7 @@ public class FitnessClass extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @org.hibernate.annotations.JdbcTypeCode(org.hibernate.type.SqlTypes.NAMED_ENUM)
-    @Column(name = "difficulty", nullable = false)
+    @Column(name = "difficulty", nullable = false, columnDefinition = "class_difficulty")
     private ClassDifficulty difficulty = ClassDifficulty.ALL_LEVELS;
 
     @Column(name = "category", length = 100)

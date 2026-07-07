@@ -37,7 +37,7 @@ public class UserMembership extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @org.hibernate.annotations.JdbcTypeCode(org.hibernate.type.SqlTypes.NAMED_ENUM)
-    @Column(name = "status", nullable = false)
+    @Column(name = "status", nullable = false, columnDefinition = "membership_status")
     private MembershipStatus status = MembershipStatus.PENDING;
 
     @Column(name = "start_date")

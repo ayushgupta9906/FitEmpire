@@ -25,7 +25,7 @@ public class GymDocument {
 
     @Enumerated(EnumType.STRING)
     @org.hibernate.annotations.JdbcTypeCode(org.hibernate.type.SqlTypes.NAMED_ENUM)
-    @Column(name = "document_type", nullable = false)
+    @Column(name = "document_type", nullable = false, columnDefinition = "document_type")
     private DocumentType documentType;
 
     @Column(name = "file_url", nullable = false)

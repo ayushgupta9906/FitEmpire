@@ -29,7 +29,7 @@ public class UserProfile {
 
     @Enumerated(EnumType.STRING)
     @org.hibernate.annotations.JdbcTypeCode(org.hibernate.type.SqlTypes.NAMED_ENUM)
-    @Column(name = "fitness_goal")
+    @Column(name = "fitness_goal", columnDefinition = "fitness_goal")
     private FitnessGoal fitnessGoal;
 
     @Column(name = "fitness_level", length = 50)

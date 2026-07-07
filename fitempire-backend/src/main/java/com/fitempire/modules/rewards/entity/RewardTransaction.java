@@ -28,7 +28,7 @@ public class RewardTransaction {
 
     @Enumerated(EnumType.STRING)
     @org.hibernate.annotations.JdbcTypeCode(org.hibernate.type.SqlTypes.NAMED_ENUM)
-    @Column(name = "type", nullable = false)
+    @Column(name = "type", nullable = false, columnDefinition = "transaction_type")
     private TransactionType type;
 
     @Column(name = "description", length = 500)

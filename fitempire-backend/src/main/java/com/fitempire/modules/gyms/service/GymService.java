@@ -111,6 +111,7 @@ public class GymService {
         gym.setPanNumber(request.getPanNumber());
         gym.setWebsiteUrl(request.getWebsiteUrl());
         gym.setStatus(GymStatus.PENDING_REVIEW);
+        gym.setCategory(request.getCategory());
 
         Gym savedGym = gymRepository.save(gym);
 

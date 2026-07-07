@@ -38,6 +38,9 @@ public interface BookingRepository extends JpaRepository<Booking, UUID> {
     @Query("SELECT COUNT(b) FROM Booking b WHERE b.gym.id = :gymId AND b.bookingDate = :date AND b.deleted = false")
     long countByGymAndDate(@Param("gymId") UUID gymId, @Param("date") LocalDate date);
 
+    @Query("SELECT COUNT(b) FROM Booking b WHERE b.bookingDate = :date AND b.deleted = false")
+    long countAllByDate(@Param("date") LocalDate date);
+
     Page<Booking> findByGymIdAndDeletedFalseOrderByCreatedAtDesc(UUID gymId, Pageable pageable);
 
     @Query("""

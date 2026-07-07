@@ -58,6 +58,10 @@ public class Gym extends BaseEntity {
     @Column(name = "status", nullable = false, columnDefinition = "gym_status")
     private GymStatus status = GymStatus.PENDING_REVIEW;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "category", nullable = false)
+    private GymCategory category = GymCategory.GYM;
+
     @Column(name = "is_featured")
     private boolean featured = false;
 

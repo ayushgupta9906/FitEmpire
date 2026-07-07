@@ -11,6 +11,8 @@ public interface GymMapper {
     @Mapping(target = "ownerName", expression = "java(gym.getOwner().getFullName())")
     GymDto toDto(Gym gym);
 
+    @Mapping(target = "gymId", source = "gym.id")
+    @Mapping(target = "distanceKm", ignore = true)
     GymBranchDto toDto(GymBranch branch);
 
     GymPhotoDto toDto(GymPhoto photo);

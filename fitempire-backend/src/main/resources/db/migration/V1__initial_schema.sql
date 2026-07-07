@@ -184,6 +184,7 @@ CREATE TABLE gyms (
     gst_number          VARCHAR(20),
     pan_number          VARCHAR(20),
     status              gym_status NOT NULL DEFAULT 'PENDING_REVIEW',
+    category            VARCHAR(50) NOT NULL DEFAULT 'GYM',
     is_featured         BOOLEAN NOT NULL DEFAULT FALSE,
     avg_rating          DECIMAL(3,2) DEFAULT 0,
     total_reviews       INT DEFAULT 0,

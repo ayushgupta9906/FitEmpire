@@ -630,7 +630,11 @@ CREATE TABLE coupons (
     applicable_plan_ids UUID[],
     created_by_id       UUID REFERENCES users(id),
     created_at          TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    updated_at          TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    updated_at          TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    deleted_at          TIMESTAMPTZ,
+    is_deleted          BOOLEAN NOT NULL DEFAULT FALSE,
+    created_by          VARCHAR(255),
+    updated_by          VARCHAR(255)
 );
 
 CREATE INDEX idx_coupons_code ON coupons(code) WHERE is_active = TRUE;

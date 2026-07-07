@@ -42,7 +42,7 @@ public class SecurityConfig {
     private final OAuth2AuthenticationFailureHandler oAuth2FailureHandler;
     private final CustomOAuth2UserService customOAuth2UserService;
 
-    @Value("${app.cors.allowed-origins}")
+    @Value("${app.cors.allowed-origins:http://localhost:3000,http://localhost:3001}")
     private List<String> allowedOrigins;
 
     @Bean
@@ -133,7 +133,7 @@ public class SecurityConfig {
         config.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/api/**", config);
+        source.registerCorsConfiguration("/**", config);
         return source;
     }
 

@@ -19,6 +19,11 @@ public interface UserMapper {
     @Mapping(target = "user", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "bmi", ignore = true)
+    @Mapping(target = "fitnessScore", ignore = true)
+    @Mapping(target = "totalCheckins", ignore = true)
+    @Mapping(target = "totalClasses", ignore = true)
+    @Mapping(target = "country", ignore = true)
     void updateProfile(
             com.fitempire.modules.users.dto.UpdateProfileRequest request,
             @MappingTarget UserProfile profile

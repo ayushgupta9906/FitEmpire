@@ -139,6 +139,7 @@ export interface Gym {
   name: string;
   slug: string;
   status: string;
+  category: string;
   avgRating: number;
   totalReviews: number;
   totalMembers: number;

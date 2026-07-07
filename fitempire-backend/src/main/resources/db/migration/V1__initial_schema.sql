@@ -776,7 +776,7 @@ CREATE INDEX idx_cms_pages_slug ON cms_pages(slug) WHERE is_active = TRUE;
 -- ── ANALYTICS EVENTS ──────────────────────────────────────────
 
 CREATE TABLE analytics_events (
-    id              UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id              UUID DEFAULT uuid_generate_v4(),
     user_id         UUID REFERENCES users(id),
     event_name      VARCHAR(255) NOT NULL,
     entity_type     VARCHAR(100),
@@ -785,7 +785,8 @@ CREATE TABLE analytics_events (
     ip_address      VARCHAR(50),
     user_agent      TEXT,
     session_id      VARCHAR(255),
-    created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    PRIMARY KEY (id, created_at)
 ) PARTITION BY RANGE (created_at);
 
 CREATE TABLE analytics_events_2024 PARTITION OF analytics_events

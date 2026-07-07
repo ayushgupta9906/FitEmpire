@@ -22,6 +22,35 @@ public class AwsConfig {
 
     @Bean
     public S3Client s3Client() {
+        if (accessKeyId == null || accessKeyId.isBlank() || secretAccessKey == null || secretAccessKey.isBlank()) {
+            return (S3Client) java.lang.reflect.Proxy.newProxyInstance(
+                    S3Client.class.getClassLoader(),
+                    new Class<?>[]{S3Client.class},
+                    (proxy, method, args1) -> {
+                        if (method.getName().equals("toString")) {
+                            return "MockedS3ClientProxy";
+                        }
+                        if (method.getName().equals("hashCode")) {
+                            return System.identityHashCode(proxy);
+                        }
+                        if (method.getName().equals("equals")) {
+                            return proxy == args1[0];
+                        }
+                        if (method.getName().equals("close")) {
+                            return null;
+                        }
+                        Class<?> returnType = method.getReturnType();
+                        if (returnType.isPrimitive()) {
+                            if (returnType == boolean.class) return false;
+                            if (returnType == int.class) return 0;
+                            if (returnType == long.class) return 0L;
+                            if (returnType == double.class) return 0.0;
+                            if (returnType == float.class) return 0.0f;
+                        }
+                        return null;
+                    }
+            );
+        }
         return S3Client.builder()
                 .region(Region.of(region))
                 .credentialsProvider(

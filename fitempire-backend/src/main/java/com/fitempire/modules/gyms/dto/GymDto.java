@@ -1,6 +1,7 @@
 package com.fitempire.modules.gyms.dto;
 
 import com.fitempire.modules.gyms.entity.GymStatus;
+import com.fitempire.modules.gyms.entity.GymCategory;
 import lombok.Builder;
 import lombok.Data;
 
@@ -22,6 +23,7 @@ public class GymDto {
     private String email;
     private String phone;
     private GymStatus status;
+    private GymCategory category;
     private boolean featured;
     private BigDecimal avgRating;
     private int totalReviews;

@@ -28,7 +28,7 @@ spring:
 
   # ── Database ──────────────────────────────────────────────
   datasource:
-    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:fitempire}?reWriteBatchedInserts=true&ssl=false
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:fitempire}?reWriteBatchedInserts=true&ssl=false&prepareThreshold=0
     username: ${DB_USER:fitempire_user}
     password: ${DB_PASSWORD:fitempire_secret}
     driver-class-name: org.postgresql.Driver
@@ -197,6 +197,10 @@ app:
     access-token-expiry-ms: ${JWT_ACCESS_TOKEN_EXPIRY_MS:900000}
     refresh-token-expiry-ms: ${JWT_REFRESH_TOKEN_EXPIRY_MS:604800000}
 
+  admin:
+    default-email: ${ADMIN_DEFAULT_EMAIL:admin@fitempire.in}
+    default-password: ${ADMIN_DEFAULT_PASSWORD:Admin@FitEmpire2024!}
+
   oauth2:
     google:
       client-id: ${GOOGLE_CLIENT_ID:}
@@ -287,7 +291,13 @@ spring:
   jpa:
     show-sql: true
   flyway:
+    enabled: true
     clean-disabled: false
+  cache:
+    type: simple
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
 
 logging:
   level:
@@ -338,3 +348,42 @@ logging:
     name: /var/log/fitempire/app.log
     max-history: 30
     max-size: 100MB
+
+---
+# ── H2 Profile ─────────────────────────────────────────────
+spring:
+  config:
+    activate:
+      on-profile: h2
+  datasource:
+    url: jdbc:h2:mem:fitempire;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;NON_KEYWORDS=USER,USERS;INIT=RUNSCRIPT FROM 'classpath:schema-h2.sql'
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: password
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        default_schema: ""
+  flyway:
+    enabled: false
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
+  cache:
+    type: simple
+  data:
+    redis:
+      repositories:
+        enabled: false # disable redis repo if needed, or keep local default
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: dummy
+            client-secret: dummy
+

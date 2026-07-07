@@ -17,11 +17,18 @@ const STATUS_COLORS: Record<string, { bg: string; color: string; border: string 
   REJECTED: { bg: 'rgba(255,87,87,0.08)', color: '#FF5757', border: 'rgba(255,87,87,0.2)' },
 };
 
+const CATEGORIES = ['GYM', 'MMA', 'BOXING', 'KICKBOXING', 'DANCE', 'SWIMMING', 'YOGA', 'SPORTS', 'GAMES'];
+
 const MOCK_GYMS: Gym[] = Array.from({ length: 40 }, (_, i) => ({
   id: `gym-${i + 1}`,
-  name: ['PowerZone Fitness', 'Iron Paradise', 'Gold\'s Gym', 'Cult.Fit', 'FitStar', 'BodyFit', 'GainStation', 'FitHouse'][i % 8] + ` - ${['Andheri', 'Bandra', 'Worli', 'Juhu', 'Thane', 'Pune'][i % 6]}`,
+  name: [
+    'PowerZone Fitness', 'Strike Force MMA', 'Rocky\'s Boxing Club',
+    'Kicking Warriors Arena', 'Rhythm & Beats Studio', 'Blue Wave Aquatics',
+    'Zen Yoga Center', 'Huddle Turf Complex', 'Cue & Pin Games Lounge'
+  ][i % 9] + ` - ${['Andheri', 'Bandra', 'Worli', 'Juhu', 'Thane', 'Pune'][i % 6]}`,
   slug: `gym-${i + 1}`,
   status: ['ACTIVE', 'PENDING_REVIEW', 'ACTIVE', 'ACTIVE', 'SUSPENDED', 'PENDING_REVIEW'][i % 6],
+  category: CATEGORIES[i % 9],
   avgRating: 3.5 + (i % 15) / 10,
   totalReviews: 12 + i * 7,
   totalMembers: 100 + i * 23,
@@ -120,7 +127,8 @@ export function GymsPage() {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>Gym Name</TableCell>
+                  <TableCell>Center Name</TableCell>
+                  <TableCell>Category</TableCell>
                   <TableCell>Owner</TableCell>
                   <TableCell>Status</TableCell>
                   <TableCell>Rating</TableCell>
@@ -149,6 +157,18 @@ export function GymsPage() {
                             {gym.name}
                           </Typography>
                         </Box>
+                      </TableCell>
+                      <TableCell>
+                        <Chip
+                          label={gym.category}
+                          size="small"
+                          sx={{
+                            background: 'rgba(108,99,255,0.1)',
+                            color: '#6C63FF',
+                            border: '1px solid rgba(108,99,255,0.3)',
+                            fontWeight: 700, fontSize: '0.65rem',
+                          }}
+                        />
                       </TableCell>
                       <TableCell>
                         <Typography variant="body2" sx={{ color: 'text.secondary', fontSize: '0.8rem' }}>

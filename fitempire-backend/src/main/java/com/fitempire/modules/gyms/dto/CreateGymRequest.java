@@ -1,10 +1,13 @@
 package com.fitempire.modules.gyms.dto;
 
+import com.fitempire.modules.gyms.entity.GymCategory;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
 @Data
 public class CreateGymRequest {
+
+    private GymCategory category = GymCategory.GYM;
 
     @NotBlank(message = "Gym name is required")
     @Size(min = 3, max = 255, message = "Gym name must be between 3 and 255 characters")

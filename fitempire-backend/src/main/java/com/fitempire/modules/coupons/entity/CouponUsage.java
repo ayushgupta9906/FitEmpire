@@ -34,7 +34,7 @@ public class CouponUsage {
     @JoinColumn(name = "payment_id")
     private Payment payment;
 
-    @Column(name = "discount_amount", nullable = false, precision = 10, scale = 2)
+    @Column(name = "discount", nullable = false, precision = 10, scale = 2)
     private BigDecimal discountAmount;
 
     @Column(name = "used_at", nullable = false)

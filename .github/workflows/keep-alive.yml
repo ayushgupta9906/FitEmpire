@@ -1,0 +1,53 @@
+# ─────────────────────────────────────────────────────────
+# Keep HuggingFace Space Alive
+# Pings the Space every 6 hours to prevent 48-hour sleep
+# ─────────────────────────────────────────────────────────
+name: Keep HuggingFace Space Alive
+
+on:
+  schedule:
+    # Run every 6 hours (4 times a day) — well within the 48-hour window
+    - cron: "0 */6 * * *"
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  ping-space:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Ping HuggingFace Space (Health Check)
+        run: |
+          echo "🏋️ Pinging FitEmpire API on HuggingFace..."
+          SPACE_URL="https://ayush150152-fitempire-api.hf.space/api/v1/actuator/health"
+
+          # Retry up to 5 times with 30s delay (Space may need to wake up)
+          MAX_RETRIES=5
+          RETRY_DELAY=30
+
+          for i in $(seq 1 $MAX_RETRIES); do
+            echo "Attempt $i of $MAX_RETRIES..."
+            HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 60 "$SPACE_URL" || echo "000")
+
+            if [ "$HTTP_STATUS" = "200" ]; then
+              echo "✅ Space is UP! (HTTP $HTTP_STATUS)"
+              curl -s "$SPACE_URL" | head -c 200
+              echo ""
+              exit 0
+            fi
+
+            echo "⏳ Space returned HTTP $HTTP_STATUS. Waiting ${RETRY_DELAY}s before retry..."
+            sleep $RETRY_DELAY
+          done
+
+          echo "⚠️ Space did not respond with 200 after $MAX_RETRIES attempts."
+          echo "Last HTTP status: $HTTP_STATUS"
+          # Don't fail the workflow — the ping itself keeps the Space awake
+          exit 0
+
+      - name: Ping Swagger UI
+        run: |
+          echo "📖 Pinging Swagger UI..."
+          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 60 \
+            "https://ayush150152-fitempire-api.hf.space/api/swagger-ui.html" || echo "000")
+          echo "Swagger UI status: HTTP $HTTP_STATUS"

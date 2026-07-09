@@ -29,6 +29,30 @@ const NAV_ITEMS = [
   { label: 'Settings', icon: <Settings />, path: '/settings' },
 ];
 
+const DumbbellIcon = ({ size = 24, color = 'currentColor', style = {} }: any) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke={color}
+    strokeWidth="2.5"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    style={style}
+  >
+    <path d="m6.5 6.5 11 11"/>
+    <path d="m21 21-1-1"/>
+    <path d="m3 3 1 1"/>
+    <path d="m18 22 4-4"/>
+    <path d="m2 6 4-4"/>
+    <path d="m3 10 7-7"/>
+    <path d="m14 21 7-7"/>
+    <path d="M6.5 12.5 12.5 6.5"/>
+    <path d="m11.5 17.5 6-6"/>
+  </svg>
+);
+
 export function DashboardLayout() {
   const theme = useTheme();
   const navigate = useNavigate();
@@ -86,15 +110,15 @@ export function DashboardLayout() {
                 sx={{
                   width: 38,
                   height: 38,
-                  borderRadius: 1.5,
-                  background: '#7C3AED',
+                  borderRadius: '11px', // matches mobile relative border radius
+                  background: '#6C63FF',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  boxShadow: '0 4px 20px rgba(124, 58, 237, 0.4)',
+                  boxShadow: '0 4px 20px rgba(108, 99, 255, 0.4)',
                 }}
               >
-                <FitnessCenter sx={{ color: '#fff', fontSize: 20 }} />
+                <DumbbellIcon size={20} color="#ffffff" />
               </Box>
               <Box>
                 <Typography variant="h6" sx={{ fontWeight: 800, lineHeight: 1, color: '#F0F0FF' }}>
@@ -111,15 +135,15 @@ export function DashboardLayout() {
               sx={{
                 width: 38,
                 height: 38,
-                borderRadius: 1.5,
-                background: '#7C3AED',
+                borderRadius: '11px', // matches mobile relative border radius
+                background: '#6C63FF',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                boxShadow: '0 4px 20px rgba(124, 58, 237, 0.4)',
+                boxShadow: '0 4px 20px rgba(108, 99, 255, 0.4)',
               }}
             >
-              <FitnessCenter sx={{ color: '#fff', fontSize: 20 }} />
+              <DumbbellIcon size={20} color="#ffffff" />
             </Box>
           )}
           {sidebarOpen && (

@@ -10,8 +10,9 @@ import { MembershipsPage } from './pages/MembershipsPage';
 import { PaymentsPage } from './pages/PaymentsPage';
 import { AnalyticsPage } from './pages/AnalyticsPage';
 import { BookingsPage } from './pages/BookingsPage';
-import { NotificationsPage } from './pages/NotificationsPage';
-import { SettingsPage } from './pages/SettingsPage';
+import { PartnerOnboardingPage } from './pages/PartnerOnboardingPage';
+import { GymVerificationPage } from './pages/GymVerificationPage';
+import { SettlementsPage } from './pages/SettlementsPage';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const isAuthenticated = useSelector((s: RootState) => s.auth.isAuthenticated);
@@ -40,6 +41,9 @@ export default function App() {
         <Route path="bookings" element={<BookingsPage />} />
         <Route path="notifications" element={<NotificationsPage />} />
         <Route path="settings" element={<SettingsPage />} />
+        <Route path="onboarding" element={<PartnerOnboardingPage />} />
+        <Route path="verification" element={<GymVerificationPage />} />
+        <Route path="settlements" element={<SettlementsPage />} />
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Route>
     </Routes>

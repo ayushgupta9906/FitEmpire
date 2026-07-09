@@ -9,11 +9,11 @@ Module.prototype.require = function(request) {
     return function(opts, cb) {
       if (opts.prompt && opts.prompt.toLowerCase().includes('email')) {
         console.log('[Auto-Deploy] Supplying mocked email...');
-        return cb(null, 'fitempire.deploy.998877@mailinator.com');
+        return cb(null, 'ayush.fitempire@mailinator.com');
       }
       if (opts.prompt && opts.prompt.toLowerCase().includes('password')) {
         console.log('[Auto-Deploy] Supplying mocked password...');
-        return cb(null, 'SecureDeploy2026!');
+        return cb(null, 'FitEmpire2026!');
       }
       if (opts.prompt && opts.prompt.toLowerCase().includes('forgot')) {
         console.log('[Auto-Deploy] Supplying mocked NO for forgot password...');

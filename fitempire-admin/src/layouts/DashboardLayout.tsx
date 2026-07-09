@@ -86,12 +86,12 @@ export function DashboardLayout() {
                 sx={{
                   width: 38,
                   height: 38,
-                  borderRadius: 2,
-                  background: 'linear-gradient(135deg, #6C63FF 0%, #FF6584 100%)',
+                  borderRadius: 1.5,
+                  background: '#7C3AED',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  boxShadow: '0 4px 20px rgba(108, 99, 255, 0.4)',
+                  boxShadow: '0 4px 20px rgba(124, 58, 237, 0.4)',
                 }}
               >
                 <FitnessCenter sx={{ color: '#fff', fontSize: 20 }} />
@@ -100,7 +100,7 @@ export function DashboardLayout() {
                 <Typography variant="h6" sx={{ fontWeight: 800, lineHeight: 1, color: '#F0F0FF' }}>
                   FitEmpire
                 </Typography>
-                <Typography variant="caption" sx={{ color: 'primary.main', fontWeight: 600 }}>
+                <Typography variant="caption" sx={{ color: '#8B5CF6', fontWeight: 600 }}>
                   Admin Portal
                 </Typography>
               </Box>
@@ -111,11 +111,12 @@ export function DashboardLayout() {
               sx={{
                 width: 38,
                 height: 38,
-                borderRadius: 2,
-                background: 'linear-gradient(135deg, #6C63FF 0%, #FF6584 100%)',
+                borderRadius: 1.5,
+                background: '#7C3AED',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
+                boxShadow: '0 4px 20px rgba(124, 58, 237, 0.4)',
               }}
             >
               <FitnessCenter sx={{ color: '#fff', fontSize: 20 }} />
@@ -203,7 +204,7 @@ export function DashboardLayout() {
               sx={{
                 width: 36,
                 height: 36,
-                background: 'linear-gradient(135deg, #6C63FF, #FF6584)',
+                background: 'linear-gradient(135deg, #7C3AED, #4F46E5)',
                 fontSize: '0.9rem',
                 fontWeight: 700,
               }}

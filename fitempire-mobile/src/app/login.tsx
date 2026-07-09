@@ -85,7 +85,7 @@ export default function LoginScreen() {
             {/* Logo Section */}
             <View style={styles.logoContainer}>
               <View style={styles.logoBadge}>
-                <Dumbbell size={36} color="#ffffff" />
+                <Dumbbell size={38} color="#ffffff" />
               </View>
               <ThemedText style={styles.logoText}>FitEmpire</ThemedText>
               <ThemedText style={styles.logoTagline}>India's Premium Fitness Ecosystem</ThemedText>
@@ -162,13 +162,13 @@ const styles = StyleSheet.create({
   logoBadge: {
     width: 72,
     height: 72,
-    borderRadius: 20,
+    borderRadius: 19,
     backgroundColor: '#6C63FF',
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: '#6C63FF',
     shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.4,
+    shadowOpacity: 0.45,
     shadowRadius: 16,
     elevation: 8,
   },

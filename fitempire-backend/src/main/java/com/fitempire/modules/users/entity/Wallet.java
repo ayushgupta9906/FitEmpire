@@ -21,8 +21,15 @@ public class Wallet {
     private UUID id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false, unique = true)
+    @JoinColumn(name = "user_id")
     private User user;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "wallet_type", nullable = false)
+    private WalletType walletType = WalletType.USER;
+    
+    @Column(name = "gym_id")
+    private UUID gymId;
 
     @Column(name = "balance", nullable = false, precision = 12, scale = 2)
     private BigDecimal balance = BigDecimal.ZERO;

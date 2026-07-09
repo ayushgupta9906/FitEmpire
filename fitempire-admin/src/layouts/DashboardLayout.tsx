@@ -25,6 +25,9 @@ const NAV_ITEMS = [
   { label: 'Payments', icon: <Payment />, path: '/payments' },
   { label: 'Bookings', icon: <EventNote />, path: '/bookings' },
   { label: 'Analytics', icon: <BarChart />, path: '/analytics' },
+  { label: 'Partner Onboarding', icon: <FitnessCenter />, path: '/onboarding' },
+  { label: 'Verification Queue', icon: <FitnessCenter />, path: '/verification' },
+  { label: 'Partner Settlements', icon: <Payment />, path: '/settlements' },
   { label: 'Notifications', icon: <Notifications />, path: '/notifications' },
   { label: 'Settings', icon: <Settings />, path: '/settings' },
 ];

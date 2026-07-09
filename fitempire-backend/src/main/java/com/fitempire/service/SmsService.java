@@ -41,11 +41,20 @@ public class SmsService {
         }
 
         try {
-            Message message = Message.creator(
-                    new PhoneNumber(internationalPhone),
-                    new PhoneNumber(fromNumber),
-                    messageBody
-            ).create();
+            Message message;
+            if (fromNumber != null && fromNumber.trim().startsWith("MG")) {
+                message = Message.creator(
+                        new PhoneNumber(internationalPhone),
+                        fromNumber.trim(),
+                        messageBody
+                ).create();
+            } else {
+                message = Message.creator(
+                        new PhoneNumber(internationalPhone),
+                        new PhoneNumber(fromNumber),
+                        messageBody
+                ).create();
+            }
             log.info("OTP SMS sent to {} [SID: {}]", maskPhone(toPhone), message.getSid());
         } catch (Exception e) {
             log.error("Failed to send OTP SMS to {}: {}", maskPhone(toPhone), e.getMessage());
@@ -59,11 +68,19 @@ public class SmsService {
             return;
         }
         try {
-            Message.creator(
-                    new PhoneNumber("+91" + toPhone),
-                    new PhoneNumber(fromNumber),
-                    message
-            ).create();
+            if (fromNumber != null && fromNumber.trim().startsWith("MG")) {
+                Message.creator(
+                        new PhoneNumber("+91" + toPhone),
+                        fromNumber.trim(),
+                        message
+                ).create();
+            } else {
+                Message.creator(
+                        new PhoneNumber("+91" + toPhone),
+                        new PhoneNumber(fromNumber),
+                        message
+                ).create();
+            }
         } catch (Exception e) {
             log.error("Failed to send SMS to {}: {}", maskPhone(toPhone), e.getMessage());
         }

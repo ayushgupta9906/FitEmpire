@@ -6,7 +6,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
   user: any;
-  requestOtp: (phone: string) => Promise<void>;
+  requestOtp: (phone: string) => Promise<string | null>;
   verifyOtp: (phone: string, code: string) => Promise<void>;
   logout: () => Promise<void>;
   refreshProfile: () => Promise<void>;
@@ -52,8 +52,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const requestOtp = async (phone: string) => {
-    await authApi.requestOtp(phone);
+  const requestOtp = async (phone: string): Promise<string | null> => {
+    const res = await authApi.requestOtp(phone);
+    return res.data?.data || null;
   };
 
   const verifyOtp = async (phone: string, code: string) => {

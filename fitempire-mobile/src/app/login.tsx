@@ -25,15 +25,24 @@ export default function LoginScreen() {
     }
     setLoading(true);
     try {
-      await requestOtp(phone);
-      setStep(2);
+      const otp = await requestOtp(phone);
+      if (otp) {
+        setCode(otp);
+        Alert.alert(
+          'Dev Mode Bypass',
+          `OTP received and auto-filled: ${otp}`,
+          [{ text: 'OK', onPress: () => setStep(2) }]
+        );
+      } else {
+        setStep(2);
+      }
     } catch (e: any) {
       console.error(e);
       // For local testing/dev, if backend fails or TWILIO SID is not configured, fall back to step 2 with mock OTP
       Alert.alert(
         'Dev Mode Bypass',
-        'OTP request failed (service not configured). Proceeding with mock OTP: 123456.',
-        [{ text: 'OK', onPress: () => setStep(2) }]
+        'OTP request failed. Proceeding with mock OTP: 123456.',
+        [{ text: 'OK', onPress: () => { setCode('123456'); setStep(2); } }]
       );
     } finally {
       setLoading(false);

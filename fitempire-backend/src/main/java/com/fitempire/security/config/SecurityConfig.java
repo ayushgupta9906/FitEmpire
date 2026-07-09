@@ -34,6 +34,7 @@ import java.util.List;
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true, securedEnabled = true)
 @RequiredArgsConstructor
+@lombok.extern.slf4j.Slf4j
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthFilter;
@@ -45,80 +46,87 @@ public class SecurityConfig {
     @Value("${app.cors.allowed-origins:http://localhost:3000,http://localhost:3001}")
     private List<String> allowedOrigins;
 
+    @Value("${spring.security.oauth2.client.registration.google.client-id:dummy}")
+    private String googleClientId;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            // ── CSRF (stateless JWT — disable) ───────────────────────────
-            .csrf(AbstractHttpConfigurer::disable)
+                // ── CSRF (stateless JWT — disable) ───────────────────────────
+                .csrf(AbstractHttpConfigurer::disable)
 
-            // ── CORS ─────────────────────────────────────────────────────
-            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                // ── CORS ─────────────────────────────────────────────────────
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
 
-            // ── Session (stateless) ───────────────────────────────────────
-            .sessionManagement(session ->
-                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                // ── Session (stateless) ───────────────────────────────────────
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
-            // ── Security Headers ─────────────────────────────────────────
-            .headers(headers -> headers
-                .frameOptions(frame -> frame.deny())
-                .contentTypeOptions(contentType -> {})
-                .referrerPolicy(referrer ->
-                    referrer.policy(ReferrerPolicyHeaderWriter.ReferrerPolicy.STRICT_ORIGIN_WHEN_CROSS_ORIGIN))
-                .httpStrictTransportSecurity(hsts -> hsts
-                    .maxAgeInSeconds(31536000)
-                    .includeSubDomains(true)
-                    .preload(true))
-            )
+                // ── Security Headers ─────────────────────────────────────────
+                .headers(headers -> headers
+                        .frameOptions(frame -> frame.deny())
+                        .contentTypeOptions(contentType -> {
+                        })
+                        .referrerPolicy(referrer -> referrer
+                                .policy(ReferrerPolicyHeaderWriter.ReferrerPolicy.STRICT_ORIGIN_WHEN_CROSS_ORIGIN))
+                        .httpStrictTransportSecurity(hsts -> hsts
+                                .maxAgeInSeconds(31536000)
+                                .includeSubDomains(true)
+                                .preload(true)))
 
-            // ── Authorization Rules ───────────────────────────────────────
-            .authorizeHttpRequests(auth -> auth
-                // Public auth endpoints
-                .requestMatchers(HttpMethod.POST, "/v1/auth/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/v1/auth/oauth2/**").permitAll()
+                // ── Authorization Rules ───────────────────────────────────────
+                .authorizeHttpRequests(auth -> auth
+                        // CORS preflight requests must pass through without auth/redirect
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
-                // Public content endpoints (read-only gym/class discovery)
-                .requestMatchers(HttpMethod.GET, "/v1/gyms/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/v1/classes/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/v1/trainers/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/v1/membership-plans/**").permitAll()
+                        // Public auth endpoints
+                        .requestMatchers(HttpMethod.POST, "/v1/auth/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/v1/auth/oauth2/**").permitAll()
 
-                // Webhook (payment gateway callbacks)
-                .requestMatchers("/v1/payments/webhook/**").permitAll()
+                        // Public content endpoints (read-only gym/class discovery)
+                        .requestMatchers(HttpMethod.GET, "/v1/gyms/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/v1/classes/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/v1/trainers/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/v1/membership-plans/**").permitAll()
 
-                // Swagger / API docs
-                .requestMatchers(
-                    "/swagger-ui/**",
-                    "/swagger-ui.html",
-                    "/v1/api-docs/**",
-                    "/v3/api-docs/**"
-                ).permitAll()
+                        // Webhook (payment gateway callbacks)
+                        .requestMatchers("/v1/payments/webhook/**").permitAll()
 
-                // Actuator health
-                .requestMatchers("/v1/actuator/health", "/v1/actuator/info").permitAll()
+                        // Swagger / API docs
+                        .requestMatchers(
+                                "/swagger-ui/**",
+                                "/swagger-ui.html",
+                                "/v1/api-docs/**",
+                                "/v3/api-docs/**")
+                        .permitAll()
 
-                // Admin endpoints
-                .requestMatchers("/v1/admin/**").hasAnyRole("ADMIN", "SUPER_ADMIN")
-                .requestMatchers("/v1/super-admin/**").hasRole("SUPER_ADMIN")
+                        // Actuator health
+                        .requestMatchers("/v1/actuator/health", "/v1/actuator/info").permitAll()
 
-                // Partner endpoints
-                .requestMatchers("/v1/partners/**").hasAnyRole("GYM_PARTNER", "ADMIN", "SUPER_ADMIN")
+                        // Admin endpoints
+                        .requestMatchers("/v1/admin/**").hasAnyRole("ADMIN", "SUPER_ADMIN")
+                        .requestMatchers("/v1/super-admin/**").hasRole("SUPER_ADMIN")
 
-                // Everything else requires authentication
-                .anyRequest().authenticated()
-            )
+                        // Partner endpoints
+                        .requestMatchers("/v1/partners/**").hasAnyRole("GYM_PARTNER", "ADMIN", "SUPER_ADMIN")
 
-            // ── OAuth2 ─────────────────────────────────────────────────────
-            .oauth2Login(oauth2 -> oauth2
-                .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
-                .successHandler(oAuth2SuccessHandler)
-                .failureHandler(oAuth2FailureHandler)
-            )
+                        // Everything else requires authentication
+                        .anyRequest().authenticated())
 
-            // ── Authentication Provider ───────────────────────────────────
-            .authenticationProvider(authenticationProvider())
+        // ── OAuth2 (only if real credentials configured) ──────────────
+        ;
+        if (!"dummy".equals(googleClientId) && !googleClientId.isEmpty()) {
+            http.oauth2Login(oauth2 -> oauth2
+                    .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
+                    .successHandler(oAuth2SuccessHandler)
+                    .failureHandler(oAuth2FailureHandler));
+        }
 
-            // ── JWT Filter ────────────────────────────────────────────────
-            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+        http
+                // ── Authentication Provider ───────────────────────────────────
+                .authenticationProvider(authenticationProvider())
+
+                // ── JWT Filter ────────────────────────────────────────────────
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
@@ -126,9 +134,34 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(allowedOrigins);
+
+        // Hardcode all known origins for reliability
+        List<String> origins = new java.util.ArrayList<>(Arrays.asList(
+                "http://localhost:3000",
+                "http://localhost:3001",
+                "http://localhost:5173",
+                "http://localhost:8081",
+                "http://localhost:8082",
+                "http://localhost:19006",
+                "https://fitempire.netlify.app",
+                "https://fitempire.vercel.app"
+        ));
+
+        // Also add any configured origins from env vars
+        if (allowedOrigins != null) {
+            for (String origin : allowedOrigins) {
+                String trimmed = origin.trim();
+                if (!trimmed.isEmpty() && !origins.contains(trimmed)) {
+                    origins.add(trimmed);
+                }
+            }
+        }
+
+        log.info("Configured CORS Allowed Origins: {}", origins);
+        config.setAllowedOrigins(origins);
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-        config.setAllowedHeaders(List.of("*"));
+        config.setAllowedHeaders(Arrays.asList("*"));
+        config.setExposedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Refresh-Token"));
         config.setAllowCredentials(true);
         config.setMaxAge(3600L);
 

@@ -43,7 +43,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 1rem 2.5rem;
+      padding: 0.6rem 2rem;
       border-bottom: 1px solid var(--border);
       background: rgba(7, 8, 10, 0.8);
       backdrop-filter: blur(12px);
@@ -129,10 +129,10 @@
     .workspace {
       flex: 1;
       display: grid;
-      grid-template-columns: 42% 58%;
-      padding: 1.5rem 2rem;
-      gap: 2rem;
-      height: calc(100vh - 70px);
+      grid-template-columns: 34% 66%;
+      padding: 1rem 1.5rem;
+      gap: 1.5rem;
+      height: calc(100vh - 60px);
       align-items: stretch;
     }
 
@@ -176,14 +176,40 @@
       box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
     }
 
+    .device-badge {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: rgba(18, 20, 26, 0.8);
+      border: 1px solid var(--border);
+      padding: 0.3rem 0.65rem;
+      border-radius: 8px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      z-index: 5;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      backdrop-filter: blur(8px);
+    }
+    .device-badge span {
+      color: var(--primary);
+      font-size: 0.62rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 700;
+    }
+
     /* Device Mockups */
     /* 1. iPhone 15 Mockup */
     .iphone-frame {
-      width: 330px;
-      height: 670px;
+      width: 360px;
+      height: 98%;
+      max-height: 840px;
       background: #000;
       border-radius: 46px;
-      border: 10px solid #1a1a1f;
+      border: 11px solid #1a1a1f;
       position: relative;
       box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
       overflow: hidden;
@@ -324,11 +350,8 @@
   <main class="workspace">
     <!-- Mobile App Viewport -->
     <div class="pane">
-      <div class="pane-title">
-        <span>MOBILE APP CLIENT</span>
-        <a href="https://firmempireapp.netlify.app" target="_blank" class="pane-link">Live Link ↗</a>
-      </div>
       <div class="frame-container">
+        <div class="device-badge">Mobile App <span>Live</span></div>
         <div class="iphone-frame">
           <iframe src="https://firmempireapp.netlify.app" title="FitEmpire Mobile App"></iframe>
         </div>
@@ -337,11 +360,8 @@
 
     <!-- Admin Panel Viewport -->
     <div class="pane">
-      <div class="pane-title">
-        <span>ADMIN MANAGEMENT SYSTEM</span>
-        <a href="https://fitempire.netlify.app" target="_blank" class="pane-link">Live Link ↗</a>
-      </div>
       <div class="frame-container">
+        <div class="device-badge">Admin Dashboard <span>Live</span></div>
         <div class="browser-frame">
           <div class="browser-header">
             <div class="browser-dot dot-red"></div>

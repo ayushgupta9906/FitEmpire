@@ -37,14 +37,14 @@ spring:
 
   # ── Database ──────────────────────────────────────────────
   datasource:
-    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:fitempire}?reWriteBatchedInserts=true&ssl=false&prepareThreshold=0
+    url: ${DATABASE_URL:${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/fitempire?reWriteBatchedInserts=true&sslmode=disable}}
     username: ${DB_USER:fitempire_user}
     password: ${DB_PASSWORD:fitempire_secret}
     driver-class-name: org.postgresql.Driver
     hikari:
       pool-name: FitEmpirePool
-      maximum-pool-size: ${DB_POOL_SIZE:20}
-      minimum-idle: 5
+      maximum-pool-size: ${DB_POOL_SIZE:10}
+      minimum-idle: 2
       connection-timeout: 30000
       idle-timeout: 600000
       max-lifetime: 1800000
@@ -150,10 +150,12 @@ management:
         include: health,info,metrics,prometheus
   endpoint:
     health:
-      show-details: when-authorized
+      show-details: always
       probes:
         enabled: true
   health:
+    mail:
+      enabled: false
     redis:
       enabled: true
     db:
@@ -221,12 +223,7 @@ app:
       private-key: ${APPLE_PRIVATE_KEY:}
 
   cors:
-    allowed-origins:
-      - ${APP_FRONTEND_URL:http://localhost:3001}
-      - ${APP_ADMIN_URL:http://localhost:3000}
-      - http://localhost:3001
-      - http://localhost:3000
-      - http://localhost:19006
+    allowed-origins: ${APP_FRONTEND_URL:http://localhost:3001},${APP_ADMIN_URL:http://localhost:3000},http://localhost:3001,http://localhost:3000,http://localhost:19006,https://fitempire.netlify.app,https://fitempire-admin-2026.surge.sh,http://fitempire-admin-2026.surge.sh
     allowed-methods: GET,POST,PUT,PATCH,DELETE,OPTIONS
     allowed-headers: "*"
     allow-credentials: true
@@ -349,6 +346,15 @@ spring:
   flyway:
     clean-disabled: false
     clean-on-validation-error: true
+  cache:
+    type: simple
+  data:
+    redis:
+      repositories:
+        enabled: false
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
 
 logging:
   level:

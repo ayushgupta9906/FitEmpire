@@ -141,6 +141,7 @@ public class AdminController {
 
     @GetMapping("/gyms")
     @Operation(summary = "List gyms by review/active status")
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
     public ResponseEntity<ApiResponse<PagedResponse<GymDto>>> getAllGyms(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
@@ -149,9 +150,9 @@ public class AdminController {
         Page<Gym> gymPage;
         if (status != null && !status.isBlank()) {
             GymStatus gymStatus = GymStatus.valueOf(status.toUpperCase());
-            gymPage = gymRepository.findByStatus(gymStatus, pageable);
+            gymPage = gymRepository.findByStatusWithOwner(gymStatus, pageable);
         } else {
-            gymPage = gymRepository.findAll(pageable);
+            gymPage = gymRepository.findAllWithOwner(pageable);
         }
         return ResponseEntity.ok(ApiResponse.success(PagedResponse.of(gymPage.map(gymMapper::toDto))));
     }

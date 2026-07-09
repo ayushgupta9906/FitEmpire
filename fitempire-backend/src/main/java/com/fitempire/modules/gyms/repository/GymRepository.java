@@ -4,6 +4,7 @@ import com.fitempire.modules.gyms.entity.Gym;
 import com.fitempire.modules.gyms.entity.GymStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -20,6 +21,14 @@ public interface GymRepository extends JpaRepository<Gym, UUID> {
 
     @Query("SELECT g FROM Gym g WHERE g.deleted = false AND g.status = :status ORDER BY g.featured DESC, g.avgRating DESC")
     Page<Gym> findByStatus(@Param("status") GymStatus status, Pageable pageable);
+
+    @EntityGraph(attributePaths = {"owner", "branches"})
+    @Query("SELECT g FROM Gym g WHERE g.deleted = false AND g.status = :status")
+    Page<Gym> findByStatusWithOwner(@Param("status") GymStatus status, Pageable pageable);
+
+    @EntityGraph(attributePaths = {"owner", "branches"})
+    @Query("SELECT g FROM Gym g WHERE g.deleted = false")
+    Page<Gym> findAllWithOwner(Pageable pageable);
 
     @Query("SELECT g FROM Gym g WHERE g.owner.id = :ownerId AND g.deleted = false ORDER BY g.createdAt DESC")
     List<Gym> findByOwnerId(@Param("ownerId") UUID ownerId);

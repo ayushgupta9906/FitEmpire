@@ -107,14 +107,14 @@ export function LoginPage() {
               sx={{
                 width: 64,
                 height: 64,
-                borderRadius: 4,
-                background: 'linear-gradient(135deg, #6C63FF 0%, #FF6584 100%)',
+                borderRadius: '20px', // matches mobile app's logoBadge borderRadius (20)
+                background: '#7C3AED',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 mx: 'auto',
                 mb: 2,
-                boxShadow: '0 12px 40px rgba(108, 99, 255, 0.4)',
+                boxShadow: '0 12px 40px rgba(124, 58, 237, 0.4)',
               }}
             >
               <FitnessCenter sx={{ fontSize: 32, color: '#fff' }} />
@@ -123,7 +123,7 @@ export function LoginPage() {
               variant="h4"
               sx={{
                 fontWeight: 800,
-                background: 'linear-gradient(135deg, #6C63FF 0%, #FF6584 100%)',
+                background: 'linear-gradient(135deg, #7C3AED 0%, #4F46E5 100%)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
                 mb: 0.5,

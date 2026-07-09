@@ -4,15 +4,15 @@ export const theme = createTheme({
   palette: {
     mode: 'dark',
     primary: {
-      main: '#6C63FF',
-      light: '#9C94FF',
-      dark: '#3D35CC',
+      main: '#8B5CF6',
+      light: '#A78BFA',
+      dark: '#6D28D9',
       contrastText: '#ffffff',
     },
     secondary: {
-      main: '#FF6584',
-      light: '#FF98A8',
-      dark: '#CC3356',
+      main: '#06B6D4',
+      light: '#22D3EE',
+      dark: '#0891B2',
       contrastText: '#ffffff',
     },
     background: {
@@ -79,11 +79,11 @@ export const theme = createTheme({
           transition: 'all 0.2s ease',
         },
         contained: {
-          background: 'linear-gradient(135deg, #6C63FF 0%, #9C94FF 100%)',
-          boxShadow: '0 8px 32px rgba(108, 99, 255, 0.3)',
+          background: 'linear-gradient(135deg, #7C3AED 0%, #A78BFA 100%)',
+          boxShadow: '0 8px 32px rgba(124, 58, 237, 0.3)',
           '&:hover': {
-            background: 'linear-gradient(135deg, #5B54EE 0%, #8B84EE 100%)',
-            boxShadow: '0 12px 40px rgba(108, 99, 255, 0.4)',
+            background: 'linear-gradient(135deg, #6D28D9 0%, #8B5CF6 100%)',
+            boxShadow: '0 12px 40px rgba(124, 58, 237, 0.4)',
             transform: 'translateY(-1px)',
           },
         },

@@ -6,7 +6,22 @@ import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { Colors } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
-import { Dumbbell, Phone, KeyRound, ChevronRight, ArrowLeft } from 'lucide-react-native';
+import { Phone, KeyRound, ChevronRight, ArrowLeft } from 'lucide-react-native';
+import Svg, { Path } from 'react-native-svg';
+
+const DumbbellIcon = ({ size = 24, color = '#ffffff' }: { size?: number; color?: string }) => (
+  <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+    <Path d="m6.5 6.5 11 11" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+    <Path d="m21 21-1-1" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+    <Path d="m3 3 1 1" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+    <Path d="m18 22 4-4" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+    <Path d="m2 6 4-4" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+    <Path d="m3 10 7-7" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+    <Path d="m14 21 7-7" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+    <Path d="M6.5 12.5 12.5 6.5" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+    <Path d="m11.5 17.5 6-6" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+  </Svg>
+);
 
 export default function LoginScreen() {
   const router = useRouter();
@@ -85,7 +100,7 @@ export default function LoginScreen() {
             {/* Logo Section */}
             <View style={styles.logoContainer}>
               <View style={styles.logoBadge}>
-                <Dumbbell size={38} color="#ffffff" />
+                <DumbbellIcon size={38} color="#ffffff" />
               </View>
               <ThemedText style={styles.logoText}>FitEmpire</ThemedText>
               <ThemedText style={styles.logoTagline}>India's Premium Fitness Ecosystem</ThemedText>

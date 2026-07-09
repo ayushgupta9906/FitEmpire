@@ -68,7 +68,7 @@ export const authApi = {
     apiClient.post('/auth/otp/send', { phone, purpose: 'LOGIN' }),
   
   verifyOtp: (phone: string, code: string) =>
-    apiClient.post('/auth/otp/verify', { phone, code, purpose: 'LOGIN' }),
+    apiClient.post('/auth/otp/verify', { phone, otp: code, purpose: 'LOGIN' }),
   
   getProfile: () =>
     apiClient.get('/users/profile/me'),

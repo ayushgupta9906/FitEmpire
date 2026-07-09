@@ -131,7 +131,7 @@ public class AuthService {
     // ── OTP Login (Send OTP) ──────────────────────────────────────────────────
 
     @Transactional
-    public void sendOtp(OtpLoginRequest request) {
+    public String sendOtp(OtpLoginRequest request) {
         // Rate limiting: max 5 OTPs per hour
         Instant oneHourAgo = Instant.now().minusSeconds(3600);
         long recentCount = otpCodeRepository.countRecentByPhone(request.getPhone(), OtpPurpose.LOGIN, oneHourAgo);
@@ -158,6 +158,7 @@ public class AuthService {
         // Send via SMS
         smsService.sendOtp(request.getPhone(), otpCode);
         log.info("OTP sent to phone: {}", maskPhone(request.getPhone()));
+        return otpCode;
     }
 
     // ── OTP Verify ────────────────────────────────────────────────────────────

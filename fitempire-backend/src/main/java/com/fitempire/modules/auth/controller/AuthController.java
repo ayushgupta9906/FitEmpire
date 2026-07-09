@@ -23,6 +23,9 @@ public class AuthController {
 
     private final AuthService authService;
 
+    @org.springframework.beans.factory.annotation.Value("${spring.profiles.active:dev}")
+    private String activeProfile;
+
     @PostMapping("/register")
     @Operation(summary = "Register a new customer account")
     public ResponseEntity<ApiResponse<AuthResponse>> register(
@@ -42,10 +45,13 @@ public class AuthController {
 
     @PostMapping("/otp/send")
     @Operation(summary = "Send OTP to phone number for login")
-    public ResponseEntity<ApiResponse<Void>> sendOtp(
+    public ResponseEntity<ApiResponse<String>> sendOtp(
             @Valid @RequestBody OtpLoginRequest request) {
-        authService.sendOtp(request);
-        return ResponseEntity.ok(ApiResponse.success("OTP sent successfully."));
+        String otp = authService.sendOtp(request);
+        // Conditionally return the OTP for developer testing convenience
+        boolean isDev = activeProfile != null && (activeProfile.contains("dev") || activeProfile.contains("local"));
+        String responseOtp = isDev ? otp : null;
+        return ResponseEntity.ok(ApiResponse.success("OTP sent successfully.", responseOtp));
     }
 
     @PostMapping("/otp/verify")

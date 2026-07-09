@@ -7,7 +7,7 @@ import { ThemedView } from '@/components/themed-view';
 import { Colors, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import { authApi, walletApi } from '@/services/api';
-import { Dumbbell, CreditCard, Award, ChevronRight, Activity, Calendar, Compass, Star } from 'lucide-react-native';
+import { Dumbbell, CreditCard, Award, ChevronRight, Activity, Calendar, Compass, Star, Sparkles } from 'lucide-react-native';
 import { useColorScheme } from 'react-native';
 
 const CATEGORIES = [
@@ -99,6 +99,22 @@ export default function HomeScreen() {
             </ThemedText>
           </View>
 
+          {/* AI Coach Banner */}
+          <TouchableOpacity
+            style={styles.aiCoachCard}
+            onPress={() => router.push('/ai-workout')}
+            activeOpacity={0.85}
+          >
+            <View style={styles.aiCoachIconWrap}>
+              <Sparkles size={22} color="#ffffff" />
+            </View>
+            <View style={{ flex: 1 }}>
+              <ThemedText style={styles.aiCoachTitle}>AI Workout & Diet Coach</ThemedText>
+              <ThemedText style={styles.aiCoachSub}>Generate customized workouts & diet recommendations</ThemedText>
+            </View>
+            <ChevronRight size={18} color="rgba(255, 255, 255, 0.7)" />
+          </TouchableOpacity>
+
           {/* Activity Category Chips */}
           <View style={styles.sectionHeader}>
             <ThemedText style={styles.sectionTitle}>Explore Categories</ThemedText>
@@ -172,8 +188,41 @@ const styles = StyleSheet.create({
   walletValue: { color: '#ffffff', fontSize: 28, fontWeight: '800', marginTop: 4 },
   rechargeBtn: { flexDirection: 'row', backgroundColor: '#ffffff', paddingVertical: 10, paddingHorizontal: 16, borderRadius: 12, alignItems: 'center', justifyContent: 'space-between' },
   rechargeBtnText: { color: '#6C63FF', fontWeight: '700', fontSize: 13 },
-  membershipBanner: { flexDirection: 'row', padding: 12, borderRadius: 12, alignItems: 'center', gap: 10, marginBottom: 24 },
+  membershipBanner: { flexDirection: 'row', padding: 12, borderRadius: 12, alignItems: 'center', gap: 10, marginBottom: 16 },
   membershipText: { fontSize: 13, fontWeight: '500' },
+  aiCoachCard: {
+    flexDirection: 'row',
+    padding: 16,
+    borderRadius: 16,
+    backgroundColor: '#6C63FF',
+    alignItems: 'center',
+    gap: 12,
+    marginBottom: 24,
+    shadowColor: '#6C63FF',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.3,
+    shadowRadius: 10,
+    elevation: 6,
+  },
+  aiCoachIconWrap: {
+    width: 40,
+    height: 40,
+    borderRadius: 10,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  aiCoachTitle: {
+    color: '#ffffff',
+    fontSize: 14,
+    fontWeight: '800',
+  },
+  aiCoachSub: {
+    color: 'rgba(255, 255, 255, 0.8)',
+    fontSize: 10,
+    marginTop: 2,
+    fontWeight: '500',
+  },
   sectionHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, marginTop: 12 },
   sectionTitle: { fontSize: 16, fontWeight: '800' },
   seeAll: { fontSize: 12, fontWeight: '600' },

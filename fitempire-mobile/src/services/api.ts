@@ -65,7 +65,7 @@ export const logOut = async () => {
 
 export const authApi = {
   requestOtp: (phone: string) =>
-    apiClient.post('/auth/otp/request', { phone, purpose: 'LOGIN' }),
+    apiClient.post('/auth/otp/send', { phone, purpose: 'LOGIN' }),
   
   verifyOtp: (phone: string, code: string) =>
     apiClient.post('/auth/otp/verify', { phone, code, purpose: 'LOGIN' }),

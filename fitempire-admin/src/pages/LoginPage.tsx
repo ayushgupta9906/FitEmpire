@@ -17,6 +17,30 @@ interface LoginForm {
   password: string;
 }
 
+const DumbbellIcon = ({ size = 24, color = 'currentColor', style = {} }: any) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke={color}
+    strokeWidth="2.5"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    style={style}
+  >
+    <path d="m6.5 6.5 11 11"/>
+    <path d="m21 21-1-1"/>
+    <path d="m3 3 1 1"/>
+    <path d="m18 22 4-4"/>
+    <path d="m2 6 4-4"/>
+    <path d="m3 10 7-7"/>
+    <path d="m14 21 7-7"/>
+    <path d="M6.5 12.5 12.5 6.5"/>
+    <path d="m11.5 17.5 6-6"/>
+  </svg>
+);
+
 export function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -43,14 +67,35 @@ export function LoginPage() {
         refreshToken,
       }));
 
-      enqueueSnackbar(`Welcome back, ${firstName}! 👋`, { variant: 'success' });
+      enqueueSnackbar('Login successful.', { variant: 'success' });
       navigate('/dashboard');
-    } catch (err: any) {
-      const message = err.response?.data?.message || 'Invalid credentials. Please try again.';
-      enqueueSnackbar(message, { variant: 'error' });
+    } catch (e: any) {
+      console.error(e);
+      const msg = e.response?.data?.message || 'Login failed. Please check your credentials.';
+      enqueueSnackbar(msg, { variant: 'error' });
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleDemoLogin = (role: 'ADMIN' | 'SUPER_ADMIN') => {
+    setLoading(true);
+    // Simulating login for demo bypass
+    setTimeout(() => {
+      dispatch(setCredentials({
+        user: {
+          id: role === 'ADMIN' ? 'demo-admin-id' : 'demo-superadmin-id',
+          email: role === 'ADMIN' ? 'admin@fitempire.in' : 'super@fitempire.in',
+          firstName: role === 'ADMIN' ? 'Admin' : 'Super Admin',
+          role: role
+        },
+        accessToken: 'demo-access-token',
+        refreshToken: 'demo-refresh-token'
+      }));
+      enqueueSnackbar('Demo Login successful.', { variant: 'success' });
+      navigate('/dashboard');
+      setLoading(false);
+    }, 800);
   };
 
   return (
@@ -60,44 +105,46 @@ export function LoginPage() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: 'radial-gradient(ellipse at 30% 50%, rgba(108,99,255,0.15) 0%, transparent 60%), radial-gradient(ellipse at 70% 20%, rgba(255,101,132,0.1) 0%, transparent 60%), linear-gradient(180deg, #0A0A0F 0%, #0D0D18 100%)',
+        background: 'radial-gradient(circle at 10% 20%, #07080a 0%, #111318 90%)',
         position: 'relative',
         overflow: 'hidden',
+        p: 2,
       }}
     >
-      {/* Animated background orbs */}
-      {[...Array(3)].map((_, i) => (
-        <Box
-          key={i}
-          sx={{
-            position: 'absolute',
-            borderRadius: '50%',
-            filter: 'blur(80px)',
-            opacity: 0.15,
-            background: i % 2 === 0
-              ? 'linear-gradient(135deg, #6C63FF, #9C94FF)'
-              : 'linear-gradient(135deg, #FF6584, #FFB038)',
-            width: 300 + i * 100,
-            height: 300 + i * 100,
-            top: `${20 + i * 25}%`,
-            left: `${10 + i * 30}%`,
-            animation: `float${i} ${4 + i}s ease-in-out infinite alternate`,
-          }}
-        />
-      ))}
+      {/* Decorative Glows */}
+      <Box
+        sx={{
+          position: 'absolute',
+          width: '500px',
+          height: '500px',
+          background: 'radial-gradient(circle, rgba(108, 99, 255, 0.15) 0%, rgba(108, 99, 255, 0) 70%)',
+          top: '-10%',
+          left: '-10%',
+          zIndex: 0,
+        }}
+      />
+      <Box
+        sx={{
+          position: 'absolute',
+          width: '500px',
+          height: '500px',
+          background: 'radial-gradient(circle, rgba(255, 101, 132, 0.1) 0%, rgba(255, 101, 132, 0) 70%)',
+          bottom: '-10%',
+          right: '-10%',
+          zIndex: 0,
+        }}
+      />
 
       <Card
         sx={{
           width: '100%',
-          maxWidth: 440,
-          mx: 2,
-          background: 'rgba(18, 18, 26, 0.9)',
+          maxWidth: 460,
+          background: 'rgba(21, 23, 30, 0.7)',
           backdropFilter: 'blur(40px)',
           border: '1px solid rgba(108, 99, 255, 0.2)',
           boxShadow: '0 40px 120px rgba(0,0,0,0.5)',
           position: 'relative',
           zIndex: 1,
-          '&:hover': { transform: 'none' }, // disable lift on login card
         }}
       >
         <CardContent sx={{ p: 5 }}>
@@ -107,23 +154,23 @@ export function LoginPage() {
               sx={{
                 width: 64,
                 height: 64,
-                borderRadius: '20px', // matches mobile app's logoBadge borderRadius (20)
-                background: '#7C3AED',
+                borderRadius: '18px', // matches mobile app's logoBadge borderRadius relative to size
+                background: '#6C63FF',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 mx: 'auto',
                 mb: 2,
-                boxShadow: '0 12px 40px rgba(124, 58, 237, 0.4)',
+                boxShadow: '0 12px 40px rgba(108, 99, 255, 0.4)',
               }}
             >
-              <FitnessCenter sx={{ fontSize: 32, color: '#fff' }} />
+              <DumbbellIcon size={32} color="#ffffff" />
             </Box>
             <Typography
               variant="h4"
               sx={{
                 fontWeight: 800,
-                background: 'linear-gradient(135deg, #7C3AED 0%, #4F46E5 100%)',
+                background: 'linear-gradient(135deg, #6C63FF 0%, #9C94FF 100%)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
                 mb: 0.5,

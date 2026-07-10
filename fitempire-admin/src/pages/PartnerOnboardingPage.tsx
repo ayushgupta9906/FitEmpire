@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { 
   Building, MapPin, FileText, CheckCircle, Clock, Users, CreditCard, Landmark, Check
 } from 'lucide-react';
-import api from '../services/api';
+import api from '../api/axios';
 
 const STEPS = [
   { id: 1, title: 'Basic Details', icon: Building },

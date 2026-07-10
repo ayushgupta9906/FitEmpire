@@ -7,5 +7,7 @@ public enum MembershipType {
     ANNUAL,
     DAY_PASS,
     CREDIT_PACK,
-    CORPORATE
+    PLATINUM,
+    CORPORATE,
+    GYM_ACCESS
 }

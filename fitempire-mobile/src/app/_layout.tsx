@@ -10,7 +10,7 @@ import { AuthProvider, useAuth } from '@/services/auth-context';
 SplashScreen.preventAutoHideAsync();
 
 function AuthGuard() {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isLoading, user } = useAuth();
   const segments = useSegments();
   const router = useRouter();
   const { width, height } = useWindowDimensions();
@@ -21,13 +21,17 @@ function AuthGuard() {
     // Check if the user is in the auth group (or at the root /login)
     const isLoginScreen = segments[0] === 'login';
 
+    
     if (!isAuthenticated && !isLoginScreen) {
-      // Redirect unauthenticated users to login
       router.replace('/login');
     } else if (isAuthenticated && isLoginScreen) {
-      // Redirect authenticated users away from login
-      router.replace('/(tabs)');
+      if (user?.role === 'PARTNER') {
+        router.replace('/(partner-tabs)');
+      } else {
+        router.replace('/(tabs)');
+      }
     }
+    
   }, [isAuthenticated, isLoading, segments]);
 
   const isDesktopWeb = Platform.OS === 'web' && width > 480;

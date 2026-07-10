@@ -31,6 +31,7 @@ export default function LoginScreen() {
   const [phone, setPhone] = useState('');
   const [code, setCode] = useState('');
   const [step, setStep] = useState<1 | 2>(1);
+  const [loginMode, setLoginMode] = useState<'USER' | 'PARTNER'>('USER');
   const [loading, setLoading] = useState(false);
 
   const handleSendOtp = async () => {

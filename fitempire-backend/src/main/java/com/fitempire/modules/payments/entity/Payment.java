@@ -102,4 +102,7 @@ public class Payment {
 
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt = Instant.now();
+
+    @Column(name = "is_settled", nullable = false)
+    private boolean isSettled = false;
 }

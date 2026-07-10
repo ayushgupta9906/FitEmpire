@@ -27,4 +27,5 @@ public class UserDto {
     private Instant lastLoginAt;
     private Instant createdAt;
     private UserProfileDto profile;
+    private UUID gymId;
 }

@@ -6,5 +6,6 @@ public enum DocumentType {
     AADHAAR,
     BUSINESS_REGISTRATION,
     OWNER_ID,
+    TRADE_LICENSE,
     OTHER
 }

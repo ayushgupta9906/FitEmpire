@@ -62,9 +62,9 @@ public class GymOnboardingService {
             GymBranch branch = new GymBranch();
             branch.setGym(gym);
             branch.setName("Main Branch");
-            branch.setAddress(data.path("address").asText());
+            branch.setAddressLine1(data.path("address").asText());
             branch.setCity(data.path("city").asText());
-            branch.setZipCode(data.path("pincode").asText());
+            branch.setPincode(data.path("pincode").asText());
             branch.setCountry("India");
             // Set dummy coords for now
             branch.setLatitude(BigDecimal.valueOf(19.0760));
@@ -77,8 +77,8 @@ public class GymOnboardingService {
                 GymDocument doc = new GymDocument();
                 doc.setGym(gym);
                 doc.setDocumentType(DocumentType.TRADE_LICENSE);
-                doc.setFileUrl(tradeLicense);
-                doc.setStatus(VerificationStatus.PENDING);
+                doc.setFileUrl(data.path("businessRegUrl").asText());
+                doc.setVerified(false);
                 documentRepository.save(doc);
             }
             String panDoc = data.path("panDoc").asText("");
@@ -86,8 +86,8 @@ public class GymOnboardingService {
                 GymDocument doc2 = new GymDocument();
                 doc2.setGym(gym);
                 doc2.setDocumentType(DocumentType.OWNER_ID);
-                doc2.setFileUrl(panDoc);
-                doc2.setStatus(VerificationStatus.PENDING);
+                doc2.setFileUrl(data.path("ownerIdUrl").asText());
+                doc2.setVerified(false);
                 documentRepository.save(doc2);
             }
 

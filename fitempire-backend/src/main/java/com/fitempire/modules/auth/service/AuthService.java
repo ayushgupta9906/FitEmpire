@@ -10,11 +10,14 @@ import com.fitempire.modules.auth.entity.OtpPurpose;
 import com.fitempire.modules.auth.entity.RefreshToken;
 import com.fitempire.modules.auth.repository.OtpCodeRepository;
 import com.fitempire.modules.auth.repository.RefreshTokenRepository;
+import com.fitempire.modules.users.dto.UserDto;
 import com.fitempire.modules.users.entity.User;
 import com.fitempire.modules.users.entity.UserProfile;
 import com.fitempire.modules.users.entity.UserRole;
 import com.fitempire.modules.users.repository.UserProfileRepository;
 import com.fitempire.modules.users.repository.UserRepository;
+
+import java.util.List;
 import com.fitempire.security.jwt.JwtService;
 import com.fitempire.service.NotificationService;
 import com.fitempire.service.SmsService;
@@ -39,6 +42,7 @@ import java.util.UUID;
 public class AuthService {
 
     private final UserRepository userRepository;
+
     private final UserProfileRepository userProfileRepository;
     private final OtpCodeRepository otpCodeRepository;
     private final RefreshTokenRepository refreshTokenRepository;
@@ -282,21 +286,22 @@ public class AuthService {
 
     // ── Private Helpers ───────────────────────────────────────────────────────
 
+    
     private AuthResponse buildAuthResponse(User user, boolean isNewUser) {
         String accessToken = jwtService.generateAccessToken(user.getId(), user.getEmail(), user.getRole().name());
-        String refreshTokenValue = jwtService.generateRefreshToken(user.getId(), user.getEmail());
+        String refreshToken = jwtService.generateRefreshToken(user.getId(), user.getEmail());
 
-        // Persist refresh token
-        RefreshToken refreshToken = new RefreshToken();
-        refreshToken.setUser(user);
-        refreshToken.setTokenHash(hashToken(refreshTokenValue));
-        refreshToken.setExpiresAt(Instant.now().plusMillis(jwtService.getRefreshTokenExpiryMs()));
-        refreshTokenRepository.save(refreshToken);
+        // Save refresh token
+        RefreshToken rt = new RefreshToken();
+        rt.setUser(user);
+        rt.setTokenHash(refreshToken); // Using tokenHash field as defined in RefreshToken entity
+        rt.setExpiresAt(Instant.now().plusMillis(jwtService.getRefreshTokenExpiryMs()));
+        refreshTokenRepository.save(rt);
 
         return AuthResponse.builder()
                 .accessToken(accessToken)
-                .refreshToken(refreshTokenValue)
-                .expiresIn(jwtService.getAccessTokenExpiryMs() / 1000)
+                .refreshToken(refreshToken)
+                .expiresIn(jwtService.getAccessTokenExpiryMs())
                 .userId(user.getId())
                 .email(user.getEmail())
                 .firstName(user.getFirstName())
@@ -305,6 +310,7 @@ public class AuthService {
                 .newUser(isNewUser)
                 .build();
     }
+
 
     private User createPhoneOnlyUser(String phone) {
         User user = new User();

@@ -197,19 +197,19 @@ export default function AiWorkoutScreen() {
             {/* Macros */}
             <View style={styles.macrosRow}>
               <View style={styles.macroCol}>
-                <ThemedText style={styles.macroValue} style={{ color: '#6C63FF', fontWeight: '800' }}>
+                <ThemedText style={[styles.macroValue, { color: '#6C63FF', fontWeight: '800' }]}>
                   {aiData.nutritionPlan.macros.protein}
                 </ThemedText>
                 <ThemedText style={styles.macroLabel}>Protein</ThemedText>
               </View>
               <View style={styles.macroCol}>
-                <ThemedText style={styles.macroValue} style={{ color: '#43D787', fontWeight: '800' }}>
+                <ThemedText style={[styles.macroValue, { color: '#43D787', fontWeight: '800' }]}>
                   {aiData.nutritionPlan.macros.carbs}
                 </ThemedText>
                 <ThemedText style={styles.macroLabel}>Carbs</ThemedText>
               </View>
               <View style={styles.macroCol}>
-                <ThemedText style={styles.macroValue} style={{ color: '#FFB038', fontWeight: '800' }}>
+                <ThemedText style={[styles.macroValue, { color: '#FFB038', fontWeight: '800' }]}>
                   {aiData.nutritionPlan.macros.fats}
                 </ThemedText>
                 <ThemedText style={styles.macroLabel}>Fats</ThemedText>

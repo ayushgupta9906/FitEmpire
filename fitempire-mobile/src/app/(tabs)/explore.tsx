@@ -8,7 +8,7 @@ import * as Location from 'expo-location';
 import { ThemedText } from '@/components/themed-text';
 import { BottomTabInset, Colors } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
-import { MapPin } from 'lucide-react-native';
+import { MapPin, Search, Filter, Star, Dumbbell, Compass } from 'lucide-react-native';
 import { useColorScheme } from 'react-native';
 
 const CATEGORIES = ['All', 'GYM', 'MMA', 'BOXING', 'KICKBOXING', 'DANCE', 'SWIMMING', 'YOGA', 'SPORTS', 'GAMES'];

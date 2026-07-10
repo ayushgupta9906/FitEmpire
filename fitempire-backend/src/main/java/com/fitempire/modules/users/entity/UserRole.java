@@ -5,5 +5,6 @@ public enum UserRole {
     GYM_PARTNER,
     TRAINER,
     ADMIN,
-    SUPER_ADMIN
+    SUPER_ADMIN,
+    PARTNER
 }

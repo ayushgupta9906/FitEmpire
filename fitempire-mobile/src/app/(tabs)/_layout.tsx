@@ -1,6 +1,6 @@
 import { Tabs } from 'expo-router';
 import { useColorScheme } from 'react-native';
-import { Home, Compass, Wallet, User } from 'lucide-react-native';
+import { Home, Compass, Wallet, User, QrCode, CalendarHeart } from 'lucide-react-native';
 
 import { Colors } from '@/constants/theme';
 
@@ -31,6 +31,20 @@ export default function TabsLayout() {
         options={{
           title: 'Explore',
           tabBarIcon: ({ color, size }) => <Compass color={color} size={size} />,
+        }}
+      />
+      <Tabs.Screen
+        name="classes"
+        options={{
+          title: 'Classes',
+          tabBarIcon: ({ color, size }) => <CalendarHeart color={color} size={size} />,
+        }}
+      />
+      <Tabs.Screen
+        name="ticket"
+        options={{
+          title: 'Ticket',
+          tabBarIcon: ({ color, size }) => <QrCode color={color} size={size} />,
         }}
       />
       <Tabs.Screen

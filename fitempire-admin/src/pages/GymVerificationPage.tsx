@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, Typography, Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Chip } from '@mui/material';
 import { CheckCircle, PendingActions, Cancel } from '@mui/icons-material';
-import api from '../api';
+import api from '../api/axios';
 
 export function GymVerificationPage() {
   const [drafts, setDrafts] = useState<any[]>([]);

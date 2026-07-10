@@ -21,7 +21,7 @@ spring:
   # ── JPA ──────────────────────────────────────────────────
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update
     show-sql: false
     properties:
       hibernate:
@@ -37,9 +37,9 @@ spring:
 
   # ── Database ──────────────────────────────────────────────
   datasource:
-    url: ${DATABASE_URL:${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/fitempire?reWriteBatchedInserts=true&sslmode=disable}}
-    username: ${DB_USER:fitempire_user}
-    password: ${DB_PASSWORD:fitempire_secret}
+    url: ${DATABASE_URL:${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/fitempire}}
+    username: ${DB_USER:${SPRING_DATASOURCE_USERNAME:postgres}}
+    password: ${DB_PASSWORD:${SPRING_DATASOURCE_PASSWORD:postgres}}
     driver-class-name: org.postgresql.Driver
     hikari:
       pool-name: FitEmpirePool
@@ -52,7 +52,7 @@ spring:
 
   # ── Flyway ───────────────────────────────────────────────
   flyway:
-    enabled: true
+    enabled: false
     locations: classpath:db/migration
     baseline-on-migrate: true
     baseline-version: 0

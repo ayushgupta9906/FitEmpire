@@ -1,8 +1,13 @@
-package com.fitempire.modules.payments.controller;
+const fs = require('fs');
+const path = require('path');
+
+const controllerDir = path.join(__dirname, 'fitempire-backend', 'src', 'main', 'java', 'com', 'fitempire', 'modules', 'payments', 'controller');
+fs.mkdirSync(controllerDir, { recursive: true });
+
+const controllerContent = `package com.fitempire.modules.payments.controller;
 
 import com.fitempire.common.response.ApiResponse;
 import com.fitempire.modules.payments.service.RazorpayService;
-import com.fitempire.modules.coupons.service.CouponService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,24 +22,13 @@ import java.util.UUID;
 public class PaymentController {
 
     private final RazorpayService razorpayService;
-    private final CouponService couponService;
 
     @PostMapping("/create-order")
     public ResponseEntity<ApiResponse<String>> createOrder(@RequestBody Map<String, Object> payload) {
         UUID paymentId = UUID.fromString((String) payload.get("paymentId"));
         BigDecimal amount = new BigDecimal(payload.get("amount").toString());
-        String couponCode = (String) payload.get("couponCode");
-        UUID userId = UUID.fromString((String) payload.get("userId"));
-
-        BigDecimal discount = BigDecimal.ZERO;
-        if (couponCode != null && !couponCode.trim().isEmpty()) {
-            discount = couponService.validateAndCalculateDiscount(userId, couponCode, amount);
-        }
         
-        BigDecimal finalAmount = amount.subtract(discount);
-        if (finalAmount.compareTo(BigDecimal.ZERO) < 0) finalAmount = BigDecimal.ZERO;
-        
-        String orderId = razorpayService.createOrder(paymentId, finalAmount);
+        String orderId = razorpayService.createOrder(paymentId, amount);
         return ResponseEntity.ok(ApiResponse.success("Order created", orderId));
     }
 
@@ -54,3 +48,7 @@ public class PaymentController {
         }
     }
 }
+`;
+
+fs.writeFileSync(path.join(controllerDir, 'PaymentController.java'), controllerContent);
+console.log("Created PaymentController.java");

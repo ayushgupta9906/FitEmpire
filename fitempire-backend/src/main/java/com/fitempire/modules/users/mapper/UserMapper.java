@@ -10,6 +10,7 @@ import org.mapstruct.*;
 public interface UserMapper {
 
     @Mapping(target = "profile", source = "profile")
+    @Mapping(target = "gymId", ignore = true)
     UserDto toDto(User user);
 
     UserProfileDto toDto(UserProfile profile);

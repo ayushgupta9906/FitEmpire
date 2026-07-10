@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, Typography, Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Chip } from '@mui/material';
 import { AccountBalanceWallet, RequestQuote, CurrencyRupee } from '@mui/icons-material';
-import api from '../api';
+import api from '../api/axios';
 
 export function SettlementsPage() {
   const [settlements, setSettlements] = useState<any[]>([]);

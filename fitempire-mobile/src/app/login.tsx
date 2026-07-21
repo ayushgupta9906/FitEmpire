@@ -1,38 +1,32 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, TextInput, TouchableOpacity, ImageBackground, KeyboardAvoidingView, Platform, ScrollView, Alert } from 'react-native';
-import { useRouter } from 'expo-router';
+import { View, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, Dimensions, ActivityIndicator, Alert } from 'react-native';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useAuth } from '@/services/auth-context';
 import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
 import { Colors } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
-import { Phone, KeyRound, ChevronRight, ArrowLeft } from 'lucide-react-native';
-import Svg, { Path } from 'react-native-svg';
+import { ArrowRight, Phone, KeyRound, Dumbbell, Zap } from 'lucide-react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import { useColorScheme } from 'react-native';
 
-const DumbbellIcon = ({ size = 24, color = '#ffffff' }: { size?: number; color?: string }) => (
-  <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
-    <Path d="m6.5 6.5 11 11" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-    <Path d="m21 21-1-1" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-    <Path d="m3 3 1 1" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-    <Path d="m18 22 4-4" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-    <Path d="m2 6 4-4" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-    <Path d="m3 10 7-7" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-    <Path d="m14 21 7-7" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-    <Path d="M6.5 12.5 12.5 6.5" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-    <Path d="m11.5 17.5 6-6" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-  </Svg>
-);
+const { width, height } = Dimensions.get('window');
 
 export default function LoginScreen() {
   const router = useRouter();
+  const params = useLocalSearchParams();
+  const scheme = useColorScheme();
   const theme = useTheme();
-  const { requestOtp, verifyOtp } = useAuth();
+  const colors = Colors[scheme === 'unspecified' ? 'light' : scheme];
+  
+  const { requestOtp, verifyOtp, loginAsPartner } = useAuth();
 
   const [phone, setPhone] = useState('');
   const [code, setCode] = useState('');
   const [step, setStep] = useState<1 | 2>(1);
-  const [loginMode, setLoginMode] = useState<'USER' | 'PARTNER'>('USER');
+  const [loginMode, setLoginMode] = useState<'USER' | 'PARTNER'>((params.mode as any) || 'USER');
   const [loading, setLoading] = useState(false);
+  const [partnerEmail, setPartnerEmail] = useState('');
+  const [partnerPassword, setPartnerPassword] = useState('');
 
   const handleSendOtp = async () => {
     if (!phone || phone.length < 10) {
@@ -45,176 +39,314 @@ export default function LoginScreen() {
       if (otp) {
         setCode(otp);
         Alert.alert(
-          'Dev Mode Bypass',
-          `OTP received and auto-filled: ${otp}`,
-          [{ text: 'OK', onPress: () => setStep(2) }]
+          'OTP Received',
+          `Use this OTP to login: ${otp}`,
+          [{ text: 'Proceed', onPress: () => setStep(2) }]
         );
       } else {
         setStep(2);
       }
-    } catch (e: any) {
-      console.error(e);
-      // For local testing/dev, if backend fails or TWILIO SID is not configured, fall back to step 2 with mock OTP
-      Alert.alert(
-        'Dev Mode Bypass',
-        'OTP request failed. Proceeding with mock OTP: 123456.',
-        [{ text: 'OK', onPress: () => { setCode('123456'); setStep(2); } }]
-      );
+    } catch (err: any) {
+      Alert.alert('Error', err.response?.data?.message || 'Failed to send OTP.');
     } finally {
       setLoading(false);
     }
   };
 
   const handleVerifyOtp = async () => {
-    if (!code || code.length < 6) {
-      Alert.alert('Invalid OTP', 'Please enter the 6-digit verification code.');
+    if (!code || code.length < 4) return;
+    setLoading(true);
+    try {
+      await verifyOtp(phone, code);
+      router.replace('/(tabs)/explore');
+    } catch (err: any) {
+      Alert.alert('Error', err.response?.data?.message || 'Invalid OTP.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handlePartnerLogin = async () => {
+    if (!partnerEmail || !partnerPassword) {
+      Alert.alert('Error', 'Please enter both email and password.');
       return;
     }
     setLoading(true);
     try {
-      await verifyOtp(phone, code);
-      router.replace('/(tabs)');
-    } catch (e: any) {
-      console.error(e);
-      // Direct mock fallback for local testing
-      if (code === '123456') {
-        router.replace('/(tabs)');
-      } else {
-        Alert.alert('Verification Failed', 'Incorrect OTP code. Try 123456.');
-      }
+      await loginAsPartner(partnerEmail, partnerPassword);
+      router.replace('/(partner-tabs)');
+    } catch (err: any) {
+      Alert.alert('Error', err.response?.data?.message || 'Invalid credentials.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <ImageBackground
-      source={{ uri: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=1080&auto=format&fit=crop' }}
-      style={styles.backgroundImage}
+    <KeyboardAvoidingView 
+      style={{ flex: 1 }} 
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
-      <View style={styles.overlay}>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          style={styles.keyboardView}
-        >
-          <ScrollView contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled">
-            {/* Logo Section */}
-            <View style={styles.logoContainer}>
-              <View style={styles.logoBadge}>
-                <DumbbellIcon size={38} color="#ffffff" />
+      <LinearGradient
+        colors={[colors.background, colors.backgroundElement]}
+        style={styles.container}
+      >
+        {/* Dynamic Header */}
+        <View style={styles.header}>
+          <LinearGradient
+            colors={[colors.primary, colors.primaryDark]}
+            style={styles.logoContainer}
+          >
+            <Dumbbell color="#FFF" size={32} />
+          </LinearGradient>
+          <ThemedText style={styles.title}>FitEmpire</ThemedText>
+          <ThemedText style={styles.subtitle} themeColor="textSecondary">
+            {loginMode === 'USER' ? 'Your premium fitness journey starts here.' : 'Manage your business beautifully.'}
+          </ThemedText>
+        </View>
+
+        {/* Toggle Mode */}
+        <View style={[styles.toggleContainer, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+          <TouchableOpacity 
+            style={[styles.toggleButton, loginMode === 'USER' && { backgroundColor: colors.primary }]}
+            onPress={() => { setLoginMode('USER'); setStep(1); }}
+          >
+            <ThemedText style={[styles.toggleText, loginMode === 'USER' && { color: '#FFF' }]}>Member</ThemedText>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={[styles.toggleButton, loginMode === 'PARTNER' && { backgroundColor: colors.primary }]}
+            onPress={() => { setLoginMode('PARTNER'); setStep(1); }}
+          >
+            <ThemedText style={[styles.toggleText, loginMode === 'PARTNER' && { color: '#FFF' }]}>Partner</ThemedText>
+          </TouchableOpacity>
+        </View>
+
+        {/* Form Content */}
+        <View style={styles.formContainer}>
+          {loginMode === 'USER' ? (
+            step === 1 ? (
+              <View style={styles.inputWrapper}>
+                <ThemedText style={styles.label}>Mobile Number</ThemedText>
+                <View style={[styles.inputContainer, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+                  <Phone color={colors.textSecondary} size={20} style={styles.inputIcon} />
+                  <ThemedText style={styles.prefix}>+91</ThemedText>
+                  <TextInput
+                    style={[styles.input, { color: colors.text }]}
+                    placeholder="Enter your phone number"
+                    placeholderTextColor={colors.textSecondary}
+                    keyboardType="number-pad"
+                    maxLength={10}
+                    value={phone}
+                    onChangeText={setPhone}
+                  />
+                </View>
+                <TouchableOpacity 
+                  style={[styles.primaryButton, { backgroundColor: colors.primary }]}
+                  onPress={handleSendOtp}
+                  disabled={loading}
+                >
+                  {loading ? <ActivityIndicator color="#FFF" /> : (
+                    <>
+                      <ThemedText style={styles.buttonText}>Continue</ThemedText>
+                      <ArrowRight color="#FFF" size={20} />
+                    </>
+                  )}
+                </TouchableOpacity>
               </View>
-              <ThemedText style={styles.logoText}>FitEmpire</ThemedText>
-              <ThemedText style={styles.logoTagline}>India's Premium Fitness Ecosystem</ThemedText>
-            </View>
-
-            {/* Login Card */}
-            <View style={[styles.card, { backgroundColor: 'rgba(33, 34, 37, 0.85)' }]}>
-              {step === 1 ? (
-                <View>
-                  <ThemedText style={styles.cardTitle}>Welcome to the Empire</ThemedText>
-                  <ThemedText style={styles.cardSubtitle}>Enter your phone number to get started</ThemedText>
-
-                  <View style={[styles.inputContainer, { borderColor: 'rgba(255,255,255,0.15)' }]}>
-                    <Phone size={20} color="rgba(255,255,255,0.6)" style={styles.inputIcon} />
-                    <TextInput
-                      style={styles.input}
-                      placeholder="Mobile Number"
-                      placeholderTextColor="rgba(255,255,255,0.4)"
-                      keyboardType="phone-pad"
-                      maxLength={10}
-                      value={phone}
-                      onChangeText={setPhone}
-                    />
-                  </View>
-
-                  <TouchableOpacity style={styles.btn} onPress={handleSendOtp} disabled={loading}>
-                    <ThemedText style={styles.btnText}>{loading ? 'Sending...' : 'Send OTP'}</ThemedText>
-                    <ChevronRight size={18} color="#ffffff" />
-                  </TouchableOpacity>
+            ) : (
+              <View style={styles.inputWrapper}>
+                <ThemedText style={styles.label}>Enter OTP</ThemedText>
+                <ThemedText style={styles.hint} themeColor="textSecondary">
+                  Sent securely to +91 {phone}
+                </ThemedText>
+                <View style={[styles.inputContainer, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+                  <KeyRound color={colors.textSecondary} size={20} style={styles.inputIcon} />
+                  <TextInput
+                    style={[styles.input, { color: colors.text, fontSize: 20, letterSpacing: 8, fontWeight: '700' }]}
+                    placeholder="0000"
+                    placeholderTextColor={colors.textSecondary}
+                    keyboardType="number-pad"
+                    maxLength={6}
+                    value={code}
+                    onChangeText={setCode}
+                    autoFocus
+                  />
                 </View>
-              ) : (
-                <View>
-                  <TouchableOpacity style={styles.backLink} onPress={() => setStep(1)}>
-                    <ArrowLeft size={16} color="#6C63FF" />
-                    <ThemedText style={styles.backLinkText}>Change Number</ThemedText>
-                  </TouchableOpacity>
-
-                  <ThemedText style={styles.cardTitle}>Verification</ThemedText>
-                  <ThemedText style={styles.cardSubtitle}>Enter the 6-digit OTP sent to +91 {phone}</ThemedText>
-
-                  <View style={[styles.inputContainer, { borderColor: 'rgba(255,255,255,0.15)' }]}>
-                    <KeyRound size={20} color="rgba(255,255,255,0.6)" style={styles.inputIcon} />
-                    <TextInput
-                      style={styles.input}
-                      placeholder="6-Digit OTP"
-                      placeholderTextColor="rgba(255,255,255,0.4)"
-                      keyboardType="number-pad"
-                      maxLength={6}
-                      value={code}
-                      onChangeText={setCode}
-                    />
-                  </View>
-
-                  <TouchableOpacity style={styles.btn} onPress={handleVerifyOtp} disabled={loading}>
-                    <ThemedText style={styles.btnText}>{loading ? 'Verifying...' : 'Verify & Login'}</ThemedText>
-                    <ChevronRight size={18} color="#ffffff" />
-                  </TouchableOpacity>
-                </View>
-              )}
+                <TouchableOpacity 
+                  style={[styles.primaryButton, { backgroundColor: colors.primary }]}
+                  onPress={handleVerifyOtp}
+                  disabled={loading}
+                >
+                  {loading ? <ActivityIndicator color="#FFF" /> : (
+                    <>
+                      <ThemedText style={styles.buttonText}>Verify & Secure Login</ThemedText>
+                      <Zap color="#FFF" size={20} />
+                    </>
+                  )}
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.textButton} onPress={() => setStep(1)}>
+                  <ThemedText style={[styles.textButtonText, { color: colors.primary }]}>Change Number</ThemedText>
+                </TouchableOpacity>
+              </View>
+            )
+          ) : (
+            <View style={styles.inputWrapper}>
+              <View style={[styles.inputContainer, { backgroundColor: colors.surface, borderColor: colors.border, marginBottom: 16 }]}>
+                <TextInput
+                  style={[styles.input, { color: colors.text }]}
+                  placeholder="Business Email"
+                  placeholderTextColor={colors.textSecondary}
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  value={partnerEmail}
+                  onChangeText={setPartnerEmail}
+                />
+              </View>
+              <View style={[styles.inputContainer, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+                <TextInput
+                  style={[styles.input, { color: colors.text }]}
+                  placeholder="Password"
+                  placeholderTextColor={colors.textSecondary}
+                  secureTextEntry
+                  value={partnerPassword}
+                  onChangeText={setPartnerPassword}
+                />
+              </View>
+              <TouchableOpacity 
+                style={[styles.primaryButton, { backgroundColor: colors.primary, marginTop: 24 }]}
+                onPress={handlePartnerLogin}
+                disabled={loading}
+              >
+                {loading ? <ActivityIndicator color="#FFF" /> : <ThemedText style={styles.buttonText}>Access Dashboard</ThemedText>}
+              </TouchableOpacity>
             </View>
-          </ScrollView>
-        </KeyboardAvoidingView>
-      </View>
-    </ImageBackground>
+          )}
+        </View>
+
+      </LinearGradient>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
-  backgroundImage: { flex: 1 },
-  overlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.65)' },
-  keyboardView: { flex: 1 },
-  scrollContent: { flexGrow: 1, justifyContent: 'center', padding: 24 },
-  logoContainer: { alignItems: 'center', marginBottom: 32 },
-  logoBadge: {
+  container: {
+    flex: 1,
+    paddingHorizontal: 24,
+    justifyContent: 'center',
+  },
+  header: {
+    alignItems: 'center',
+    marginBottom: 40,
+    marginTop: -60,
+  },
+  logoContainer: {
     width: 72,
     height: 72,
-    borderRadius: 19,
-    backgroundColor: '#6C63FF',
-    justifyContent: 'center',
+    borderRadius: 24,
     alignItems: 'center',
-    shadowColor: '#6C63FF',
+    justifyContent: 'center',
+    marginBottom: 20,
+    shadowColor: '#4F46E5',
     shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.45,
+    shadowOpacity: 0.3,
     shadowRadius: 16,
-    elevation: 8,
+    elevation: 10,
+    transform: [{ rotate: '-10deg' }]
   },
-  logoText: { fontSize: 32, fontWeight: '800', color: '#ffffff', marginTop: 16 },
-  logoTagline: { fontSize: 13, color: 'rgba(255,255,255,0.6)', marginTop: 4, letterSpacing: 0.5 },
-  card: { borderRadius: 24, padding: 24, backdropFilter: 'blur(20px)' },
-  cardTitle: { fontSize: 20, fontWeight: '800', color: '#ffffff', marginBottom: 8 },
-  cardSubtitle: { fontSize: 13, color: 'rgba(255,255,255,0.6)', marginBottom: 24 },
+  title: {
+    fontSize: 32,
+    fontWeight: '900',
+    letterSpacing: -0.5,
+    marginBottom: 8,
+  },
+  subtitle: {
+    fontSize: 16,
+    fontWeight: '500',
+    textAlign: 'center',
+  },
+  toggleContainer: {
+    flexDirection: 'row',
+    height: 52,
+    borderRadius: 26,
+    borderWidth: 1,
+    padding: 4,
+    marginBottom: 32,
+  },
+  toggleButton: {
+    flex: 1,
+    borderRadius: 22,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  toggleText: {
+    fontSize: 15,
+    fontWeight: '700',
+  },
+  formContainer: {
+    width: '100%',
+  },
+  inputWrapper: {
+    width: '100%',
+  },
+  label: {
+    fontSize: 14,
+    fontWeight: '700',
+    marginBottom: 8,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+  },
+  hint: {
+    fontSize: 14,
+    marginBottom: 16,
+  },
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    height: 60,
+    borderRadius: 16,
     borderWidth: 1,
-    borderRadius: 14,
-    backgroundColor: 'rgba(255,255,255,0.06)',
     paddingHorizontal: 16,
-    height: 56,
-    marginBottom: 20,
   },
-  inputIcon: { marginRight: 12 },
-  input: { flex: 1, color: '#ffffff', fontSize: 16, fontWeight: '500' },
-  btn: {
+  inputIcon: {
+    marginRight: 12,
+  },
+  prefix: {
+    fontSize: 16,
+    fontWeight: '700',
+    marginRight: 8,
+  },
+  input: {
+    flex: 1,
+    fontSize: 16,
+    fontWeight: '600',
+    height: '100%',
+  },
+  primaryButton: {
     flexDirection: 'row',
-    backgroundColor: '#6C63FF',
-    height: 56,
-    borderRadius: 14,
-    justifyContent: 'center',
     alignItems: 'center',
-    gap: 8,
+    justifyContent: 'center',
+    height: 60,
+    borderRadius: 16,
+    marginTop: 24,
+    shadowColor: '#4F46E5',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.25,
+    shadowRadius: 12,
+    elevation: 8,
   },
-  btnText: { color: '#ffffff', fontSize: 16, fontWeight: '700' },
-  backLink: { flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 16 },
-  backLinkText: { color: '#6C63FF', fontSize: 13, fontWeight: '600' },
+  buttonText: {
+    color: '#FFF',
+    fontSize: 18,
+    fontWeight: '700',
+    marginRight: 8,
+  },
+  textButton: {
+    alignItems: 'center',
+    marginTop: 20,
+    padding: 10,
+  },
+  textButtonText: {
+    fontSize: 15,
+    fontWeight: '600',
+  }
 });

@@ -18,13 +18,12 @@ function AuthGuard() {
   useEffect(() => {
     if (isLoading) return;
     
-    // Check if the user is in the auth group (or at the root /login)
     const isLoginScreen = segments[0] === 'login';
+    const isRootScreen = segments.length === 0 || (segments.length === 1 && segments[0] === '');
 
-    
-    if (!isAuthenticated && !isLoginScreen) {
-      router.replace('/login');
-    } else if (isAuthenticated && isLoginScreen) {
+    if (!isAuthenticated && !isLoginScreen && !isRootScreen) {
+      router.replace('/');
+    } else if (isAuthenticated && (isLoginScreen || isRootScreen)) {
       if (user?.role === 'PARTNER') {
         router.replace('/(partner-tabs)');
       } else {

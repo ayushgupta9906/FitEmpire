@@ -50,6 +50,7 @@ public class AwsConfig {
                         return null;
                     }
             );
+            
         }
         return S3Client.builder()
                 .region(Region.of(region))

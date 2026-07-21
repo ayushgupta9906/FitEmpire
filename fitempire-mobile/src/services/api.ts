@@ -2,8 +2,11 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Platform } from 'react-native';
 
-const BASE_URL = 'https://ayush150152-fitempire-api.hf.space/api/v1';
+import Constants from 'expo-constants';
 
+const debuggerHost = Constants.expoConfig?.hostUri;
+const localhost = debuggerHost?.split(':')[0] || 'localhost';
+const BASE_URL = process.env.EXPO_PUBLIC_API_URL || `http://${localhost}:8080/api/v1`;
 export const apiClient = axios.create({
   baseURL: BASE_URL,
   timeout: 15000,

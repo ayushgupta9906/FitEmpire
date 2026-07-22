@@ -1,16 +1,41 @@
-import React from 'react';
-import { View, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, ScrollView, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
+import { useRouter } from 'expo-router';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { Calendar, Clock, MapPin, User as UserIcon } from 'lucide-react-native';
-
-const dummyClasses = [
-  { id: 1, name: 'Zumba Masterclass', trainer: 'Rahul Sharma', time: '05:00 PM', duration: '60 min', spots: 5, category: 'Cardio', img: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&q=80&w=300&h=200' },
-  { id: 2, name: 'Power Yoga', trainer: 'Anjali Desai', time: '07:00 AM', duration: '45 min', spots: 2, category: 'Flexibility', img: 'https://images.unsplash.com/photo-1599901860904-17e08627cba4?auto=format&fit=crop&q=80&w=300&h=200' },
-  { id: 3, name: 'HIIT Explosion', trainer: 'Vikram Singh', time: '06:30 PM', duration: '45 min', spots: 12, category: 'Strength', img: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&q=80&w=300&h=200' }
-];
+import { classesApi } from '@/services/api';
 
 export default function ClassesScreen() {
+  const router = useRouter();
+  const [classesList, setClassesList] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedCategory, setSelectedCategory] = useState('All');
+
+  useEffect(() => {
+    fetchClasses();
+  }, []);
+
+  const fetchClasses = async () => {
+    setLoading(true);
+    try {
+      const today = new Date().toISOString().split('T')[0];
+      const res = await classesApi.getSchedules('', today);
+      setClassesList(res.data.data || []);
+    } catch (e) {
+      console.warn("Failed to load classes:", e);
+      setClassesList([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const categories = ['All', 'Cardio', 'Strength', 'Yoga', 'Zumba'];
+
+  const filteredClasses = selectedCategory === 'All'
+    ? classesList
+    : classesList.filter((c: any) => c.fitnessClass?.category?.toUpperCase() === selectedCategory.toUpperCase());
+
   return (
     <ThemedView style={styles.container}>
       <View style={styles.header}>
@@ -19,44 +44,64 @@ export default function ClassesScreen() {
       </View>
 
       <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.filterScroll} contentContainerStyle={styles.filterContent}>
-        {['All', 'Cardio', 'Strength', 'Yoga', 'Zumba'].map((cat, i) => (
-          <TouchableOpacity key={i} style={[styles.filterChip, i === 0 && styles.filterChipActive]}>
-            <ThemedText style={[styles.filterText, i === 0 && styles.filterTextActive]}>{cat}</ThemedText>
+        {categories.map((cat) => (
+          <TouchableOpacity
+            key={cat}
+            style={[styles.filterChip, selectedCategory === cat && styles.filterChipActive]}
+            onPress={() => setSelectedCategory(cat)}
+          >
+            <ThemedText style={[styles.filterText, selectedCategory === cat && styles.filterTextActive]}>{cat}</ThemedText>
           </TouchableOpacity>
         ))}
       </ScrollView>
 
-      <ScrollView contentContainerStyle={styles.list}>
-        {dummyClasses.map((item) => (
-          <View key={item.id} style={styles.classCard}>
-            <Image source={{ uri: item.img }} style={styles.classImg} />
-            <View style={styles.classContent}>
-              <View style={styles.classHeaderRow}>
-                <ThemedText style={styles.className}>{item.name}</ThemedText>
-                <View style={styles.categoryBadge}>
-                  <ThemedText style={styles.categoryTxt}>{item.category}</ThemedText>
+      {loading ? (
+        <ActivityIndicator size="large" color="#6C63FF" style={{ marginTop: 40 }} />
+      ) : (
+        <ScrollView contentContainerStyle={styles.list}>
+          {filteredClasses.length === 0 ? (
+            <ThemedText style={{ textAlign: 'center', marginTop: 40, color: '#6B7280' }}>
+              No classes scheduled for today.
+            </ThemedText>
+          ) : (
+            filteredClasses.map((item: any) => (
+              <View key={item.id} style={styles.classCard}>
+                <Image
+                  source={{ uri: item.fitnessClass?.imageUrl || 'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&q=80&w=300&h=200' }}
+                  style={styles.classImg}
+                />
+                <View style={styles.classContent}>
+                  <View style={styles.classHeaderRow}>
+                    <ThemedText style={styles.className}>{item.fitnessClass?.name || 'Fitness Class'}</ThemedText>
+                    <View style={styles.categoryBadge}>
+                      <ThemedText style={styles.categoryTxt}>{item.fitnessClass?.category || 'General'}</ThemedText>
+                    </View>
+                  </View>
+                  
+                  <View style={styles.infoRow}>
+                    <UserIcon size={14} color="#6B7280" />
+                    <ThemedText style={styles.infoTxt}>{item.trainer?.user?.firstName || 'Certified Trainer'}</ThemedText>
+                  </View>
+                  <View style={styles.infoRow}>
+                    <Clock size={14} color="#6B7280" />
+                    <ThemedText style={styles.infoTxt}>{item.startTime} - {item.endTime}</ThemedText>
+                  </View>
+
+                  <View style={styles.footerRow}>
+                    <ThemedText style={styles.spots}>{item.availableCapacity || 10} spots left</ThemedText>
+                    <TouchableOpacity
+                      style={styles.bookBtn}
+                      onPress={() => router.push({ pathname: '/booking', params: { gymId: item.gymId, branchId: item.branchId, bookingType: 'CLASS' } })}
+                    >
+                      <ThemedText style={styles.bookTxt}>Book Slot</ThemedText>
+                    </TouchableOpacity>
+                  </View>
                 </View>
               </View>
-              
-              <View style={styles.infoRow}>
-                <UserIcon size={14} color="#6B7280" />
-                <ThemedText style={styles.infoTxt}>{item.trainer}</ThemedText>
-              </View>
-              <View style={styles.infoRow}>
-                <Clock size={14} color="#6B7280" />
-                <ThemedText style={styles.infoTxt}>{item.time} ({item.duration})</ThemedText>
-              </View>
-
-              <View style={styles.footerRow}>
-                <ThemedText style={styles.spots}>{item.spots} spots left</ThemedText>
-                <TouchableOpacity style={styles.bookBtn}>
-                  <ThemedText style={styles.bookTxt}>Book Slot</ThemedText>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
-        ))}
-      </ScrollView>
+            ))
+          )}
+        </ScrollView>
+      )}
     </ThemedView>
   );
 }

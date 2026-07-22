@@ -30,30 +30,8 @@ export default function AiWorkoutScreen() {
       const res = await aiApi.getWorkoutPlan();
       setAiData(res.data.data);
     } catch (e) {
-      console.warn("Failed to load real AI plan (using fallback):", e);
-      // Fallback
-      setAiData({
-        workoutPlan: {
-          title: "Lean Muscle Hypertrophy Program",
-          goal: "Muscle Building & Toning",
-          exercises: [
-            { name: "Incline Dumbbell Press", sets: 4, reps: "10-12", note: "Keep elbow at 45 degrees" },
-            { name: "Weighted Pull-Ups", sets: 3, reps: "8-10", note: "Full range of motion" },
-            { name: "Barbell Back Squats", sets: 4, reps: "8", note: "Control down tempo" },
-            { name: "Dumbbell Romanian Deadlifts", sets: 3, reps: "12", note: "Hinge from hips" }
-          ]
-        },
-        nutritionPlan: {
-          calories: 2400,
-          macros: { protein: "160g", carbs: "220g", fats: "75g" },
-          meals: {
-            breakfast: "3 Scrambled Eggs + 2 Slices Whole Wheat Toast + 1 Banana",
-            lunch: "150g Grilled Chicken Breast + 1 Cup Brown Rice + Mixed Sautéed Greens",
-            snack: "Whey Protein Shake + 1/4 Cup Almonds",
-            dinner: "150g Baked Salmon + Sweet Potato Mash + Asparagus"
-          }
-        }
-      });
+      console.warn("Failed to load AI plan:", e);
+      Alert.alert('Error', 'Unable to fetch AI coach data. Please try again later.');
     } finally {
       setLoading(false);
     }
@@ -66,21 +44,8 @@ export default function AiWorkoutScreen() {
       setAiData((prev: any) => ({ ...prev, workoutPlan: res.data.data }));
       Alert.alert("Workout Refreshed", "AI has generated a new workout regime based on your bio metrics.");
     } catch (e) {
-      // Mock workout refresh
-      setAiData((prev: any) => ({
-        ...prev,
-        workoutPlan: {
-          title: "HIIT & Core Conditioning Blast",
-          goal: "Fat Loss & Metabolic Acceleration",
-          exercises: [
-            { name: "Kettlebell Swings", sets: 4, reps: "45 seconds", note: "Snappy hip drive" },
-            { name: "Pushups to Renegade Row", sets: 3, reps: "10 per side", note: "Minimize hip sway" },
-            { name: "Goblet Squats", sets: 4, reps: "15", note: "Continuous movement" },
-            { name: "Hanging Leg Raises", sets: 3, reps: "12", note: "Strict form, no swinging" }
-          ]
-        }
-      }));
-      Alert.alert("Workout Refreshed (Mock)", "New conditioning routine loaded.");
+      console.warn("Failed to generate workout:", e);
+      Alert.alert('Error', 'Could not generate workout plan.');
     } finally {
       setGeneratingWorkout(false);
     }
@@ -93,21 +58,8 @@ export default function AiWorkoutScreen() {
       setAiData((prev: any) => ({ ...prev, nutritionPlan: res.data.data }));
       Alert.alert("Nutrition Refreshed", "AI has generated a new macro intake schedule.");
     } catch (e) {
-      // Mock nutrition refresh
-      setAiData((prev: any) => ({
-        ...prev,
-        nutritionPlan: {
-          calories: 2100,
-          macros: { protein: "140g", carbs: "190g", fats: "65g" },
-          meals: {
-            breakfast: "Oatmeal with Almond Milk + Blueberries + Scoop of Whey",
-            lunch: "150g Baked Cod Fish + Quinoa Quarters + Steamed Broccoli",
-            snack: "Greek Yogurt 0% + Apple Slices",
-            dinner: "Paneer Stir Fry (150g) with Bell Peppers & Spinach"
-          }
-        }
-      }));
-      Alert.alert("Nutrition Refreshed (Mock)", "Vegetarian/Lean nutrition guide loaded.");
+      console.warn("Failed to generate nutrition:", e);
+      Alert.alert('Error', 'Could not generate nutrition plan.');
     } finally {
       setGeneratingNutrition(false);
     }

@@ -29,30 +29,8 @@ export default function MyBookingsScreen() {
       const res = await bookingsApi.getMyBookings();
       setBookings(res.data.data.content || []);
     } catch (e) {
-      console.warn("Failed to load real bookings (using fallback):", e);
-      // Fallback bookings
-      setBookings([
-        {
-          id: 'b1',
-          gymName: "Gold's Gym Elite",
-          branchName: "Andheri West Central",
-          bookingType: 'CLASS',
-          bookingDate: new Date().toISOString().split('T')[0],
-          startTime: '08:00:00',
-          endTime: '09:00:00',
-          status: 'CONFIRMED',
-        },
-        {
-          id: 'b2',
-          gymName: "Strike Force MMA",
-          branchName: "Bandra East Hub",
-          bookingType: 'GYM',
-          bookingDate: '2026-07-05',
-          startTime: '17:00:00',
-          endTime: '19:00:00',
-          status: 'COMPLETED',
-        }
-      ]);
+      console.warn("Failed to load bookings:", e);
+      setBookings([]);
     } finally {
       setLoading(false);
     }
@@ -73,11 +51,7 @@ export default function MyBookingsScreen() {
               Alert.alert('Success', 'Booking cancelled.');
               fetchBookings();
             } catch (err) {
-              // Dev Fallback
-              setBookings((prev) =>
-                prev.map((b) => (b.id === bookingId ? { ...b, status: 'CANCELLED' } : b))
-              );
-              Alert.alert('Success', 'Booking cancelled.');
+              Alert.alert('Error', 'Failed to cancel booking. Please try again.');
             }
           },
         },

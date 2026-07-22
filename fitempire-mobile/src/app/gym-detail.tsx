@@ -28,108 +28,27 @@ export default function GymDetailScreen() {
   const fetchGymDetails = async () => {
     setLoading(true);
     try {
-      // Mock details fallback in case network fails
-      const fallbackGym = {
-        id: id || '1',
-        name: id === '2' ? 'Strike Force MMA' : id === '3' ? 'Rhythm & Beats Studio' : "Gold's Gym Elite",
-        category: id === '2' ? 'MMA' : id === '3' ? 'DANCE' : 'GYM',
-        description: "India's state-of-the-art premium fitness destination. Featuring international equipment, celebrity trainers, custom steam chambers, and tailored nutrition consultation services to elevate your limits.",
-        avgRating: 4.8,
-        totalReviews: 320,
-        email: 'info@goldsgym.in',
-        phone: '+91 98765 43210',
-        websiteUrl: 'https://goldsgym.in',
-        logoUrl: 'https://images.unsplash.com/photo-1571731979149-75be79725b6c?w=100&auto=format&fit=crop',
-        coverImageUrl: id === '2' ? 'https://images.unsplash.com/photo-1599058917212-d750089bc07e?w=800&auto=format&fit=crop' : 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&auto=format&fit=crop',
-      };
-
-      const fallbackBranches = [
-        { id: 'b1', name: 'Andheri West Central', city: 'Mumbai', addressLine1: '4th Floor, Link Road, Andheri West', capacity: 150 },
-        { id: 'b2', name: 'Bandra East Hub', city: 'Mumbai', addressLine1: 'BKC Corporate Block G, Bandra East', capacity: 100 }
-      ];
-
-      const fallbackPlans = [
-        { id: 'p1', name: 'Monthly Unlimited Elite', price: 2999, durationDays: 30, type: 'UNLIMITED', description: 'Access to all weights, cardio, steam room & locker facilities.' },
-        { id: 'p2', name: 'Annual Golden Access Pass', price: 19999, durationDays: 365, type: 'UNLIMITED', description: 'VIP entrance, priority bookings, and free personal trainer support.' },
-      ];
-
-      // API calls
-      try {
-        if (id) {
-          const gymRes = await gymsApi.getGymDetails(id);
-          setGym(gymRes.data.data);
-          
-          const branchesRes = await gymsApi.getBranches(id);
-          setBranches(branchesRes.data.data || []);
-        } else {
-          setGym(fallbackGym);
-          setBranches(fallbackBranches);
-        }
-      } catch (err) {
-        setGym(fallbackGym);
-        setBranches(fallbackBranches);
+      if (id) {
+        const gymRes = await gymsApi.getGymDetails(id);
+        setGym(gymRes.data.data);
+        
+        const branchesRes = await gymsApi.getBranches(id);
+        setBranches(branchesRes.data.data || []);
       }
 
-      try {
-        const plansRes = await membershipsApi.getPlans();
-        const activePlans = plansRes.data.data || [];
-        setPlans(activePlans.filter((p: any) => p.gymId === id || !id) || fallbackPlans);
-      } catch (err) {
-        setPlans(fallbackPlans);
-      }
+      const plansRes = await membershipsApi.getPlans();
+      const activePlans = plansRes.data.data || [];
+      setPlans(activePlans.filter((p: any) => p.gymId === id || !id));
 
     } catch (e) {
       console.warn(e);
+      Alert.alert('Error', 'Failed to load gym details');
     } finally {
       setLoading(false);
     }
   };
 
-  
-  const handlePurchase = async (plan: any) => {
-    try {
-      Alert.alert("Initializing Checkout", "Contacting Razorpay...");
-      
-      // 1. Create Order Backend
-      const orderRes = await fetch('http://localhost:8080/api/v1/payments/create-order', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          paymentId: '11111111-1111-1111-1111-111111111111',
-          amount: plan.price
-        })
-      });
-      const orderData = await orderRes.json();
-      const orderId = orderData.data;
 
-      // 2. Simulate Razorpay UI (Since native module isn't linked)
-      setTimeout(async () => {
-        Alert.alert("Razorpay Success", "Payment captured. Verifying signature on server...");
-        
-        // 3. Verify Payment Backend
-        const verifyRes = await fetch('http://localhost:8080/api/v1/payments/verify', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            razorpay_order_id: orderId,
-            razorpay_payment_id: "pay_mock_" + Math.floor(Math.random()*10000),
-            razorpay_signature: "mock_signature_string",
-            internal_payment_id: '11111111-1111-1111-1111-111111111111'
-          })
-        });
-        const verifyData = await verifyRes.json();
-        if(verifyData.success) {
-            Alert.alert("Success!", "Membership Purchased Successfully!");
-        } else {
-            Alert.alert("Error", "Payment verification failed.");
-        }
-      }, 1500);
-
-    } catch (e) {
-      console.error(e);
-      Alert.alert("Error", "Could not complete purchase.");
-    }
-  };
 
   if (loading) {
     return (

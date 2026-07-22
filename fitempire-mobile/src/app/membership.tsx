@@ -40,13 +40,8 @@ export default function MembershipScreen() {
         setSelectedPlan(planList[0]);
       }
     } catch (e) {
-      console.warn("Failed to load real plans, using fallback:", e);
-      const fallbackPlans = [
-        { id: 'p1', name: 'Monthly Unlimited Elite', price: 2999, durationDays: 30, type: 'UNLIMITED', description: 'Access to all weights, cardio, steam room & locker facilities.' },
-        { id: 'p2', name: 'Annual Golden Access Pass', price: 19999, durationDays: 365, type: 'UNLIMITED', description: 'VIP entrance, priority bookings, and free personal trainer support.' },
-      ];
-      setPlans(fallbackPlans);
-      setSelectedPlan(planId ? fallbackPlans.find(p => p.id === planId) || fallbackPlans[0] : fallbackPlans[0]);
+      console.warn("Failed to load plans:", e);
+      Alert.alert('Error', 'Failed to load membership plans.');
     } finally {
       setLoading(false);
     }
@@ -56,14 +51,14 @@ export default function MembershipScreen() {
     if (!selectedPlan) return;
     setPurchasing(true);
     try {
-      // Step 1: Initiate mock order
+      // Step 1: Initiate order
       const orderRes = await paymentsApi.createOrder(selectedPlan.id);
       const { paymentId, razorpayOrderId } = orderRes.data.data;
 
-      // Simulate payment gateway callback success
+      // Simulate real razorpay UI interaction by using Alert (since we don't have the Razorpay SDK installed in this MVP)
       Alert.alert(
-        'Confirm Mock Payment',
-        `Initiating mock transaction of ₹${selectedPlan.price} via Razorpay Gate.`,
+        'Razorpay Checkout (Test Mode)',
+        `Pay ₹${selectedPlan.price} for ${selectedPlan.name}?`,
         [
           { text: 'Cancel', style: 'cancel', onPress: () => setPurchasing(false) },
           {
@@ -73,18 +68,15 @@ export default function MembershipScreen() {
                 // Step 2: verify signature
                 await paymentsApi.verifyPayment({
                   paymentId,
-                  razorpayOrderId: razorpayOrderId || 'order_mock_id_123',
-                  razorpayPaymentId: 'pay_mock_id_456',
-                  razorpaySignature: 'sig_mock_789',
+                  razorpayOrderId: razorpayOrderId,
+                  razorpayPaymentId: 'pay_test_' + Math.random().toString(36).substring(7),
+                  razorpaySignature: 'sig_test_dummy',
                 });
                 Alert.alert('Payment Successful!', 'Your FitPass membership is now active.', [
                   { text: 'Great!', onPress: () => router.replace('/(tabs)') }
                 ]);
               } catch (verifyErr) {
-                // Fallback simulation
-                Alert.alert('Payment Successful! (Mock)', 'Membership activated.', [
-                  { text: 'OK', onPress: () => router.replace('/(tabs)') }
-                ]);
+                Alert.alert('Payment Failed', 'Payment verification failed.');
               } finally {
                 setPurchasing(false);
               }
@@ -93,24 +85,9 @@ export default function MembershipScreen() {
         ]
       );
     } catch (e) {
-      console.warn(e);
-      // Fallback checkout simulation
-      Alert.alert(
-        'Dev Mode Checkout',
-        `Initiating payment simulation for ₹${selectedPlan.price}.`,
-        [
-          { text: 'Cancel', style: 'cancel', onPress: () => setPurchasing(false) },
-          {
-            text: 'Complete Payment',
-            onPress: () => {
-              Alert.alert('Payment Successful!', 'Your membership is active.', [
-                { text: 'OK', onPress: () => router.replace('/(tabs)') }
-              ]);
-              setPurchasing(false);
-            }
-          }
-        ]
-      );
+      console.warn("Payment error", e);
+      Alert.alert('Error', 'Failed to initiate payment checkout.');
+      setPurchasing(false);
     }
   };
 

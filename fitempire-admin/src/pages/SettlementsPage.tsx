@@ -1,87 +1,132 @@
 import React, { useEffect, useState } from 'react';
-import { Card, CardContent, Typography, Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Chip } from '@mui/material';
+import {
+  Card, CardContent, Typography, Box, Table, TableBody, TableCell,
+  TableContainer, TableHead, TableRow, Paper, Chip, CircularProgress, Grid,
+} from '@mui/material';
 import { AccountBalanceWallet, RequestQuote, CurrencyRupee } from '@mui/icons-material';
-import api from '../api/axios';
+import { paymentsApi } from '../api';
+import type { Payment } from '../api';
 
 export function SettlementsPage() {
-  const [settlements, setSettlements] = useState<any[]>([]);
+  const [payments, setPayments] = useState<Payment[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // In a real scenario, this fetches from GET /api/v1/finance/settlements/gym/{gymId}
-    setSettlements([
-      { id: '1', date: '2023-10-01', gross: 50000, commission: 5000, tax: 900, net: 44100, status: 'COMPLETED', ref: 'BNK123456789' },
-      { id: '2', date: '2023-10-08', gross: 60000, commission: 6000, tax: 1080, net: 52920, status: 'PROCESSING', ref: 'PENDING' }
-    ]);
+    fetchSettlements();
   }, []);
+
+  const fetchSettlements = async () => {
+    setLoading(true);
+    try {
+      const res = await paymentsApi.getAll(0, 50);
+      setPayments(res.data.data?.content || []);
+    } catch (e) {
+      console.warn("Failed to fetch settlements:", e);
+      setPayments([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const totalGross = payments.reduce((acc, p) => acc + (p.amount || 0), 0);
+  const totalNet = payments.reduce((acc, p) => acc + (p.netAmount || p.amount * 0.9 || 0), 0);
+  const totalDeductions = totalGross - totalNet;
+
+  const formatCurrency = (val: number) =>
+    new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(val);
+
+  if (loading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '60vh' }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <Box>
       <Typography variant="h4" fontWeight="bold" mb={1}>Finance & Settlements</Typography>
       <Typography variant="body1" color="text.secondary" mb={4}>
-        Track your weekly platform earnings, commission deductions, and bank payouts.
+        Track your platform earnings, commission deductions, and bank payouts.
       </Typography>
 
-      <div className="grid grid-cols-3 gap-6 mb-8">
-        <Card elevation={0} sx={{ border: '1px solid #e2e8f0', borderRadius: 3 }}>
-          <CardContent>
-            <div className="flex items-center space-x-3 mb-2 text-slate-500">
-              <CurrencyRupee color="primary" />
-              <Typography variant="subtitle2" fontWeight="bold">Total Gross Earnings</Typography>
-            </div>
-            <Typography variant="h4" fontWeight="bold">₹1,10,000</Typography>
-          </CardContent>
-        </Card>
-        <Card elevation={0} sx={{ border: '1px solid #e2e8f0', borderRadius: 3 }}>
-          <CardContent>
-            <div className="flex items-center space-x-3 mb-2 text-slate-500">
-              <RequestQuote color="error" />
-              <Typography variant="subtitle2" fontWeight="bold">Total Deductions (Comm + Tax)</Typography>
-            </div>
-            <Typography variant="h4" fontWeight="bold">₹12,980</Typography>
-          </CardContent>
-        </Card>
-        <Card elevation={0} sx={{ border: '1px solid #e2e8f0', borderRadius: 3, bgcolor: '#f0fdf4', borderColor: '#bbf7d0' }}>
-          <CardContent>
-            <div className="flex items-center space-x-3 mb-2 text-green-700">
-              <AccountBalanceWallet />
-              <Typography variant="subtitle2" fontWeight="bold">Net Paid to Bank</Typography>
-            </div>
-            <Typography variant="h4" fontWeight="bold" color="success.main">₹97,020</Typography>
-          </CardContent>
-        </Card>
-      </div>
+      <Grid container spacing={3} sx={{ mb: 4 }}>
+        <Grid item xs={12} md={4}>
+          <Card elevation={0} sx={{ border: '1px solid rgba(255,255,255,0.08)', borderRadius: 3 }}>
+            <CardContent sx={{ p: 3 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1 }}>
+                <CurrencyRupee color="primary" />
+                <Typography variant="subtitle2" fontWeight="bold">Total Gross Earnings</Typography>
+              </Box>
+              <Typography variant="h4" fontWeight="bold">{formatCurrency(totalGross)}</Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={12} md={4}>
+          <Card elevation={0} sx={{ border: '1px solid rgba(255,255,255,0.08)', borderRadius: 3 }}>
+            <CardContent sx={{ p: 3 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1 }}>
+                <RequestQuote color="error" />
+                <Typography variant="subtitle2" fontWeight="bold">Total Deductions (Comm + Tax)</Typography>
+              </Box>
+              <Typography variant="h4" fontWeight="bold" color="error.main">{formatCurrency(totalDeductions)}</Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={12} md={4}>
+          <Card elevation={0} sx={{ border: '1px solid rgba(255,255,255,0.08)', borderRadius: 3, bgcolor: 'rgba(67,215,135,0.08)', borderColor: 'rgba(67,215,135,0.3)' }}>
+            <CardContent sx={{ p: 3 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1 }}>
+                <AccountBalanceWallet color="success" />
+                <Typography variant="subtitle2" fontWeight="bold">Net Payable</Typography>
+              </Box>
+              <Typography variant="h4" fontWeight="bold" color="success.main">{formatCurrency(totalNet)}</Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
 
-      <TableContainer component={Paper} elevation={0} sx={{ border: '1px solid #e2e8f0', borderRadius: 2 }}>
+      <TableContainer component={Paper} elevation={0} sx={{ border: '1px solid rgba(255,255,255,0.08)', borderRadius: 2 }}>
         <Table>
           <TableHead>
-            <TableRow sx={{ backgroundColor: '#f8fafc' }}>
-              <TableCell><strong>Settlement Date</strong></TableCell>
-              <TableCell><strong>Gross Revenue</strong></TableCell>
-              <TableCell><strong>Commission</strong></TableCell>
-              <TableCell><strong>GST</strong></TableCell>
+            <TableRow sx={{ backgroundColor: 'rgba(255,255,255,0.02)' }}>
+              <TableCell><strong>Transaction ID</strong></TableCell>
+              <TableCell><strong>User</strong></TableCell>
+              <TableCell><strong>Gross Amount</strong></TableCell>
+              <TableCell><strong>Method</strong></TableCell>
               <TableCell><strong>Net Payable</strong></TableCell>
               <TableCell><strong>Status</strong></TableCell>
-              <TableCell><strong>Bank Ref</strong></TableCell>
+              <TableCell><strong>Date</strong></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {settlements.map(row => (
-              <TableRow key={row.id}>
-                <TableCell>{row.date}</TableCell>
-                <TableCell>₹{row.gross.toLocaleString()}</TableCell>
-                <TableCell sx={{ color: 'error.main' }}>-₹{row.commission.toLocaleString()}</TableCell>
-                <TableCell sx={{ color: 'error.main' }}>-₹{row.tax.toLocaleString()}</TableCell>
-                <TableCell sx={{ fontWeight: 'bold' }}>₹{row.net.toLocaleString()}</TableCell>
-                <TableCell>
-                  <Chip 
-                    label={row.status} 
-                    size="small" 
-                    color={row.status === 'COMPLETED' ? 'success' : 'warning'} 
-                  />
+            {payments.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={7} align="center" sx={{ py: 6, color: 'text.secondary' }}>
+                  No settlement records found.
                 </TableCell>
-                <TableCell sx={{ fontFamily: 'monospace', color: '#64748b' }}>{row.ref}</TableCell>
               </TableRow>
-            ))}
+            ) : (
+              payments.map((p) => (
+                <TableRow key={p.id}>
+                  <TableCell sx={{ fontFamily: 'monospace', fontSize: '0.8rem' }}>{p.id.substring(0, 8)}...</TableCell>
+                  <TableCell>{p.userName || 'Customer'}</TableCell>
+                  <TableCell>{formatCurrency(p.amount)}</TableCell>
+                  <TableCell><Chip label={p.paymentMethod || 'UPI'} size="small" variant="outlined" /></TableCell>
+                  <TableCell sx={{ fontWeight: 'bold' }}>{formatCurrency(p.netAmount || p.amount * 0.9)}</TableCell>
+                  <TableCell>
+                    <Chip
+                      label={p.status}
+                      size="small"
+                      color={p.status === 'COMPLETED' ? 'success' : 'warning'}
+                    />
+                  </TableCell>
+                  <TableCell sx={{ color: 'text.secondary' }}>
+                    {new Date(p.createdAt).toLocaleDateString()}
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
           </TableBody>
         </Table>
       </TableContainer>

@@ -1,75 +1,139 @@
-import { Box, Typography, Card, Grid, CardContent } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { Box, Typography, Card, Grid, CardContent, CircularProgress } from '@mui/material';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
-  ResponsiveContainer, LineChart, Line, Legend,
+  ResponsiveContainer, PieChart, Pie, Cell,
 } from 'recharts';
-
-const CITY_DATA = [
-  { city: 'Mumbai', users: 6840, gyms: 89, revenue: 2450000 },
-  { city: 'Delhi', users: 5210, gyms: 72, revenue: 1890000 },
-  { city: 'Bengaluru', users: 4950, gyms: 68, revenue: 1780000 },
-  { city: 'Hyderabad', users: 2890, gyms: 41, revenue: 980000 },
-  { city: 'Chennai', users: 2340, gyms: 32, revenue: 820000 },
-  { city: 'Pune', users: 1980, gyms: 28, revenue: 690000 },
-];
-
-const MONTHLY_GROWTH = [
-  { month: 'Jan', users: 12000, gyms: 220, revenue: 8500000 },
-  { month: 'Feb', users: 13500, gyms: 245, revenue: 9200000 },
-  { month: 'Mar', users: 15800, gyms: 268, revenue: 11000000 },
-  { month: 'Apr', users: 17200, gyms: 290, revenue: 12400000 },
-  { month: 'May', users: 19800, gyms: 315, revenue: 14800000 },
-  { month: 'Jun', users: 22400, gyms: 330, revenue: 16900000 },
-  { month: 'Jul', users: 24891, gyms: 342, revenue: 18200000 },
-];
+import { analyticsApi } from '../api';
+import type { AnalyticsOverview, TopGym, CityData } from '../api';
 
 export function AnalyticsPage() {
+  const [overview, setOverview] = useState<AnalyticsOverview | null>(null);
+  const [topGyms, setTopGyms] = useState<TopGym[]>([]);
+  const [topCities, setTopCities] = useState<CityData[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchAnalytics();
+  }, []);
+
+  const fetchAnalytics = async () => {
+    setLoading(true);
+    try {
+      const [overviewRes, gymsRes, citiesRes] = await Promise.allSettled([
+        analyticsApi.getOverview(),
+        analyticsApi.getTopGyms(),
+        analyticsApi.getTopCities(),
+      ]);
+
+      if (overviewRes.status === 'fulfilled' && overviewRes.value.data?.data) {
+        setOverview(overviewRes.value.data.data);
+      }
+      if (gymsRes.status === 'fulfilled' && gymsRes.value.data?.data) {
+        setTopGyms(gymsRes.value.data.data);
+      }
+      if (citiesRes.status === 'fulfilled' && citiesRes.value.data?.data) {
+        setTopCities(citiesRes.value.data.data);
+      }
+    } catch (e) {
+      console.warn("Failed to load analytics:", e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '60vh' }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  const formatCurrency = (val: number) =>
+    new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(val);
+
   return (
     <Box>
-      <Typography variant="h5" sx={{ fontWeight: 700, mb: 3 }}>Analytics</Typography>
+      <Typography variant="h5" sx={{ fontWeight: 700, mb: 3 }}>Analytics Overview</Typography>
 
-      <Grid container spacing={3}>
-        <Grid size={{ xs: 12, lg: 8 }}>
+      {/* KPI Cards */}
+      <Grid container spacing={3} sx={{ mb: 4 }}>
+        <Grid item xs={12} sm={6} md={3}>
           <Card>
             <CardContent sx={{ p: 3 }}>
-              <Typography variant="h6" sx={{ fontWeight: 700, mb: 0.5 }}>Platform Growth</Typography>
-              <Typography variant="caption" sx={{ color: 'text.secondary' }}>Monthly users, gyms & revenue (last 7 months)</Typography>
+              <Typography variant="caption" sx={{ color: 'text.secondary', fontWeight: 600 }}>TOTAL REVENUE</Typography>
+              <Typography variant="h4" sx={{ fontWeight: 800, mt: 1, color: '#6C63FF' }}>
+                {formatCurrency(overview?.totalRevenue || 0)}
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <Card>
+            <CardContent sx={{ p: 3 }}>
+              <Typography variant="caption" sx={{ color: 'text.secondary', fontWeight: 600 }}>TOTAL BOOKINGS</Typography>
+              <Typography variant="h4" sx={{ fontWeight: 800, mt: 1, color: '#43D787' }}>
+                {(overview?.totalBookings || 0).toLocaleString()}
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <Card>
+            <CardContent sx={{ p: 3 }}>
+              <Typography variant="caption" sx={{ color: 'text.secondary', fontWeight: 600 }}>CONVERSION RATE</Typography>
+              <Typography variant="h4" sx={{ fontWeight: 800, mt: 1, color: '#FFB038' }}>
+                {overview?.conversionRate || 0}%
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <Card>
+            <CardContent sx={{ p: 3 }}>
+              <Typography variant="caption" sx={{ color: 'text.secondary', fontWeight: 600 }}>AVG ORDER VALUE</Typography>
+              <Typography variant="h4" sx={{ fontWeight: 800, mt: 1, color: '#FF6584' }}>
+                {formatCurrency(overview?.avgOrderValue || 0)}
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+
+      {/* Charts */}
+      <Grid container spacing={3}>
+        <Grid item xs={12} lg={7}>
+          <Card>
+            <CardContent sx={{ p: 3 }}>
+              <Typography variant="h6" sx={{ fontWeight: 700, mb: 0.5 }}>Top Gyms by Bookings</Typography>
+              <Typography variant="caption" sx={{ color: 'text.secondary' }}>Most active gym partners</Typography>
               <ResponsiveContainer width="100%" height={320} style={{ marginTop: 20 }}>
-                <LineChart data={MONTHLY_GROWTH}>
+                <BarChart data={topGyms}>
                   <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-                  <XAxis dataKey="month" stroke="#A0A8C8" fontSize={12} tickLine={false} axisLine={false} />
-                  <YAxis yAxisId="left" stroke="#A0A8C8" fontSize={12} tickLine={false} axisLine={false} />
-                  <YAxis yAxisId="right" orientation="right" stroke="#A0A8C8" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(v) => `₹${(v/1000000).toFixed(1)}M`} />
+                  <XAxis dataKey="gymName" stroke="#A0A8C8" fontSize={11} tickLine={false} axisLine={false} />
+                  <YAxis stroke="#A0A8C8" fontSize={12} tickLine={false} axisLine={false} />
                   <Tooltip contentStyle={{ background: '#1A1A2E', border: '1px solid rgba(108,99,255,0.2)', borderRadius: 12 }} />
-                  <Legend />
-                  <Line yAxisId="left" type="monotone" dataKey="users" stroke="#6C63FF" strokeWidth={2.5} dot={false} name="Users" />
-                  <Line yAxisId="left" type="monotone" dataKey="gyms" stroke="#43D787" strokeWidth={2.5} dot={false} name="Gyms" />
-                  <Line yAxisId="right" type="monotone" dataKey="revenue" stroke="#FFB038" strokeWidth={2.5} dot={false} name="Revenue" />
-                </LineChart>
+                  <Bar dataKey="totalBookings" fill="#6C63FF" radius={[6, 6, 0, 0]} name="Bookings" />
+                </BarChart>
               </ResponsiveContainer>
             </CardContent>
           </Card>
         </Grid>
 
-        <Grid size={{ xs: 12, lg: 4 }}>
+        <Grid item xs={12} lg={5}>
           <Card sx={{ height: '100%' }}>
             <CardContent sx={{ p: 3 }}>
-              <Typography variant="h6" sx={{ fontWeight: 700, mb: 0.5 }}>Revenue by City</Typography>
-              <Typography variant="caption" sx={{ color: 'text.secondary' }}>Top 6 cities</Typography>
+              <Typography variant="h6" sx={{ fontWeight: 700, mb: 0.5 }}>City Breakdown</Typography>
+              <Typography variant="caption" sx={{ color: 'text.secondary' }}>Users & Gyms distribution</Typography>
               <ResponsiveContainer width="100%" height={320} style={{ marginTop: 20 }}>
-                <BarChart data={CITY_DATA} layout="vertical">
+                <BarChart data={topCities} layout="vertical">
                   <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-                  <XAxis type="number" stroke="#A0A8C8" fontSize={11} tickLine={false} axisLine={false} tickFormatter={(v) => `₹${(v/100000).toFixed(0)}L`} />
+                  <XAxis type="number" stroke="#A0A8C8" fontSize={11} tickLine={false} axisLine={false} />
                   <YAxis type="category" dataKey="city" stroke="#A0A8C8" fontSize={12} tickLine={false} axisLine={false} width={70} />
-                  <Tooltip contentStyle={{ background: '#1A1A2E', border: '1px solid rgba(108,99,255,0.2)', borderRadius: 12 }} formatter={(v: any) => [`₹${Number(v).toLocaleString('en-IN')}`, 'Revenue']} />
-                  <Bar dataKey="revenue" fill="url(#barGrad)" radius={[0, 4, 4, 0]}>
-                    <defs>
-                      <linearGradient id="barGrad" x1="0" y1="0" x2="1" y2="0">
-                        <stop offset="0%" stopColor="#6C63FF" />
-                        <stop offset="100%" stopColor="#FF6584" />
-                      </linearGradient>
-                    </defs>
-                  </Bar>
+                  <Tooltip contentStyle={{ background: '#1A1A2E', border: '1px solid rgba(108,99,255,0.2)', borderRadius: 12 }} />
+                  <Bar dataKey="users" fill="#43D787" radius={[0, 4, 4, 0]} name="Users" />
+                  <Bar dataKey="gyms" fill="#FFB038" radius={[0, 4, 4, 0]} name="Gyms" />
                 </BarChart>
               </ResponsiveContainer>
             </CardContent>

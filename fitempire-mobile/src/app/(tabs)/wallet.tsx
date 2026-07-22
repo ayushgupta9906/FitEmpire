@@ -24,19 +24,13 @@ export default function WalletScreen() {
     try {
       const walletRes = await walletApi.getWalletInfo();
       setBalance(walletRes.data.data.balance.toFixed(2));
+      setPoints(walletRes.data.data.rewardPoints || 0);
       
       const txRes = await walletApi.getTransactions(0, 10);
-      setTransactions(txRes.data.data.content);
+      setTransactions(txRes.data.data.content || []);
     } catch (e) {
-      console.warn("Wallet API Error (falling back to mock data):", e);
-      // Fallback mocks
-      setBalance('2450.00');
-      setPoints(750);
-      setTransactions([
-        { id: '1', type: 'CREDIT', txnType: 'TOPUP', amount: 1000, description: 'Added funds via UPI', createdAt: new Date().toISOString() },
-        { id: '2', type: 'DEBIT', txnType: 'PURCHASE', amount: 499, description: 'Day Pass booking', createdAt: new Date(Date.now() - 86400000).toISOString() },
-        { id: '3', type: 'CREDIT', txnType: 'REWARD_REDEMPTION', amount: 150, description: 'Redeemed points', createdAt: new Date(Date.now() - 172800000).toISOString() },
-      ]);
+      console.warn("Wallet API Error:", e);
+      setTransactions([]);
     } finally {
       setLoading(false);
     }

@@ -40,16 +40,7 @@ export default function QrCheckinScreen() {
         setBooking(res.data.data);
       }
     } catch (e) {
-      console.warn("Failed to fetch real QR code, using fallback:", e);
-      setBooking({
-        id: bookingId || 'b1',
-        gymName: "Gold's Gym Elite",
-        branchName: "Andheri West Central",
-        bookingDate: new Date().toISOString().split('T')[0],
-        startTime: '08:00:00',
-        endTime: '09:00:00',
-        qrToken: 'fit-emp-mock-qr-token-xyz-123',
-      });
+      console.warn("Failed to fetch QR code:", e);
     } finally {
       setLoading(false);
     }

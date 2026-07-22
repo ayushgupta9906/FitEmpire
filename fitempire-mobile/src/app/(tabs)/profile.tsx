@@ -25,31 +25,13 @@ export default function ProfileScreen() {
 
       const aiRes = await aiApi.getWorkoutPlan();
       const items = aiRes.data.data;
-      const wp = items.find((x: any) => x.type === 'WORKOUT');
-      const np = items.find((x: any) => x.type === 'NUTRITION');
+      const wp = items?.find((x: any) => x.type === 'WORKOUT');
+      const np = items?.find((x: any) => x.type === 'NUTRITION');
       
       if (wp) setWorkoutPlan(JSON.parse(wp.content));
       if (np) setNutritionPlan(JSON.parse(np.content));
     } catch (e) {
-      console.warn("Profile API Error (falling back to mock data):", e);
-      // Fallback mocks
-      setUserProfile({
-        user: { firstName: 'Rohan', lastName: 'Deshmukh', email: 'rohan@fitempire.in' },
-        fitnessGoal: 'MUSCLE_GAIN',
-        fitnessLevel: 'INTERMEDIATE',
-        heightCm: 178,
-        weightKg: 74.5,
-        bmi: 23.5,
-        fitnessScore: 82,
-      });
-      setWorkoutPlan({
-        title: "Hypertrophy Push Routine",
-        plan: ["Flat Bench Press: 4 sets x 8 reps", "Incline Dumbbell Fly: 3 sets x 12 reps", "Overhead Dumbbell Press: 4 sets x 10 reps", "Weighted Tricep Dips: 3 sets x 12 reps"]
-      });
-      setNutritionPlan({
-        title: "High Protein Recomp Diet",
-        plan: ["Breakfast: 4 egg whites scrambled, oats with berries", "Lunch: Grilled chicken breast, spinach, brown rice", "Post-Workout: Whey isolate shake + banana", "Dinner: Baked tilapia, asparagus, sweet potato"]
-      });
+      console.warn("Profile API Error:", e);
     } finally {
       setLoading(false);
     }

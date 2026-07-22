@@ -81,22 +81,10 @@ export default function BookingScreen() {
       const formattedDate = selectedDate.toISOString().split('T')[0];
       const res = await classesApi.getSchedules(params.branchId!, formattedDate);
       const scheduleList = res.data.data || [];
-      
-      // Fallback classes in case API has empty content
-      const fallbackClasses = [
-        { id: 'c1', fitnessClass: { name: 'Power Yoga & Flexibility' }, startTime: '07:00:00', endTime: '08:00:00', trainer: { user: { firstName: 'Anjali' } } },
-        { id: 'c2', fitnessClass: { name: 'HIIT Cardio Blast' }, startTime: '09:00:00', endTime: '10:00:00', trainer: { user: { firstName: 'Kabir' } } },
-        { id: 'c3', fitnessClass: { name: 'Zumba Cardio Party' }, startTime: '18:30:00', endTime: '19:30:00', trainer: { user: { firstName: 'Ritu' } } }
-      ];
-
-      setSchedules(scheduleList.length > 0 ? scheduleList : fallbackClasses);
+      setSchedules(scheduleList);
     } catch (e) {
-      // Mock class schedules
-      setSchedules([
-        { id: 'c1', fitnessClass: { name: 'Power Yoga & Flexibility' }, startTime: '07:00:00', endTime: '08:00:00', trainer: { user: { firstName: 'Anjali' } } },
-        { id: 'c2', fitnessClass: { name: 'HIIT Cardio Blast' }, startTime: '09:00:00', endTime: '10:00:00', trainer: { user: { firstName: 'Kabir' } } },
-        { id: 'c3', fitnessClass: { name: 'Zumba Cardio Party' }, startTime: '18:30:00', endTime: '19:30:00', trainer: { user: { firstName: 'Ritu' } } }
-      ]);
+      console.warn(e);
+      setSchedules([]);
     } finally {
       setLoadingSchedules(false);
     }
@@ -127,10 +115,7 @@ export default function BookingScreen() {
       ]);
     } catch (e: any) {
       console.warn(e);
-      // Fallback booking simulation
-      Alert.alert('Booking Confirmed (Mock Mode)', 'Successfully booked slot.', [
-        { text: 'OK', onPress: () => router.replace('/(tabs)/profile') }
-      ]);
+      Alert.alert('Booking Failed', 'Unable to confirm booking. Please check membership or try again.');
     } finally {
       setLoadingSubmit(false);
     }

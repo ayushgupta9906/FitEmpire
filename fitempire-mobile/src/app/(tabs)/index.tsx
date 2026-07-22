@@ -45,9 +45,7 @@ export default function HomeScreen() {
       const walletRes = await walletApi.getWalletInfo();
       setBalance(walletRes.data.data.balance.toFixed(2));
     } catch (e) {
-      console.warn("Home Screen Load Error (using fallback):", e);
-      setUser({ firstName: 'Rohan', lastName: 'Deshmukh' });
-      setBalance('2450.00');
+      console.warn("Home Screen Load Error:", e);
     } finally {
       setLoading(false);
     }

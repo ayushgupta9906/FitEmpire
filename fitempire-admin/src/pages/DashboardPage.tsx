@@ -1,6 +1,6 @@
 import {
   Box, Grid, Card, CardContent, Typography, Chip,
-  LinearProgress, alpha,
+  LinearProgress, alpha, CircularProgress
 } from '@mui/material';
 import {
   People, FitnessCenter, EventNote, AttachMoney,
@@ -10,7 +10,9 @@ import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, PieChart, Pie, Cell, Legend,
 } from 'recharts';
-import type { DashboardStats, RevenueChartData } from '../api';
+import { useQuery } from '@tanstack/react-query';
+import { dashboardApi } from '../api';
+import type { DashboardStats, RevenueChartData, ActivityItem } from '../api';
 
 // ── Stat Card ──────────────────────────────────────────────────────────────
 
@@ -87,28 +89,6 @@ function StatCard({ title, value, subtitle, icon, gradient, trend }: StatCardPro
   );
 }
 
-// ── Revenue Chart ──────────────────────────────────────────────────────────
-
-const MOCK_REVENUE: RevenueChartData[] = [
-  { date: 'Mon', revenue: 45000, bookings: 120 },
-  { date: 'Tue', revenue: 52000, bookings: 145 },
-  { date: 'Wed', revenue: 48000, bookings: 132 },
-  { date: 'Thu', revenue: 61000, bookings: 168 },
-  { date: 'Fri', revenue: 55000, bookings: 150 },
-  { date: 'Sat', revenue: 78000, bookings: 210 },
-  { date: 'Sun', revenue: 72000, bookings: 195 },
-];
-
-const MOCK_STATS: DashboardStats = {
-  totalUsers: 24891,
-  totalGyms: 342,
-  totalBookingsToday: 1204,
-  totalRevenueToday: 182450,
-  activeMembers: 18340,
-  pendingApprovals: 23,
-  growthRate: 18.4,
-};
-
 const PIE_DATA = [
   { name: 'Monthly', value: 45, color: '#6C63FF' },
   { name: 'Quarterly', value: 28, color: '#FF6584' },
@@ -116,18 +96,43 @@ const PIE_DATA = [
   { name: 'Day Pass', value: 8, color: '#FFB038' },
 ];
 
-const RECENT_ACTIVITY = [
-  { id: 1, type: 'user', msg: 'New user registered — Priya Sharma', time: '2 min ago', color: '#43D787' },
-  { id: 2, type: 'gym', msg: 'Iron Fitness - Andheri awaiting approval', time: '8 min ago', color: '#FFB038' },
-  { id: 3, type: 'payment', msg: '₹4,999 payment from Rahul Verma', time: '15 min ago', color: '#6C63FF' },
-  { id: 4, type: 'checkin', msg: '45 check-ins at PowerZone Gym today', time: '22 min ago', color: '#FF6584' },
-  { id: 5, type: 'user', msg: 'New gym partner onboarded — FitStar Bandra', time: '1 hr ago', color: '#43D787' },
-];
-
 export function DashboardPage() {
-  // In production, these would use real API queries:
-  // const { data: stats } = useQuery(['dashboard-stats'], dashboardApi.getStats);
-  const stats = MOCK_STATS;
+  const { data: statsRes, isLoading: statsLoading } = useQuery({
+    queryKey: ['dashboard-stats'],
+    queryFn: () => dashboardApi.getStats().then((res) => res.data.data),
+  });
+
+  const { data: revenueRes, isLoading: revenueLoading } = useQuery({
+    queryKey: ['dashboard-revenue', 'week'],
+    queryFn: () => dashboardApi.getRevenueChart('week').then((res) => res.data.data),
+  });
+
+  const { data: activityRes, isLoading: activityLoading } = useQuery({
+    queryKey: ['dashboard-activity'],
+    queryFn: () => dashboardApi.getRecentActivity().then((res) => res.data.data),
+  });
+
+  const isLoading = statsLoading || revenueLoading || activityLoading;
+
+  if (isLoading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  const stats = statsRes || {
+    totalUsers: 0,
+    totalGyms: 0,
+    totalBookingsToday: 0,
+    totalRevenueToday: 0,
+    activeMembers: 0,
+    pendingApprovals: 0,
+    growthRate: 0,
+  };
+  const revenueChartData = revenueRes || [];
+  const recentActivity = activityRes || [];
 
   const formatCurrency = (amount: number) =>
     new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(amount);
@@ -149,7 +154,7 @@ export function DashboardPage() {
 
       {/* Stat Cards */}
       <Grid container spacing={3} sx={{ mb: 4 }}>
-        <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
+        <Grid item xs={12} sm={6} lg={3}>
           <StatCard
             title="Total Users"
             value={formatNumber(stats.totalUsers)}
@@ -159,7 +164,7 @@ export function DashboardPage() {
             trend={12.4}
           />
         </Grid>
-        <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
+        <Grid item xs={12} sm={6} lg={3}>
           <StatCard
             title="Active Gyms"
             value={formatNumber(stats.totalGyms)}
@@ -169,7 +174,7 @@ export function DashboardPage() {
             trend={8.2}
           />
         </Grid>
-        <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
+        <Grid item xs={12} sm={6} lg={3}>
           <StatCard
             title="Today's Bookings"
             value={formatNumber(stats.totalBookingsToday)}
@@ -179,7 +184,7 @@ export function DashboardPage() {
             trend={5.7}
           />
         </Grid>
-        <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
+        <Grid item xs={12} sm={6} lg={3}>
           <StatCard
             title="Today's Revenue"
             value={formatCurrency(stats.totalRevenueToday)}
@@ -194,7 +199,7 @@ export function DashboardPage() {
       {/* Charts Row */}
       <Grid container spacing={3} sx={{ mb: 4 }}>
         {/* Revenue Chart */}
-        <Grid size={{ xs: 12, lg: 8 }}>
+        <Grid item xs={12} lg={8}>
           <Card sx={{ height: 360 }}>
             <CardContent sx={{ p: 3, height: '100%' }}>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
@@ -205,7 +210,7 @@ export function DashboardPage() {
                 <Chip label="This Week" size="small" sx={{ background: 'rgba(108,99,255,0.15)', color: 'primary.main', fontWeight: 600 }} />
               </Box>
               <ResponsiveContainer width="100%" height={260}>
-                <AreaChart data={MOCK_REVENUE} margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
+                <AreaChart data={revenueChartData} margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
                   <defs>
                     <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="5%" stopColor="#6C63FF" stopOpacity={0.3} />
@@ -235,7 +240,7 @@ export function DashboardPage() {
         </Grid>
 
         {/* Membership Mix Pie */}
-        <Grid size={{ xs: 12, lg: 4 }}>
+        <Grid item xs={12} lg={4}>
           <Card sx={{ height: 360 }}>
             <CardContent sx={{ p: 3, height: '100%' }}>
               <Typography variant="h6" sx={{ fontWeight: 700, mb: 0.5 }}>Membership Mix</Typography>
@@ -271,50 +276,56 @@ export function DashboardPage() {
       {/* Activity + Pending Approvals */}
       <Grid container spacing={3}>
         {/* Recent Activity */}
-        <Grid size={{ xs: 12, lg: 7 }}>
+        <Grid item xs={12} lg={7}>
           <Card>
             <CardContent sx={{ p: 3 }}>
               <Typography variant="h6" sx={{ fontWeight: 700, mb: 3 }}>Recent Activity</Typography>
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                {RECENT_ACTIVITY.map((item) => (
-                  <Box
-                    key={item.id}
-                    sx={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 2,
-                      p: 2,
-                      borderRadius: 2,
-                      background: 'rgba(255,255,255,0.02)',
-                      '&:hover': { background: 'rgba(108, 99, 255, 0.06)' },
-                      transition: 'background 0.15s ease',
-                    }}
-                  >
+              {recentActivity.length === 0 ? (
+                 <Typography variant="body2" sx={{ color: 'text.secondary' }}>No recent activity.</Typography>
+              ) : (
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                  {recentActivity.map((item: ActivityItem) => {
+                    const color = item.type === 'USER' ? '#43D787' : item.type === 'GYM' ? '#FFB038' : item.type === 'PAYMENT' ? '#6C63FF' : '#FF6584';
+                    return (
                     <Box
+                      key={item.id}
                       sx={{
-                        width: 10,
-                        height: 10,
-                        borderRadius: '50%',
-                        background: item.color,
-                        boxShadow: `0 0 8px ${item.color}`,
-                        flexShrink: 0,
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 2,
+                        p: 2,
+                        borderRadius: 2,
+                        background: 'rgba(255,255,255,0.02)',
+                        '&:hover': { background: 'rgba(108, 99, 255, 0.06)' },
+                        transition: 'background 0.15s ease',
                       }}
-                    />
-                    <Typography variant="body2" sx={{ flex: 1, color: 'text.primary' }}>
-                      {item.msg}
-                    </Typography>
-                    <Typography variant="caption" sx={{ color: 'text.secondary', flexShrink: 0 }}>
-                      {item.time}
-                    </Typography>
-                  </Box>
-                ))}
-              </Box>
+                    >
+                      <Box
+                        sx={{
+                          width: 10,
+                          height: 10,
+                          borderRadius: '50%',
+                          background: color,
+                          boxShadow: `0 0 8px ${color}`,
+                          flexShrink: 0,
+                        }}
+                      />
+                      <Typography variant="body2" sx={{ flex: 1, color: 'text.primary' }}>
+                        {item.message}
+                      </Typography>
+                      <Typography variant="caption" sx={{ color: 'text.secondary', flexShrink: 0 }}>
+                        {new Date(item.timestamp).toLocaleString()}
+                      </Typography>
+                    </Box>
+                  )})}
+                </Box>
+              )}
             </CardContent>
           </Card>
         </Grid>
 
         {/* Platform Health */}
-        <Grid size={{ xs: 12, lg: 5 }}>
+        <Grid item xs={12} lg={5}>
           <Card>
             <CardContent sx={{ p: 3 }}>
               <Typography variant="h6" sx={{ fontWeight: 700, mb: 3 }}>Platform Health</Typography>

@@ -1,23 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import QRCode from 'react-native-qrcode-svg';
 import { RefreshCw, MapPin } from 'lucide-react-native';
+import { bookingsApi } from '@/services/api';
 
 export default function TicketScreen() {
   const { bookingId } = useLocalSearchParams<{ bookingId: string }>();
   
-  const [qrToken, setQrToken] = useState<string>('MOCK-QR-TOKEN-FOR-NOW');
+  const [booking, setBooking] = useState<any>(null);
+  const [qrToken, setQrToken] = useState<string>('');
   const [timeLeft, setTimeLeft] = useState(60);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchDynamicQr();
-    const interval = setInterval(() => {
+    if (bookingId) {
+      fetchBookingDetails();
       fetchDynamicQr();
-    }, 60000);
-    return () => clearInterval(interval);
+      const interval = setInterval(() => {
+        fetchDynamicQr();
+      }, 60000);
+      return () => clearInterval(interval);
+    }
   }, [bookingId]);
 
   useEffect(() => {
@@ -27,15 +33,40 @@ export default function TicketScreen() {
     }
   }, [timeLeft]);
 
-  const fetchDynamicQr = async () => {
+  const fetchBookingDetails = async () => {
     try {
-      // In a real app: await fetch(`/api/v1/bookings/${bookingId}/qr`)
-      setQrToken(`QR-${bookingId}-${Date.now()}`);
-      setTimeLeft(60);
+      // In a real app we would have getBookingDetails API.
+      // But we can just fetch all user bookings and filter
+      const res = await bookingsApi.getUserBookings();
+      const found = res.data.data?.find((b: any) => b.id === bookingId);
+      if (found) {
+        setBooking(found);
+      }
     } catch (e) {
-      Alert.alert("Error", "Could not refresh QR code");
+      console.warn(e);
     }
   };
+
+  const fetchDynamicQr = async () => {
+    try {
+      const res = await bookingsApi.getQrCode(bookingId);
+      setQrToken(res.data.data.qrCodeData || `QR-${bookingId}-${Date.now()}`);
+      setTimeLeft(60);
+    } catch (e) {
+      setQrToken(`QR-${bookingId}-${Date.now()}`);
+      setTimeLeft(60);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <ThemedView style={[styles.container, { justifyContent: 'center' }]}>
+        <ActivityIndicator size="large" color="#6C63FF" />
+      </ThemedView>
+    );
+  }
 
   return (
     <ThemedView style={styles.container}>
@@ -46,16 +77,16 @@ export default function TicketScreen() {
 
       <View style={styles.ticketCard}>
         <View style={styles.gymInfo}>
-          <ThemedText style={styles.gymName}>Gold's Gym Elite</ThemedText>
+          <ThemedText style={styles.gymName}>{booking?.gym?.name || 'Gold\'s Gym Elite'}</ThemedText>
           <View style={styles.row}>
             <MapPin size={14} color="#6B7280" />
-            <ThemedText style={styles.gymBranch}> Andheri West</ThemedText>
+            <ThemedText style={styles.gymBranch}> {booking?.gym?.city || 'Andheri West'}</ThemedText>
           </View>
         </View>
         
         <View style={styles.qrContainer}>
           <QRCode
-            value={qrToken}
+            value={qrToken || 'MOCK'}
             size={200}
             color="black"
             backgroundColor="white"

@@ -57,9 +57,22 @@ export default function PartnerDashboard() {
     fetchStats();
   };
 
-  const handleLogout = async () => {
-    await logout();
-    router.replace('/');
+  const handleLogout = () => {
+    Alert.alert(
+      "Partner Log Out",
+      "Are you sure you want to log out of the Partner Portal?",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Log Out",
+          style: "destructive",
+          onPress: async () => {
+            await logout();
+            router.replace('/login');
+          },
+        },
+      ]
+    );
   };
 
   const formatCurrency = (val: number) => {

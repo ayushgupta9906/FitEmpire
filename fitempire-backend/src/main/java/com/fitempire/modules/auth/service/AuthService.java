@@ -234,6 +234,20 @@ public class AuthService {
         log.info("User {} logged out, all refresh tokens revoked", userId);
     }
 
+    @Transactional
+    public void logout(String emailOrId) {
+        if (emailOrId == null) return;
+        try {
+            // Try parsing as UUID first
+            UUID userId = UUID.fromString(emailOrId);
+            logout(userId);
+        } catch (IllegalArgumentException e) {
+            // Treat as email — look up user and resolve UUID
+            userRepository.findByEmailAndDeletedFalse(emailOrId.toLowerCase())
+                    .ifPresent(user -> logout(user.getId()));
+        }
+    }
+
     // ── Forgot Password ───────────────────────────────────────────────────────
 
     @Transactional

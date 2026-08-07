@@ -67,6 +67,8 @@ export const gymsApi = {
   approve: (id: string) => api.post(`/v1/gyms/${id}/approve`),
   reject: (id: string, reason: string) =>
     api.post(`/v1/gyms/${id}/reject`, null, { params: { reason } }),
+  registerPartner: (data: any) =>
+    api.post<ApiResponse<any>>('/v1/admin/partners/register', data),
 };
 
 // ── Memberships ───────────────────────────────────────────────

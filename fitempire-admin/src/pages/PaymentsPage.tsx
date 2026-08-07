@@ -3,22 +3,14 @@ import {
   Box, Card, CardContent, Typography, Table, TableBody, TableCell,
   TableContainer, TableHead, TableRow, TablePagination, Chip,
   TextField, InputAdornment, Button, Dialog, DialogTitle,
-  DialogContent, DialogActions,
+  DialogContent, DialogActions, CircularProgress
 } from '@mui/material';
 import { Search, Refresh } from '@mui/icons-material';
 import { useSnackbar } from 'notistack';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { paymentsApi } from '../api';
 import type { Payment } from '../api';
 import dayjs from 'dayjs';
-
-const MOCK_PAYMENTS: Payment[] = Array.from({ length: 60 }, (_, i) => ({
-  id: `pay-${i + 1}`,
-  userName: ['Priya Sharma', 'Rahul Verma', 'Ananya Singh', 'Karan Mehta'][i % 4],
-  amount: [999, 2499, 4999, 7999, 14999][i % 5],
-  netAmount: [999, 2499, 4999, 7999, 14999][i % 5] * 1.18,
-  status: ['COMPLETED', 'COMPLETED', 'COMPLETED', 'FAILED', 'REFUNDED'][i % 5],
-  paymentMethod: ['RAZORPAY', 'UPI', 'CARD'][i % 3],
-  createdAt: new Date(Date.now() - i * 3600000 * 6).toISOString(),
-}));
 
 const STATUS_STYLE: Record<string, { bg: string; color: string }> = {
   COMPLETED: { bg: 'rgba(67,215,135,0.1)', color: '#43D787' },
@@ -28,150 +20,206 @@ const STATUS_STYLE: Record<string, { bg: string; color: string }> = {
 };
 
 export function PaymentsPage() {
+  const queryClient = useQueryClient();
+  const { enqueueSnackbar } = useSnackbar();
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(15);
   const [refundDialog, setRefundDialog] = useState(false);
   const [selectedPayment, setSelectedPayment] = useState<Payment | null>(null);
-  const { enqueueSnackbar } = useSnackbar();
+  const [refundReason, setRefundReason] = useState('');
 
-  const filtered = MOCK_PAYMENTS.filter((p) =>
-    p.userName.toLowerCase().includes(search.toLowerCase()) || p.id.includes(search)
-  );
+  const { data: paymentsRes, isLoading, isError } = useQuery({
+    queryKey: ['payments', page, rowsPerPage],
+    queryFn: () => paymentsApi.getAll(page, rowsPerPage).then((res) => res.data.data),
+    keepPreviousData: true,
+  });
 
-  const totalRevenue = MOCK_PAYMENTS.filter((p) => p.status === 'COMPLETED')
-    .reduce((sum, p) => sum + p.netAmount, 0);
+  const refundMutation = useMutation({
+    mutationFn: ({ id, amount, reason }: { id: string; amount: number; reason: string }) =>
+      paymentsApi.processRefund(id, amount, reason),
+    onSuccess: () => {
+      enqueueSnackbar('Refund initiated successfully', { variant: 'success' });
+      queryClient.invalidateQueries(['payments']);
+      setRefundDialog(false);
+      setRefundReason('');
+    },
+    onError: (err: any) => {
+      enqueueSnackbar(err.response?.data?.message || 'Failed to initiate refund', { variant: 'error' });
+    },
+  });
+
+  const payments = paymentsRes?.content || [];
+  const totalElements = paymentsRes?.totalElements || 0;
+
+  const formatCurrency = (val: number) =>
+    new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(val || 0);
+
+  const handleConfirmRefund = () => {
+    if (!selectedPayment) return;
+    refundMutation.mutate({
+      id: selectedPayment.id,
+      amount: selectedPayment.netAmount || selectedPayment.amount || 0,
+      reason: refundReason || 'Customer requested refund',
+    });
+  };
 
   return (
-    <Box>
+    <Box sx={{ p: 1 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
         <Box>
-          <Typography variant="h5" sx={{ fontWeight: 700 }}>Payments</Typography>
+          <Typography variant="h5" sx={{ fontWeight: 800 }}>Transactions & Revenue</Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            Total Revenue:{' '}
-            <strong style={{ color: '#43D787' }}>
-              ₹{totalRevenue.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
-            </strong>
+            Real-time financial payment records and refund processing
           </Typography>
         </Box>
+        <Chip
+          label={`${totalElements.toLocaleString('en-IN')} Transactions`}
+          sx={{ background: 'rgba(67,215,135,0.15)', color: '#43D787', fontWeight: 800, p: 1 }}
+        />
       </Box>
 
-      <Card>
-        <CardContent sx={{ p: 0 }}>
-          <Box sx={{ p: 3, pb: 2 }}>
+      <Card sx={{ borderRadius: 3, boxShadow: '0 4px 20px rgba(0,0,0,0.06)' }}>
+        <CardContent sx={{ p: 2 }}>
+          <Box sx={{ mb: 2 }}>
             <TextField
-              placeholder="Search by user or payment ID..."
-              value={search}
-              onChange={(e) => { setSearch(e.target.value); setPage(0); }}
               size="small"
-              sx={{ maxWidth: 400 }}
-              slotProps={{
-                input: {
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Search sx={{ color: 'text.secondary', fontSize: 20 }} />
-                    </InputAdornment>
-                  ),
-                },
+              placeholder="Search by transaction ID or user..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Search sx={{ color: 'text.secondary' }} />
+                  </InputAdornment>
+                ),
               }}
+              sx={{ width: 340 }}
             />
           </Box>
-          <TableContainer>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Payment ID</TableCell>
-                  <TableCell>User</TableCell>
-                  <TableCell>Amount</TableCell>
-                  <TableCell>Method</TableCell>
-                  <TableCell>Status</TableCell>
-                  <TableCell>Date</TableCell>
-                  <TableCell align="center">Action</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {filtered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((pay) => {
-                  const s = STATUS_STYLE[pay.status] || STATUS_STYLE.PENDING;
-                  return (
-                    <TableRow key={pay.id}>
-                      <TableCell>
-                        <Typography variant="caption" sx={{ fontFamily: 'monospace', color: 'primary.main' }}>
-                          {pay.id}
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography variant="body2" sx={{ fontWeight: 600 }}>{pay.userName}</Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography variant="body2" sx={{ fontWeight: 700 }}>
-                          ₹{pay.netAmount.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Chip label={pay.paymentMethod} size="small" sx={{ background: 'rgba(108,99,255,0.1)', color: 'primary.main', fontWeight: 600, fontSize: '0.7rem' }} />
-                      </TableCell>
-                      <TableCell>
-                        <Chip
-                          label={pay.status}
-                          size="small"
-                          sx={{ background: s.bg, color: s.color, fontWeight: 700, fontSize: '0.7rem' }}
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-                          {dayjs(pay.createdAt).format('DD MMM YY, HH:mm')}
-                        </Typography>
-                      </TableCell>
-                      <TableCell align="center">
-                        {pay.status === 'COMPLETED' && (
-                          <Button
-                            size="small"
-                            variant="outlined"
-                            color="warning"
-                            startIcon={<Refresh />}
-                            onClick={() => { setSelectedPayment(pay); setRefundDialog(true); }}
-                            sx={{ borderRadius: 2, fontSize: '0.7rem' }}
-                          >
-                            Refund
-                          </Button>
-                        )}
+
+          {isLoading ? (
+            <Box sx={{ display: 'flex', justifyContent: 'center', py: 8 }}>
+              <CircularProgress />
+            </Box>
+          ) : isError ? (
+            <Box sx={{ textAlign: 'center', py: 6 }}>
+              <Typography color="error">Failed to load live payments from backend API.</Typography>
+            </Box>
+          ) : (
+            <TableContainer>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell sx={{ fontWeight: 700 }}>Transaction ID</TableCell>
+                    <TableCell sx={{ fontWeight: 700 }}>Customer / User</TableCell>
+                    <TableCell sx={{ fontWeight: 700 }}>Amount</TableCell>
+                    <TableCell sx={{ fontWeight: 700 }}>Payment Method</TableCell>
+                    <TableCell sx={{ fontWeight: 700 }}>Status</TableCell>
+                    <TableCell sx={{ fontWeight: 700 }}>Date & Time</TableCell>
+                    <TableCell align="right" sx={{ fontWeight: 700 }}>Actions</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {payments.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={7} align="center" sx={{ py: 6 }}>
+                        <Typography color="text.secondary">No payment records found.</Typography>
                       </TableCell>
                     </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
-          </TableContainer>
+                  ) : (
+                    payments.map((p) => {
+                      const style = STATUS_STYLE[p.status] || STATUS_STYLE.COMPLETED;
+                      return (
+                        <TableRow key={p.id} hover>
+                          <TableCell>
+                            <Typography variant="body2" sx={{ fontFamily: 'monospace', fontWeight: 700 }}>
+                              {p.id ? p.id.substring(0, 18) : '—'}
+                            </Typography>
+                          </TableCell>
+                          <TableCell>
+                            <Typography variant="body2" sx={{ fontWeight: 700 }}>{p.userName || 'Customer'}</Typography>
+                          </TableCell>
+                          <TableCell>
+                            <Typography variant="body2" sx={{ fontWeight: 800 }}>
+                              {formatCurrency(p.netAmount || p.amount)}
+                            </Typography>
+                          </TableCell>
+                          <TableCell>
+                            <Chip label={p.paymentMethod || 'RAZORPAY'} size="small" variant="outlined" sx={{ fontWeight: 700 }} />
+                          </TableCell>
+                          <TableCell>
+                            <Chip
+                              label={p.status}
+                              size="small"
+                              sx={{
+                                bgcolor: style.bg,
+                                color: style.color,
+                                fontWeight: 700,
+                                fontSize: '0.75rem',
+                              }}
+                            />
+                          </TableCell>
+                          <TableCell>
+                            <Typography variant="body2">
+                              {p.createdAt ? dayjs(p.createdAt).format('DD MMM YYYY, HH:mm') : '—'}
+                            </Typography>
+                          </TableCell>
+                          <TableCell align="right">
+                            {p.status === 'COMPLETED' && (
+                              <Button
+                                size="small"
+                                color="error"
+                                variant="outlined"
+                                onClick={() => { setSelectedPayment(p); setRefundDialog(true); }}
+                                sx={{ textTransform: 'none', fontWeight: 700, borderRadius: 2 }}
+                              >
+                                Refund
+                              </Button>
+                            )}
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          )}
+
           <TablePagination
             component="div"
-            count={filtered.length}
+            count={totalElements}
             page={page}
+            onPageChange={(_, newPage) => setPage(newPage)}
             rowsPerPage={rowsPerPage}
-            onPageChange={(_, p) => setPage(p)}
-            onRowsPerPageChange={(e) => { setRowsPerPage(Number(e.target.value)); setPage(0); }}
-            sx={{ borderTop: '1px solid', borderColor: 'divider' }}
+            onRowsPerPageChange={(e) => {
+              setRowsPerPage(parseInt(e.target.value, 10));
+              setPage(0);
+            }}
           />
         </CardContent>
       </Card>
 
-      <Dialog open={refundDialog} onClose={() => setRefundDialog(false)} maxWidth="sm" fullWidth
-        slotProps={{ paper: { sx: { borderRadius: 4, background: '#12121A', border: '1px solid rgba(108,99,255,0.2)' } } }}
-      >
-        <DialogTitle sx={{ fontWeight: 700 }}>Process Refund</DialogTitle>
+      {/* Refund Dialog */}
+      <Dialog open={refundDialog} onClose={() => setRefundDialog(false)} maxWidth="xs" fullWidth>
+        <DialogTitle sx={{ fontWeight: 800 }}>Initiate Transaction Refund</DialogTitle>
         <DialogContent>
-          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            Processing refund for <strong>{selectedPayment?.userName}</strong> — ₹{selectedPayment?.netAmount.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
+          <Typography variant="body2" sx={{ mb: 2 }}>
+            Confirm refund of <strong>{formatCurrency(selectedPayment?.netAmount || selectedPayment?.amount || 0)}</strong> to customer:
           </Typography>
+          <TextField
+            fullWidth
+            multiline
+            rows={2}
+            value={refundReason}
+            onChange={(e) => setRefundReason(e.target.value)}
+            placeholder="Reason for refund (e.g. Accidental double payment)"
+          />
         </DialogContent>
-        <DialogActions sx={{ p: 3 }}>
-          <Button onClick={() => setRefundDialog(false)} variant="outlined">Cancel</Button>
-          <Button
-            onClick={() => {
-              setRefundDialog(false);
-              enqueueSnackbar('Refund initiated (API not connected in demo)', { variant: 'success' });
-            }}
-            variant="contained" color="warning"
-          >
+        <DialogActions>
+          <Button onClick={() => setRefundDialog(false)}>Cancel</Button>
+          <Button onClick={handleConfirmRefund} variant="contained" color="error" disabled={refundMutation.isPending}>
             Process Refund
           </Button>
         </DialogActions>

@@ -74,9 +74,9 @@ public class AuthController {
     @Operation(summary = "Logout and revoke all refresh tokens")
     public ResponseEntity<ApiResponse<Void>> logout(
             @AuthenticationPrincipal UserDetails userDetails) {
-        // Extract userId from principal via security context
-        // For simplicity we call with email; service resolves UUID
-        authService.logout(null); // Will be properly wired in production
+        if (userDetails != null) {
+            authService.logout(userDetails.getUsername());
+        }
         return ResponseEntity.ok(ApiResponse.success("Logged out successfully."));
     }
 

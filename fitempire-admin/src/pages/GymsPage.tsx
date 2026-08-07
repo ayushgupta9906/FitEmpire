@@ -2,11 +2,13 @@ import { useState } from 'react';
 import {
   Box, Card, CardContent, Typography, TextField, InputAdornment,
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
-  TablePagination, Chip, IconButton, Button, Avatar, Rating, Dialog,
-  DialogTitle, DialogContent, DialogActions, Tabs, Tab, Menu, MenuItem,
+  TablePagination, Chip, IconButton, Button, Avatar, Dialog,
+  DialogTitle, DialogContent, DialogActions, Tabs, Tab, Menu, MenuItem, CircularProgress
 } from '@mui/material';
 import { Search, CheckCircle, Cancel, MoreVert, FitnessCenter } from '@mui/icons-material';
 import { useSnackbar } from 'notistack';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { gymsApi } from '../api';
 import type { Gym } from '../api';
 import dayjs from 'dayjs';
 
@@ -17,26 +19,9 @@ const STATUS_COLORS: Record<string, { bg: string; color: string; border: string 
   REJECTED: { bg: 'rgba(255,87,87,0.08)', color: '#FF5757', border: 'rgba(255,87,87,0.2)' },
 };
 
-const CATEGORIES = ['GYM', 'MMA', 'BOXING', 'KICKBOXING', 'DANCE', 'SWIMMING', 'YOGA', 'SPORTS', 'GAMES'];
-
-const MOCK_GYMS: Gym[] = Array.from({ length: 40 }, (_, i) => ({
-  id: `gym-${i + 1}`,
-  name: [
-    'PowerZone Fitness', 'Strike Force MMA', 'Rocky\'s Boxing Club',
-    'Kicking Warriors Arena', 'Rhythm & Beats Studio', 'Blue Wave Aquatics',
-    'Zen Yoga Center', 'Huddle Turf Complex', 'Cue & Pin Games Lounge'
-  ][i % 9] + ` - ${['Andheri', 'Bandra', 'Worli', 'Juhu', 'Thane', 'Pune'][i % 6]}`,
-  slug: `gym-${i + 1}`,
-  status: ['ACTIVE', 'PENDING_REVIEW', 'ACTIVE', 'ACTIVE', 'SUSPENDED', 'PENDING_REVIEW'][i % 6],
-  category: CATEGORIES[i % 9],
-  avgRating: 3.5 + (i % 15) / 10,
-  totalReviews: 12 + i * 7,
-  totalMembers: 100 + i * 23,
-  ownerName: ['Vikram Shah', 'Neha Mehta', 'Suresh Patel', 'Pooja Gupta'][i % 4],
-  createdAt: new Date(Date.now() - i * 86400000 * 5).toISOString(),
-}));
-
 export function GymsPage() {
+  const queryClient = useQueryClient();
+  const { enqueueSnackbar } = useSnackbar();
   const [tab, setTab] = useState(0);
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(0);
@@ -45,251 +30,241 @@ export function GymsPage() {
   const [selectedGym, setSelectedGym] = useState<Gym | null>(null);
   const [rejectDialog, setRejectDialog] = useState(false);
   const [rejectReason, setRejectReason] = useState('');
-  const { enqueueSnackbar } = useSnackbar();
 
   const statusFilters = ['ALL', 'ACTIVE', 'PENDING_REVIEW', 'SUSPENDED'];
+  const currentStatusParam = statusFilters[tab] === 'ALL' ? undefined : statusFilters[tab];
 
-  const filtered = MOCK_GYMS.filter((g) => {
-    const matchesSearch = g.name.toLowerCase().includes(search.toLowerCase())
-      || g.ownerName.toLowerCase().includes(search.toLowerCase());
-    const selectedStatus = statusFilters[tab];
-    const matchesTab = selectedStatus === 'ALL' || g.status === selectedStatus;
-    return matchesSearch && matchesTab;
+  const { data: gymsRes, isLoading, isError } = useQuery({
+    queryKey: ['gyms', page, rowsPerPage, currentStatusParam],
+    queryFn: () => gymsApi.getAll(page, rowsPerPage, currentStatusParam).then((res) => res.data.data),
+    keepPreviousData: true,
   });
 
-  const paged = filtered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+  const approveMutation = useMutation({
+    mutationFn: (id: string) => gymsApi.approve(id),
+    onSuccess: () => {
+      enqueueSnackbar('Gym approved and activated successfully', { variant: 'success' });
+      queryClient.invalidateQueries(['gyms']);
+    },
+    onError: (err: any) => {
+      enqueueSnackbar(err.response?.data?.message || 'Failed to approve gym', { variant: 'error' });
+    },
+  });
 
-  const handleApprove = (gym: Gym) => {
+  const rejectMutation = useMutation({
+    mutationFn: ({ id, reason }: { id: string; reason: string }) => gymsApi.reject(id, reason),
+    onSuccess: () => {
+      enqueueSnackbar('Gym application rejected', { variant: 'info' });
+      queryClient.invalidateQueries(['gyms']);
+      setRejectDialog(false);
+      setRejectReason('');
+    },
+    onError: (err: any) => {
+      enqueueSnackbar(err.response?.data?.message || 'Failed to reject gym', { variant: 'error' });
+    },
+  });
+
+  const gyms = gymsRes?.content || [];
+  const totalElements = gymsRes?.totalElements || 0;
+
+  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>, gym: Gym) => {
+    setAnchorEl(event.currentTarget);
+    setSelectedGym(gym);
+  };
+
+  const handleMenuClose = () => {
     setAnchorEl(null);
-    enqueueSnackbar(`${gym.name} approved! (API not connected in demo)`, { variant: 'success' });
   };
 
-  const handleReject = () => {
+  const handleApprove = () => {
     if (!selectedGym) return;
-    setRejectDialog(false);
-    enqueueSnackbar(`${selectedGym.name} rejected. (API not connected in demo)`, { variant: 'warning' });
-    setRejectReason('');
+    approveMutation.mutate(selectedGym.id);
+    handleMenuClose();
   };
 
-  const pendingCount = MOCK_GYMS.filter((g) => g.status === 'PENDING_REVIEW').length;
+  const handleRejectConfirm = () => {
+    if (!selectedGym) return;
+    rejectMutation.mutate({ id: selectedGym.id, reason: rejectReason });
+  };
 
   return (
-    <Box>
+    <Box sx={{ p: 1 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
         <Box>
-          <Typography variant="h5" sx={{ fontWeight: 700 }}>Gyms</Typography>
+          <Typography variant="h5" sx={{ fontWeight: 800 }}>Gym Listings & Outlets</Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            Manage gym registrations and approvals
+            Real-time management of fitness centers, clubs, and partner locations
           </Typography>
         </Box>
-        {pendingCount > 0 && (
-          <Chip
-            label={`${pendingCount} Pending Review`}
-            icon={<FitnessCenter sx={{ fontSize: '16px !important' }} />}
-            sx={{ background: 'rgba(255,176,56,0.15)', color: '#FFB038', border: '1px solid rgba(255,176,56,0.3)', fontWeight: 700 }}
-          />
-        )}
+        <Chip
+          label={`${totalElements.toLocaleString('en-IN')} Total Gyms`}
+          sx={{ background: 'rgba(255,101,132,0.15)', color: '#FF6584', fontWeight: 800, p: 1 }}
+        />
       </Box>
 
-      <Card>
-        <CardContent sx={{ p: 0 }}>
-          {/* Tabs */}
-          <Box sx={{ borderBottom: '1px solid', borderColor: 'divider', px: 3 }}>
-            <Tabs value={tab} onChange={(_, v) => { setTab(v); setPage(0); }}>
-              {statusFilters.map((s) => (
-                <Tab key={s} label={s.replace('_', ' ')} sx={{ fontWeight: 600, fontSize: '0.8rem' }} />
-              ))}
-            </Tabs>
-          </Box>
+      <Card sx={{ borderRadius: 3, boxShadow: '0 4px 20px rgba(0,0,0,0.06)' }}>
+        <CardContent sx={{ p: 2 }}>
+          <Tabs value={tab} onChange={(_, val) => { setTab(val); setPage(0); }} sx={{ mb: 2 }}>
+            <Tab label="All Gyms" />
+            <Tab label="Active" />
+            <Tab label="Pending Approvals" />
+            <Tab label="Suspended" />
+          </Tabs>
 
-          {/* Search */}
-          <Box sx={{ p: 3, pb: 2 }}>
+          <Box sx={{ mb: 2 }}>
             <TextField
-              placeholder="Search gyms or owners..."
-              value={search}
-              onChange={(e) => { setSearch(e.target.value); setPage(0); }}
               size="small"
-              sx={{ maxWidth: 400 }}
-              slotProps={{
-                input: {
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Search sx={{ color: 'text.secondary', fontSize: 20 }} />
-                    </InputAdornment>
-                  ),
-                },
+              placeholder="Search gyms by name..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Search sx={{ color: 'text.secondary' }} />
+                  </InputAdornment>
+                ),
               }}
+              sx={{ width: 340 }}
             />
           </Box>
 
-          {/* Table */}
-          <TableContainer>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Center Name</TableCell>
-                  <TableCell>Category</TableCell>
-                  <TableCell>Owner</TableCell>
-                  <TableCell>Status</TableCell>
-                  <TableCell>Rating</TableCell>
-                  <TableCell>Members</TableCell>
-                  <TableCell>Registered</TableCell>
-                  <TableCell align="center">Actions</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {paged.map((gym) => {
-                  const statusStyle = STATUS_COLORS[gym.status] || STATUS_COLORS.ACTIVE;
-                  return (
-                    <TableRow key={gym.id}>
-                      <TableCell>
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                          <Avatar
-                            sx={{
-                              width: 36, height: 36,
-                              background: 'linear-gradient(135deg, #6C63FF, #FF6584)',
-                              fontSize: '0.85rem', fontWeight: 700,
-                            }}
-                          >
-                            {gym.name[0]}
-                          </Avatar>
-                          <Typography variant="body2" sx={{ fontWeight: 600, maxWidth: 200 }}>
-                            {gym.name}
-                          </Typography>
-                        </Box>
-                      </TableCell>
-                      <TableCell>
-                        <Chip
-                          label={gym.category}
-                          size="small"
-                          sx={{
-                            background: 'rgba(108,99,255,0.1)',
-                            color: '#6C63FF',
-                            border: '1px solid rgba(108,99,255,0.3)',
-                            fontWeight: 700, fontSize: '0.65rem',
-                          }}
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <Typography variant="body2" sx={{ color: 'text.secondary', fontSize: '0.8rem' }}>
-                          {gym.ownerName}
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Chip
-                          label={gym.status.replace('_', ' ')}
-                          size="small"
-                          sx={{
-                            background: statusStyle.bg,
-                            color: statusStyle.color,
-                            border: `1px solid ${statusStyle.border}`,
-                            fontWeight: 700, fontSize: '0.7rem',
-                          }}
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                          <Rating value={gym.avgRating} precision={0.5} size="small" readOnly />
-                          <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-                            ({gym.totalReviews})
-                          </Typography>
-                        </Box>
-                      </TableCell>
-                      <TableCell>
-                        <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                          {gym.totalMembers.toLocaleString('en-IN')}
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-                          {dayjs(gym.createdAt).format('DD MMM YY')}
-                        </Typography>
-                      </TableCell>
-                      <TableCell align="center">
-                        <Box sx={{ display: 'flex', gap: 1, justifyContent: 'center' }}>
-                          {gym.status === 'PENDING_REVIEW' && (
-                            <>
-                              <Button
-                                size="small"
-                                variant="outlined"
-                                color="success"
-                                startIcon={<CheckCircle />}
-                                onClick={() => handleApprove(gym)}
-                                sx={{ borderRadius: 2, fontSize: '0.7rem' }}
-                              >
-                                Approve
-                              </Button>
-                              <Button
-                                size="small"
-                                variant="outlined"
-                                color="error"
-                                startIcon={<Cancel />}
-                                onClick={() => { setSelectedGym(gym); setRejectDialog(true); }}
-                                sx={{ borderRadius: 2, fontSize: '0.7rem' }}
-                              >
-                                Reject
-                              </Button>
-                            </>
-                          )}
-                          <IconButton
-                            size="small"
-                            onClick={(e) => { setAnchorEl(e.currentTarget); setSelectedGym(gym); }}
-                          >
-                            <MoreVert fontSize="small" />
-                          </IconButton>
-                        </Box>
+          {isLoading ? (
+            <Box sx={{ display: 'flex', justifyContent: 'center', py: 8 }}>
+              <CircularProgress />
+            </Box>
+          ) : isError ? (
+            <Box sx={{ textAlign: 'center', py: 6 }}>
+              <Typography color="error">Failed to load real gym listings from backend API.</Typography>
+            </Box>
+          ) : (
+            <TableContainer>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell sx={{ fontWeight: 700 }}>Gym Name & Outlets</TableCell>
+                    <TableCell sx={{ fontWeight: 700 }}>Category</TableCell>
+                    <TableCell sx={{ fontWeight: 700 }}>Status</TableCell>
+                    <TableCell sx={{ fontWeight: 700 }}>Members</TableCell>
+                    <TableCell sx={{ fontWeight: 700 }}>Registered Date</TableCell>
+                    <TableCell align="right" sx={{ fontWeight: 700 }}>Actions</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {gyms.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={6} align="center" sx={{ py: 6 }}>
+                        <Typography color="text.secondary">No gyms found in system.</Typography>
                       </TableCell>
                     </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
-          </TableContainer>
+                  ) : (
+                    gyms.map((g) => {
+                      const statusStyle = STATUS_COLORS[g.status] || STATUS_COLORS.ACTIVE;
+                      return (
+                        <TableRow key={g.id} hover>
+                          <TableCell>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                              <Avatar sx={{ bgcolor: 'primary.main', fontWeight: 700 }}>
+                                <FitnessCenter />
+                              </Avatar>
+                              <Box>
+                                <Typography variant="body2" sx={{ fontWeight: 700 }}>
+                                  {g.name}
+                                </Typography>
+                                <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                                  Slug: /{g.slug}
+                                </Typography>
+                              </Box>
+                            </Box>
+                          </TableCell>
+                          <TableCell>
+                            <Chip label={g.category || 'GYM'} size="small" variant="outlined" sx={{ fontWeight: 700 }} />
+                          </TableCell>
+                          <TableCell>
+                            <Chip
+                              label={g.status}
+                              size="small"
+                              sx={{
+                                bgcolor: statusStyle.bg,
+                                color: statusStyle.color,
+                                border: `1px solid ${statusStyle.border}`,
+                                fontWeight: 700,
+                                fontSize: '0.75rem',
+                              }}
+                            />
+                          </TableCell>
+                          <TableCell>
+                            <Typography variant="body2" sx={{ fontWeight: 700 }}>{g.totalMembers || 0}</Typography>
+                          </TableCell>
+                          <TableCell>
+                            <Typography variant="body2">
+                              {g.createdAt ? dayjs(g.createdAt).format('DD MMM YYYY') : '—'}
+                            </Typography>
+                          </TableCell>
+                          <TableCell align="right">
+                            <IconButton size="small" onClick={(e) => handleMenuOpen(e, g)}>
+                              <MoreVert />
+                            </IconButton>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          )}
 
           <TablePagination
             component="div"
-            count={filtered.length}
+            count={totalElements}
             page={page}
+            onPageChange={(_, newPage) => setPage(newPage)}
             rowsPerPage={rowsPerPage}
-            onPageChange={(_, p) => setPage(p)}
-            onRowsPerPageChange={(e) => { setRowsPerPage(Number(e.target.value)); setPage(0); }}
-            sx={{ borderTop: '1px solid', borderColor: 'divider' }}
+            onRowsPerPageChange={(e) => {
+              setRowsPerPage(parseInt(e.target.value, 10));
+              setPage(0);
+            }}
           />
         </CardContent>
       </Card>
 
+      {/* Context Menu */}
+      <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
+        {selectedGym?.status === 'PENDING_REVIEW' && (
+          <MenuItem onClick={handleApprove}>
+            <CheckCircle fontSize="small" sx={{ mr: 1, color: 'success.main' }} /> Approve & Activate
+          </MenuItem>
+        )}
+        {selectedGym?.status === 'PENDING_REVIEW' && (
+          <MenuItem onClick={() => { handleMenuClose(); setRejectDialog(true); }}>
+            <Cancel fontSize="small" sx={{ mr: 1, color: 'error.main' }} /> Reject Gym Listing
+          </MenuItem>
+        )}
+      </Menu>
+
       {/* Reject Dialog */}
-      <Dialog open={rejectDialog} onClose={() => setRejectDialog(false)} maxWidth="sm" fullWidth
-        slotProps={{ paper: { sx: { borderRadius: 4, background: '#12121A', border: '1px solid rgba(108,99,255,0.2)' } } }}
-      >
-        <DialogTitle sx={{ fontWeight: 700 }}>Reject Gym Registration</DialogTitle>
+      <Dialog open={rejectDialog} onClose={() => setRejectDialog(false)} maxWidth="xs" fullWidth>
+        <DialogTitle sx={{ fontWeight: 800 }}>Reject Gym Listing</DialogTitle>
         <DialogContent>
-          <Typography variant="body2" sx={{ color: 'text.secondary', mb: 2 }}>
-            Rejecting: <strong>{selectedGym?.name}</strong>
+          <Typography variant="body2" sx={{ mb: 2 }}>
+            Provide a reason for rejecting {selectedGym?.name}:
           </Typography>
           <TextField
-            label="Rejection Reason"
             fullWidth
             multiline
-            rows={4}
+            rows={3}
             value={rejectReason}
             onChange={(e) => setRejectReason(e.target.value)}
-            placeholder="Please provide a reason for rejection..."
+            placeholder="e.g. Incomplete business address verification or missing GST documents."
           />
         </DialogContent>
-        <DialogActions sx={{ p: 3 }}>
-          <Button onClick={() => setRejectDialog(false)} variant="outlined">Cancel</Button>
-          <Button onClick={handleReject} variant="contained" color="error" disabled={!rejectReason.trim()}>
-            Reject Gym
+        <DialogActions>
+          <Button onClick={() => setRejectDialog(false)}>Cancel</Button>
+          <Button onClick={handleRejectConfirm} variant="contained" color="error" disabled={!rejectReason.trim()}>
+            Confirm Rejection
           </Button>
         </DialogActions>
       </Dialog>
-
-      <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={() => setAnchorEl(null)}>
-        <MenuItem onClick={() => setAnchorEl(null)}>View Details</MenuItem>
-        <MenuItem onClick={() => setAnchorEl(null)}>Suspend Gym</MenuItem>
-        <MenuItem onClick={() => setAnchorEl(null)}>View Members</MenuItem>
-      </Menu>
     </Box>
   );
 }

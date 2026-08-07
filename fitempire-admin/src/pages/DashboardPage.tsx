@@ -11,6 +11,8 @@ import {
   ResponsiveContainer, PieChart, Pie, Cell, Legend,
 } from 'recharts';
 import { useQuery } from '@tanstack/react-query';
+import { useSelector } from 'react-redux';
+import type { RootState } from '../store';
 import { dashboardApi } from '../api';
 import type { DashboardStats, RevenueChartData, ActivityItem } from '../api';
 
@@ -97,19 +99,28 @@ const PIE_DATA = [
 ];
 
 export function DashboardPage() {
+  const user = useSelector((s: RootState) => s.auth.user);
+  const isPartner = user?.role === 'PARTNER' || user?.role === 'GYM_PARTNER';
+
   const { data: statsRes, isLoading: statsLoading } = useQuery({
     queryKey: ['dashboard-stats'],
     queryFn: () => dashboardApi.getStats().then((res) => res.data.data),
+    refetchInterval: 60_000,
+    retry: 2,
   });
 
   const { data: revenueRes, isLoading: revenueLoading } = useQuery({
     queryKey: ['dashboard-revenue', 'week'],
     queryFn: () => dashboardApi.getRevenueChart('week').then((res) => res.data.data),
+    refetchInterval: 120_000,
+    retry: 2,
   });
 
   const { data: activityRes, isLoading: activityLoading } = useQuery({
     queryKey: ['dashboard-activity'],
     queryFn: () => dashboardApi.getRecentActivity().then((res) => res.data.data),
+    refetchInterval: 30_000,
+    retry: 2,
   });
 
   const isLoading = statsLoading || revenueLoading || activityLoading;
@@ -142,23 +153,37 @@ export function DashboardPage() {
 
   return (
     <Box>
-      {/* Header */}
-      <Box sx={{ mb: 4 }}>
-        <Typography variant="h4" sx={{ fontWeight: 800, mb: 0.5 }}>
-          Welcome back 👋
-        </Typography>
-        <Typography variant="body1" sx={{ color: 'text.secondary' }}>
-          Here's what's happening at FitEmpire today.
-        </Typography>
+      {/* Role-Specific Header */}
+      <Box sx={{ mb: 4, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <Box>
+          <Typography variant="h4" sx={{ fontWeight: 800, mb: 0.5 }}>
+            {isPartner ? `Gym Partner Dashboard 🏋️‍♂️` : `FitEmpire Master Control Panel 👑`}
+          </Typography>
+          <Typography variant="body1" sx={{ color: 'text.secondary' }}>
+            {isPartner
+              ? `Welcome back, ${user?.firstName || 'Partner'}! Track your gym's members, bookings, and revenue.`
+              : `Welcome back, ${user?.firstName || 'Admin'}! Global platform overview across all gyms, partners, and revenue.`}
+          </Typography>
+        </Box>
+        <Chip
+          label={isPartner ? 'Gym Partner Account' : 'Super Admin (Owner)'}
+          sx={{
+            background: isPartner ? 'rgba(59,130,246,0.15)' : 'rgba(108,99,255,0.15)',
+            color: isPartner ? '#3B82F6' : '#6C63FF',
+            border: `1px solid ${isPartner ? 'rgba(59,130,246,0.4)' : 'rgba(108,99,255,0.4)'}`,
+            fontWeight: 800,
+            p: 1.5,
+          }}
+        />
       </Box>
 
       {/* Stat Cards */}
       <Grid container spacing={3} sx={{ mb: 4 }}>
         <Grid item xs={12} sm={6} lg={3}>
           <StatCard
-            title="Total Users"
+            title={isPartner ? 'Gym Members' : 'Total Platform Users'}
             value={formatNumber(stats.totalUsers)}
-            subtitle="Platform members"
+            subtitle={isPartner ? 'Checked-in members' : 'Registered platform users'}
             icon={<People sx={{ color: '#fff', fontSize: 24 }} />}
             gradient="linear-gradient(135deg, #6C63FF, #9C94FF)"
             trend={12.4}
@@ -166,9 +191,9 @@ export function DashboardPage() {
         </Grid>
         <Grid item xs={12} sm={6} lg={3}>
           <StatCard
-            title="Active Gyms"
+            title={isPartner ? 'My Gym Outlets' : 'Active Gyms'}
             value={formatNumber(stats.totalGyms)}
-            subtitle={`${stats.pendingApprovals} pending review`}
+            subtitle={isPartner ? 'Your listed gyms' : `${stats.pendingApprovals} pending review`}
             icon={<FitnessCenter sx={{ color: '#fff', fontSize: 24 }} />}
             gradient="linear-gradient(135deg, #FF6584, #FFB038)"
             trend={8.2}
@@ -176,7 +201,7 @@ export function DashboardPage() {
         </Grid>
         <Grid item xs={12} sm={6} lg={3}>
           <StatCard
-            title="Today's Bookings"
+            title={isPartner ? "Today's Gym Bookings" : "Platform Bookings Today"}
             value={formatNumber(stats.totalBookingsToday)}
             subtitle="Check-ins + Classes"
             icon={<EventNote sx={{ color: '#fff', fontSize: 24 }} />}

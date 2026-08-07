@@ -9,8 +9,8 @@ import { User, Activity, Dumbbell, Compass, RefreshCw, Star } from 'lucide-react
 import { useColorScheme } from 'react-native';
 
 export default function ProfileScreen() {
-  const scheme = useColorScheme();
-  const colors = Colors[scheme === 'unspecified' ? 'light' : scheme];
+  const scheme = useColorScheme() ?? 'dark';
+  const colors = Colors[scheme === 'unspecified' ? 'dark' : scheme] ?? Colors.dark;
 
   const [userProfile, setUserProfile] = useState<any>(null);
   const [workoutPlan, setWorkoutPlan] = useState<any>(null);

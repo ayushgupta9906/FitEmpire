@@ -24,7 +24,7 @@ function AuthGuard() {
     if (!isAuthenticated && !isLoginScreen && !isRootScreen) {
       router.replace('/');
     } else if (isAuthenticated && (isLoginScreen || isRootScreen)) {
-      if (user?.role === 'PARTNER') {
+      if (user?.role === 'PARTNER' || user?.role === 'GYM_PARTNER') {
         router.replace('/(partner-tabs)');
       } else {
         router.replace('/(tabs)');

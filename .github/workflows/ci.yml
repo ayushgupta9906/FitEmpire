@@ -213,6 +213,7 @@ jobs:
 
     steps:
       - name: Deploy via SSH
+        if: "${{ secrets.PROD_HOST != '' && secrets.PROD_USER != '' }}"
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.PROD_HOST }}
@@ -227,6 +228,7 @@ jobs:
             echo "✅ FitEmpire deployed successfully"
 
       - name: Health Check
+        if: "${{ secrets.PROD_HOST != '' && secrets.PROD_USER != '' }}"
         run: |
           sleep 30
           curl -f https://api.fitempire.in/api/v1/actuator/health || exit 1

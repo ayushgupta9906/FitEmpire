@@ -7,8 +7,9 @@ interface AuthContextType {
   isLoading: boolean;
   user: any;
   requestOtp: (phone: string) => Promise<string | null>;
-  verifyOtp: (phone: string, code: string) => Promise<void>;
-  loginAsPartner: (email: string, password: string) => Promise<void>;
+  verifyOtp: (phone: string, code: string) => Promise<any>;
+  login: (email: string, password: string) => Promise<any>;
+  loginAsPartner: (email: string, password: string) => Promise<any>;
   logout: () => Promise<void>;
   refreshProfile: () => Promise<void>;
 }
@@ -32,7 +33,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (accessToken && storedUser) {
         setIsAuthenticated(true);
         setUser(JSON.parse(storedUser));
-        // Async update profile in background
         fetchUserProfile();
       }
     } catch (e) {
@@ -45,9 +45,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const fetchUserProfile = async () => {
     try {
       const res = await authApi.getProfile();
-      const userData = res.data.data.user;
-      setUser(userData);
-      await AsyncStorage.setItem('fitempire_user', JSON.stringify(userData));
+      const profileData = res.data?.data;
+      const userData = profileData?.user || profileData;
+      if (userData) {
+        setUser(userData);
+        await AsyncStorage.setItem('fitempire_user', JSON.stringify(userData));
+      }
     } catch (e) {
       console.warn('Failed to refresh profile:', e);
     }
@@ -63,14 +66,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const { accessToken, refreshToken, user: userData } = res.data.data;
     
     await AsyncStorage.setItem('fitempire_access_token', accessToken);
-    await AsyncStorage.setItem('fitempire_refresh_token', refreshToken);
+    if (refreshToken) {
+      await AsyncStorage.setItem('fitempire_refresh_token', refreshToken);
+    }
     await AsyncStorage.setItem('fitempire_user', JSON.stringify(userData));
     
     setUser(userData);
     setIsAuthenticated(true);
+    fetchUserProfile();
+    return userData;
   };
 
-  const loginAsPartner = async (email: string, password: string) => {
+  const login = async (email: string, password: string) => {
     const res = await authApi.login(email, password);
     const { accessToken, refreshToken, userId, role, email: userEmail, firstName } = res.data.data;
     const userData = { id: userId, email: userEmail, firstName, role };
@@ -84,10 +91,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(userData);
     setIsAuthenticated(true);
     fetchUserProfile();
+    return userData;
+  };
+
+  const loginAsPartner = async (email: string, password: string) => {
+    return login(email, password);
   };
 
   const logout = async () => {
-    await apiLogOut();
+    try {
+      await apiLogOut();
+    } catch {
+      // Ignore network errors on logout
+    }
+    await AsyncStorage.removeItem('fitempire_access_token');
+    await AsyncStorage.removeItem('fitempire_refresh_token');
+    await AsyncStorage.removeItem('fitempire_user');
     setUser(null);
     setIsAuthenticated(false);
   };
@@ -100,6 +119,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         user,
         requestOtp,
         verifyOtp,
+        login,
         loginAsPartner,
         logout,
         refreshProfile: fetchUserProfile,

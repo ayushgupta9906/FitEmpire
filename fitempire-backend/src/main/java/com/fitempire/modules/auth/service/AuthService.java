@@ -136,32 +136,35 @@ public class AuthService {
 
     @Transactional
     public String sendOtp(OtpLoginRequest request) {
+        String normalizedPhone = normalizePhone(request.getPhone());
+        request.setPhone(normalizedPhone);
+
         // Rate limiting: max 5 OTPs per hour
         Instant oneHourAgo = Instant.now().minusSeconds(3600);
-        long recentCount = otpCodeRepository.countRecentByPhone(request.getPhone(), OtpPurpose.LOGIN, oneHourAgo);
+        long recentCount = otpCodeRepository.countRecentByPhone(normalizedPhone, OtpPurpose.LOGIN, oneHourAgo);
         if (recentCount >= 5) {
             throw new OtpException("Too many OTP requests. Please try again in an hour.", "OTP_RATE_LIMITED");
         }
 
         // Invalidate existing OTPs
-        otpCodeRepository.invalidateAllByPhone(request.getPhone(), OtpPurpose.LOGIN);
+        otpCodeRepository.invalidateAllByPhone(normalizedPhone, OtpPurpose.LOGIN);
 
         String otpCode = generateOtp();
         OtpCode otp = new OtpCode();
-        otp.setPhone(request.getPhone());
+        otp.setPhone(normalizedPhone);
         otp.setCode(otpCode);
         otp.setPurpose(OtpPurpose.LOGIN);
         otp.setExpiresAt(Instant.now().plusSeconds(otpExpiryMinutes * 60L));
 
         // Link to user if exists
-        userRepository.findByPhoneAndDeletedFalse(request.getPhone())
+        userRepository.findByPhoneAndDeletedFalse(normalizedPhone)
                 .ifPresent(otp::setUser);
 
         otpCodeRepository.save(otp);
 
         // Send via SMS
-        smsService.sendOtp(request.getPhone(), otpCode);
-        log.info("OTP sent to phone: {}", maskPhone(request.getPhone()));
+        smsService.sendOtp(normalizedPhone, otpCode);
+        log.info("OTP sent to phone: {}", maskPhone(normalizedPhone));
         return otpCode;
     }
 
@@ -169,8 +172,11 @@ public class AuthService {
 
     @Transactional
     public AuthResponse verifyOtp(OtpVerifyRequest request) {
+        String normalizedPhone = normalizePhone(request.getPhone());
+        request.setPhone(normalizedPhone);
+
         OtpCode otp = otpCodeRepository
-                .findLatestValidByPhone(request.getPhone(), OtpPurpose.LOGIN, Instant.now())
+                .findLatestValidByPhone(normalizedPhone, OtpPurpose.LOGIN, Instant.now())
                 .orElseThrow(() -> new OtpException("OTP has expired or is invalid.", "OTP_INVALID"));
 
         if (otp.getAttempts() >= maxOtpAttempts) {
@@ -187,8 +193,8 @@ public class AuthService {
         otpCodeRepository.save(otp);
 
         // Find or create user
-        User user = userRepository.findByPhoneAndDeletedFalse(request.getPhone())
-                .orElseGet(() -> createPhoneOnlyUser(request.getPhone()));
+        User user = userRepository.findByPhoneAndDeletedFalse(normalizedPhone)
+                .orElseGet(() -> createPhoneOnlyUser(normalizedPhone));
 
         user.setPhoneVerified(true);
         user.setLastLoginAt(Instant.now());
@@ -370,5 +376,14 @@ public class AuthService {
     private String maskPhone(String phone) {
         if (phone == null || phone.length() < 4) return "****";
         return "****" + phone.substring(phone.length() - 4);
+    }
+
+    private String normalizePhone(String phone) {
+        if (phone == null) return null;
+        String digits = phone.replaceAll("\\D", "");
+        if (digits.length() > 10) {
+            digits = digits.substring(digits.length() - 10);
+        }
+        return digits;
     }
 }

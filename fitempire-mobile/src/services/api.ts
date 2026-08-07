@@ -6,6 +6,7 @@ import Constants from 'expo-constants';
 
 const debuggerHost = Constants.expoConfig?.hostUri;
 const localhost = debuggerHost?.split(':')[0] || 'localhost';
+// Must include /api since backend servlet context-path is /api
 const BASE_URL = process.env.EXPO_PUBLIC_API_URL || `http://${localhost}:8080/api/v1`;
 export const apiClient = axios.create({
   baseURL: BASE_URL,
@@ -39,11 +40,16 @@ apiClient.interceptors.response.use(
         const refreshToken = await AsyncStorage.getItem('fitempire_refresh_token');
         if (!refreshToken) throw new Error('No refresh token available');
 
-        const res = await axios.post(`${BASE_URL}/auth/refresh`, { refreshToken });
+        // Backend expects refresh token as X-Refresh-Token header, not body
+        const res = await axios.post(`${BASE_URL}/auth/refresh`, null, {
+          headers: { 'X-Refresh-Token': refreshToken },
+        });
         const { accessToken, refreshToken: newRefreshToken } = res.data.data;
 
         await AsyncStorage.setItem('fitempire_access_token', accessToken);
-        await AsyncStorage.setItem('fitempire_refresh_token', newRefreshToken);
+        if (newRefreshToken) {
+          await AsyncStorage.setItem('fitempire_refresh_token', newRefreshToken);
+        }
 
         originalRequest.headers.Authorization = `Bearer ${accessToken}`;
         return apiClient(originalRequest);
@@ -67,6 +73,9 @@ export const logOut = async () => {
 // ── Service API endpoints ──────────────────────────────────────────────────
 
 export const authApi = {
+  login: (email: string, password: string) =>
+    apiClient.post('/auth/login', { email, password }),
+
   requestOtp: (phone: string) =>
     apiClient.post('/auth/otp/send', { phone, purpose: 'LOGIN' }),
   

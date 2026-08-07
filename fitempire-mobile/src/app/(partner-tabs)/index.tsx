@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, ScrollView, TouchableOpacity, RefreshControl } from 'react-native';
+import { View, StyleSheet, ScrollView, TouchableOpacity, RefreshControl, ActivityIndicator } from 'react-native';
 import { useAuth } from '@/services/auth-context';
+import { apiClient } from '@/services/api';
 import { ThemedText } from '@/components/themed-text';
 import { Colors } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
@@ -17,15 +18,52 @@ export default function PartnerDashboard() {
   const colors = Colors[scheme === 'unspecified' ? 'light' : scheme];
 
   const [refreshing, setRefreshing] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [stats, setStats] = useState({
+    totalUsers: 0,
+    totalGyms: 0,
+    totalBookingsToday: 0,
+    totalRevenueToday: 0,
+    activeMembers: 0,
+    pendingApprovals: 0,
+  });
+
+  const [activities, setActivities] = useState<any[]>([]);
+
+  const fetchStats = async () => {
+    try {
+      const res = await apiClient.get('/admin/dashboard/stats');
+      if (res.data?.data) {
+        setStats(res.data.data);
+      }
+      const actRes = await apiClient.get('/admin/dashboard/activity');
+      if (actRes.data?.data) {
+        setActivities(actRes.data.data);
+      }
+    } catch (e) {
+      console.warn('Failed to fetch partner dashboard stats:', e);
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchStats();
+  }, []);
 
   const onRefresh = () => {
     setRefreshing(true);
-    setTimeout(() => setRefreshing(false), 1500);
+    fetchStats();
   };
 
   const handleLogout = async () => {
     await logout();
     router.replace('/');
+  };
+
+  const formatCurrency = (val: number) => {
+    return `₹ ${val.toLocaleString('en-IN')}`;
   };
 
   return (
@@ -37,9 +75,9 @@ export default function PartnerDashboard() {
         {/* Header section */}
         <View style={styles.header}>
           <View>
-            <ThemedText style={styles.greeting} themeColor="textSecondary">Partner Dashboard</ThemedText>
+            <ThemedText style={styles.greeting} themeColor="textSecondary">Gym Partner Portal</ThemedText>
             <ThemedText style={[styles.title, { color: colors.text }]}>
-              {user?.gym?.name || 'My Gym Center'}
+              {user?.firstName ? `${user.firstName}'s Gym Center` : 'My Gym Center'}
             </ThemedText>
           </View>
           <TouchableOpacity onPress={handleLogout} style={[styles.logoutBtn, { backgroundColor: 'rgba(239, 68, 68, 0.1)' }]}>
@@ -55,18 +93,18 @@ export default function PartnerDashboard() {
           end={{ x: 1, y: 1 }}
         >
           <View style={styles.heroHeader}>
-            <ThemedText style={styles.heroTitle}>Today's Activity</ThemedText>
+            <ThemedText style={styles.heroTitle}>Today's Gym Overview</ThemedText>
             <Activity size={24} color="#FFF" />
           </View>
           <View style={styles.heroStats}>
             <View>
-              <ThemedText style={styles.heroStatValue}>142</ThemedText>
-              <ThemedText style={styles.heroStatLabel}>Check-ins</ThemedText>
+              <ThemedText style={styles.heroStatValue}>{stats.totalBookingsToday}</ThemedText>
+              <ThemedText style={styles.heroStatLabel}>Bookings Today</ThemedText>
             </View>
             <View style={styles.heroDivider} />
             <View>
-              <ThemedText style={styles.heroStatValue}>24</ThemedText>
-              <ThemedText style={styles.heroStatLabel}>Active Classes</ThemedText>
+              <ThemedText style={styles.heroStatValue}>{stats.totalGyms}</ThemedText>
+              <ThemedText style={styles.heroStatLabel}>Active Gyms</ThemedText>
             </View>
           </View>
         </LinearGradient>
@@ -77,42 +115,49 @@ export default function PartnerDashboard() {
             <View style={[styles.iconWrapper, { backgroundColor: 'rgba(16, 185, 129, 0.1)' }]}>
               <TrendingUp size={24} color="#10B981" />
             </View>
-            <ThemedText style={[styles.statValue, { color: colors.text }]}>₹ 12,500</ThemedText>
-            <ThemedText style={styles.statLabel} themeColor="textSecondary">Revenue (This Week)</ThemedText>
+            <ThemedText style={[styles.statValue, { color: colors.text }]}>
+              {formatCurrency(stats.totalRevenueToday)}
+            </ThemedText>
+            <ThemedText style={styles.statLabel} themeColor="textSecondary">Today's Revenue</ThemedText>
           </View>
           
           <View style={[styles.statCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
             <View style={[styles.iconWrapper, { backgroundColor: 'rgba(59, 130, 246, 0.1)' }]}>
               <Users size={24} color="#3B82F6" />
             </View>
-            <ThemedText style={[styles.statValue, { color: colors.text }]}>850</ThemedText>
+            <ThemedText style={[styles.statValue, { color: colors.text }]}>
+              {stats.totalUsers}
+            </ThemedText>
             <ThemedText style={styles.statLabel} themeColor="textSecondary">Active Members</ThemedText>
           </View>
         </View>
 
         {/* Recent Activity List */}
         <View style={styles.section}>
-          <ThemedText style={[styles.sectionTitle, { color: colors.text }]}>Recent Check-ins</ThemedText>
+          <ThemedText style={[styles.sectionTitle, { color: colors.text }]}>Recent Gym Check-ins & Activity</ThemedText>
           
-          {[
-            { id: 1, name: 'Ayush Gupta', time: '10 mins ago', type: 'Gym Access' },
-            { id: 2, name: 'Rahul Sharma', time: '25 mins ago', type: 'Yoga Class' },
-            { id: 3, name: 'Priya Patel', time: '1 hour ago', type: 'Zumba' }
-          ].map((item) => (
-            <View key={item.id} style={[styles.listItem, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-              <View style={[styles.avatarBox, { backgroundColor: colors.primary + '20' }]}>
-                <ThemedText style={{ color: colors.primary, fontWeight: 'bold' }}>{item.name.charAt(0)}</ThemedText>
-              </View>
-              <View style={styles.listContent}>
-                <ThemedText style={[styles.listName, { color: colors.text }]}>{item.name}</ThemedText>
-                <ThemedText style={styles.listDesc} themeColor="textSecondary">{item.type}</ThemedText>
-              </View>
-              <View style={styles.listRight}>
-                <ThemedText style={styles.listTime} themeColor="textSecondary">{item.time}</ThemedText>
-                <CheckCircle2 size={16} color="#10B981" style={{ marginTop: 4 }} />
-              </View>
+          {activities.length === 0 ? (
+            <View style={[styles.listItem, { backgroundColor: colors.surface, borderColor: colors.border, padding: 16 }]}>
+              <ThemedText themeColor="textSecondary">No recent check-ins recorded today.</ThemedText>
             </View>
-          ))}
+          ) : (
+            activities.map((item, idx) => (
+              <View key={item.id || idx} style={[styles.listItem, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+                <View style={[styles.avatarBox, { backgroundColor: colors.primary + '20' }]}>
+                  <ThemedText style={{ color: colors.primary, fontWeight: 'bold' }}>
+                    {item.user ? item.user.charAt(0).toUpperCase() : 'B'}
+                  </ThemedText>
+                </View>
+                <View style={styles.listContent}>
+                  <ThemedText style={[styles.listName, { color: colors.text }]}>{item.user || 'Member'}</ThemedText>
+                  <ThemedText style={styles.listDesc} themeColor="textSecondary">{item.message || item.description || 'Gym Access'}</ThemedText>
+                </View>
+                <View style={styles.listRight}>
+                  <CheckCircle2 size={18} color="#10B981" />
+                </View>
+              </View>
+            ))
+          )}
         </View>
 
       </ScrollView>

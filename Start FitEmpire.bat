@@ -1,3 +1,3 @@
 @echo off
-cd /d "c:\Users\ayush-g\Desktop\FitEmpire"
+cd /d "%~dp0"
 call start-all.bat

@@ -12,9 +12,9 @@ const { width, height } = Dimensions.get('window');
 
 export default function WelcomeScreen() {
   const router = useRouter();
-  const scheme = useColorScheme();
+  const scheme = useColorScheme() ?? 'dark';
   const theme = useTheme();
-  const colors = Colors[scheme === 'unspecified' ? 'light' : scheme];
+  const colors = Colors[scheme === 'unspecified' ? 'dark' : scheme] ?? Colors.dark;
 
   return (
     <View style={styles.container}>
@@ -68,7 +68,7 @@ export default function WelcomeScreen() {
                 </View>
                 <View style={styles.cardText}>
                   <ThemedText style={styles.cardTitle}>I am a Gym Partner</ThemedText>
-                  <ThemedText style={styles.cardDesc}>Manage your fitness business</ThemedText>
+                  <ThemedText style={styles.cardDesc}>Login with Admin-registered credentials</ThemedText>
                 </View>
                 <ArrowRight color="#FFF" size={20} />
               </TouchableOpacity>

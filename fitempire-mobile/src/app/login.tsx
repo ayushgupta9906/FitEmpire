@@ -14,9 +14,9 @@ const { width, height } = Dimensions.get('window');
 export default function LoginScreen() {
   const router = useRouter();
   const params = useLocalSearchParams();
-  const scheme = useColorScheme();
+  const scheme = useColorScheme() ?? 'dark';
   const theme = useTheme();
-  const colors = Colors[scheme === 'unspecified' ? 'light' : scheme];
+  const colors = Colors[scheme === 'unspecified' ? 'dark' : scheme] ?? Colors.dark;
   
   const { requestOtp, verifyOtp, loginAsPartner } = useAuth();
 
@@ -191,10 +191,13 @@ export default function LoginScreen() {
             )
           ) : (
             <View style={styles.inputWrapper}>
+              <ThemedText style={{ fontSize: 13, textAlign: 'center', marginBottom: 16, lineHeight: 18 }} themeColor="textSecondary">
+                Gym Partners are registered by FitEmpire Admin through the Admin Portal. Log in with your registered credentials below:
+              </ThemedText>
               <View style={[styles.inputContainer, { backgroundColor: colors.surface, borderColor: colors.border, marginBottom: 16 }]}>
                 <TextInput
                   style={[styles.input, { color: colors.text }]}
-                  placeholder="Business Email"
+                  placeholder="Registered Business Email"
                   placeholderTextColor={colors.textSecondary}
                   keyboardType="email-address"
                   autoCapitalize="none"

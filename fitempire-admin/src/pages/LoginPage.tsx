@@ -55,9 +55,9 @@ export function LoginPage() {
       const res = await authApi.login(data.email, data.password);
       const { accessToken, refreshToken, userId, email, firstName, role } = res.data.data;
 
-      // Only allow admin/super admin
-      if (!['ADMIN', 'SUPER_ADMIN'].includes(role)) {
-        enqueueSnackbar('Access denied. Admin credentials required.', { variant: 'error' });
+      // Allow admin, super admin, and gym partners
+      if (!['ADMIN', 'SUPER_ADMIN', 'PARTNER', 'GYM_PARTNER'].includes(role)) {
+        enqueueSnackbar('Access denied. Admin or Gym Partner credentials required.', { variant: 'error' });
         return;
       }
 

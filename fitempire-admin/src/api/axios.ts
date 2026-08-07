@@ -1,8 +1,8 @@
 import axios, { AxiosError } from 'axios';
 import type { AxiosInstance, AxiosResponse } from 'axios';
 
-// Production backend configuration for live deployment
-const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://ayush150152-fitempire-api.hf.space/api';
+// Use env var VITE_API_BASE_URL in production; fall back to local backend
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api';
 
 const api: AxiosInstance = axios.create({
   baseURL: BASE_URL,
@@ -47,7 +47,9 @@ api.interceptors.response.use(
 
         const { accessToken, refreshToken: newRefreshToken } = response.data.data;
         localStorage.setItem('fitempire_access_token', accessToken);
-        localStorage.setItem('fitempire_refresh_token', newRefreshToken);
+        if (newRefreshToken) {
+          localStorage.setItem('fitempire_refresh_token', newRefreshToken);
+        }
 
         originalRequest.headers.Authorization = `Bearer ${accessToken}`;
         return api(originalRequest);

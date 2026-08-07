@@ -17,6 +17,7 @@ import com.fitempire.modules.payments.repository.PaymentRepository;
 import com.fitempire.modules.payments.service.PaymentService;
 import com.fitempire.modules.users.dto.UserDto;
 import com.fitempire.modules.users.repository.UserRepository;
+import com.fitempire.modules.users.entity.User;
 import com.fitempire.modules.users.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -31,6 +32,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
@@ -38,7 +41,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/v1/admin")
 @RequiredArgsConstructor
-@PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
+@PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN', 'PARTNER', 'GYM_PARTNER')")
 @Tag(name = "Admin Operations", description = "Back-office management panel statistics, user deactivation, gym reviews")
 public class AdminController {
 
@@ -52,31 +55,38 @@ public class AdminController {
     private final PaymentRepository paymentRepository;
     private final PaymentService paymentService;
 
+    private User getUserFromPrincipal(UserDetails userDetails) {
+        if (userDetails == null) return null;
+        return userRepository.findByEmailAndDeletedFalse(userDetails.getUsername()).orElse(null);
+    }
+
     private UUID getUserIdFromPrincipal(UserDetails userDetails) {
-        return userRepository.findByEmailAndDeletedFalse(userDetails.getUsername())
-                .orElseThrow(() -> new RuntimeException("Admin user not found"))
-                .getId();
+        User user = getUserFromPrincipal(userDetails);
+        return user != null ? user.getId() : null;
     }
 
     // ── Dashboard stats ──────────────────────────────────────────────────────
 
     @GetMapping("/dashboard/stats")
     @Operation(summary = "Get aggregate statistics for the dashboard overview")
-    public ResponseEntity<ApiResponse<DashboardStatsDto>> getDashboardStats() {
-        return ResponseEntity.ok(ApiResponse.success(adminService.getDashboardStats()));
+    public ResponseEntity<ApiResponse<DashboardStatsDto>> getDashboardStats(
+            @AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.ok(ApiResponse.success(adminService.getDashboardStats(getUserFromPrincipal(userDetails))));
     }
 
     @GetMapping("/dashboard/revenue")
     @Operation(summary = "Get historical revenue data for chart plotting")
     public ResponseEntity<ApiResponse<List<RevenueChartDto>>> getRevenueChart(
-            @RequestParam(defaultValue = "week") String period) {
-        return ResponseEntity.ok(ApiResponse.success(adminService.getRevenueChart(period)));
+            @RequestParam(defaultValue = "week") String period,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.ok(ApiResponse.success(adminService.getRevenueChart(period, getUserFromPrincipal(userDetails))));
     }
 
     @GetMapping("/dashboard/activity")
     @Operation(summary = "Get recent platform activities log")
-    public ResponseEntity<ApiResponse<List<RecentActivityDto>>> getRecentActivity() {
-        return ResponseEntity.ok(ApiResponse.success(adminService.getRecentActivity()));
+    public ResponseEntity<ApiResponse<List<RecentActivityDto>>> getRecentActivity(
+            @AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.ok(ApiResponse.success(adminService.getRecentActivity(getUserFromPrincipal(userDetails))));
     }
 
     // ── Analytics ────────────────────────────────────────────────────────────
@@ -190,6 +200,17 @@ public class AdminController {
         UUID adminId = getUserIdFromPrincipal(userDetails);
         paymentService.processRefund(paymentId, refundRequest.getAmount(), refundRequest.getReason(), adminId);
         return ResponseEntity.ok(ApiResponse.success("Refund initiated successfully."));
+    }
+
+    // ── Partner Registration ─────────────────────────────────────────────────
+
+    @PostMapping("/partners/register")
+    @Operation(summary = "Register a new Gym Partner and initialize their Gym")
+    public ResponseEntity<ApiResponse<PartnerRegistrationResultDto>> registerPartner(
+            @Valid @RequestBody RegisterPartnerDto dto) {
+        PartnerRegistrationResultDto result = adminService.registerPartner(dto);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ApiResponse.success("Gym Partner and Gym account registered successfully.", result));
     }
 
     // Static helper class for request mapping

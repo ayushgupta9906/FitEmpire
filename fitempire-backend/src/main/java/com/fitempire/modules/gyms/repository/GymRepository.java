@@ -19,6 +19,8 @@ public interface GymRepository extends JpaRepository<Gym, UUID> {
 
     Optional<Gym> findBySlugAndDeletedFalse(String slug);
 
+    boolean existsBySlugAndDeletedFalse(String slug);
+
     @Query("SELECT g FROM Gym g WHERE g.deleted = false AND g.status = :status ORDER BY g.featured DESC, g.avgRating DESC")
     Page<Gym> findByStatus(@Param("status") GymStatus status, Pageable pageable);
 

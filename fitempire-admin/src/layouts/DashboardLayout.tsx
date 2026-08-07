@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -8,7 +9,8 @@ import {
 import {
   Dashboard, People, FitnessCenter, CardMembership, Payment,
   BarChart, EventNote, Notifications, Settings, ChevronLeft,
-  ChevronRight, Logout, NotificationsNone, Search,
+  ChevronRight, Logout, NotificationsNone, Search, CalendarMonth,
+  VerifiedUser, CurrencyRupee,
 } from '@mui/icons-material';
 import type { AppDispatch, RootState } from '../store';
 import { logout, toggleSidebar } from '../store';
@@ -24,10 +26,11 @@ const NAV_ITEMS = [
   { label: 'Memberships', icon: <CardMembership />, path: '/memberships' },
   { label: 'Payments', icon: <Payment />, path: '/payments' },
   { label: 'Bookings', icon: <EventNote />, path: '/bookings' },
+  { label: 'Classes', icon: <CalendarMonth />, path: '/classes' },
   { label: 'Analytics', icon: <BarChart />, path: '/analytics' },
   { label: 'Partner Onboarding', icon: <FitnessCenter />, path: '/onboarding' },
-  { label: 'Verification Queue', icon: <FitnessCenter />, path: '/verification' },
-  { label: 'Partner Settlements', icon: <Payment />, path: '/settlements' },
+  { label: 'Verification Queue', icon: <VerifiedUser />, path: '/verification' },
+  { label: 'Settlements', icon: <CurrencyRupee />, path: '/settlements' },
   { label: 'Notifications', icon: <Notifications />, path: '/notifications' },
   { label: 'Settings', icon: <Settings />, path: '/settings' },
 ];
@@ -64,6 +67,15 @@ export function DashboardLayout() {
   const sidebarOpen = useSelector((s: RootState) => s.ui.sidebarOpen);
   const user = useSelector((s: RootState) => s.auth.user);
   const drawerWidth = sidebarOpen ? DRAWER_WIDTH : DRAWER_COLLAPSED;
+
+  const isPartner = user?.role === 'PARTNER' || user?.role === 'GYM_PARTNER';
+
+  useEffect(() => {
+    const superAdminOnlyPaths = ['/users', '/onboarding', '/verification', '/settlements', '/analytics', '/memberships'];
+    if (isPartner && superAdminOnlyPaths.some((p) => location.pathname.startsWith(p))) {
+      navigate('/dashboard', { replace: true });
+    }
+  }, [user, location.pathname, isPartner, navigate]);
 
   const handleLogout = async () => {
     try { await authApi.logout(); } catch { /* ignore */ }
@@ -158,7 +170,12 @@ export function DashboardLayout() {
 
         {/* Navigation */}
         <List sx={{ flex: 1, px: 1.5, py: 2, overflowY: 'auto' }}>
-          {NAV_ITEMS.map((item) => {
+          {NAV_ITEMS.filter((item) => {
+            if (user?.role === 'PARTNER' || user?.role === 'GYM_PARTNER') {
+              return ['/dashboard', '/gyms', '/bookings', '/classes', '/payments', '/notifications', '/settings'].includes(item.path);
+            }
+            return true;
+          }).map((item) => {
             const active = location.pathname === item.path;
             return (
               <ListItem key={item.path} disablePadding sx={{ mb: 0.5 }}>

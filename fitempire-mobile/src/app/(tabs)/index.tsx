@@ -28,9 +28,9 @@ const POPULAR_CENTERS = [
 
 export default function HomeScreen() {
   const router = useRouter();
-  const scheme = useColorScheme();
+  const scheme = useColorScheme() ?? 'dark';
   const theme = useTheme();
-  const colors = Colors[scheme === 'unspecified' ? 'light' : scheme];
+  const colors = Colors[scheme === 'unspecified' ? 'dark' : scheme] ?? Colors.dark;
 
   const [user, setUser] = useState<any>(null);
   const [balance, setBalance] = useState('0.00');
@@ -40,12 +40,16 @@ export default function HomeScreen() {
     setLoading(true);
     try {
       const profRes = await authApi.getProfile();
-      setUser(profRes.data.data.user);
-      
+      // API returns { success, data: { ...userFields } } or { success, data: { user: {...} } }
+      const profileData = profRes.data?.data;
+      setUser(profileData?.user ?? profileData ?? null);
+
       const walletRes = await walletApi.getWalletInfo();
-      setBalance(walletRes.data.data.balance.toFixed(2));
+      const walletData = walletRes.data?.data;
+      const balanceNum = walletData?.balance ?? walletData?.walletBalance ?? 0;
+      setBalance(typeof balanceNum === 'number' ? balanceNum.toFixed(2) : '0.00');
     } catch (e) {
-      console.warn("Home Screen Load Error:", e);
+      console.warn('Home Screen Load Error:', e);
     } finally {
       setLoading(false);
     }

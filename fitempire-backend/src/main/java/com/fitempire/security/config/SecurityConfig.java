@@ -159,7 +159,7 @@ public class SecurityConfig {
         }
 
         log.info("Configured CORS Allowed Origins: {}", origins);
-        config.setAllowedOrigins(origins);
+        config.setAllowedOriginPatterns(Arrays.asList("*"));
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(Arrays.asList("*"));
         config.setExposedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Refresh-Token"));

@@ -76,11 +76,15 @@ export const authApi = {
   login: (email: string, password: string) =>
     apiClient.post('/auth/login', { email, password }),
 
-  requestOtp: (phone: string) =>
-    apiClient.post('/auth/otp/send', { phone, purpose: 'LOGIN' }),
+  requestOtp: (phone: string) => {
+    const cleanPhone = phone.replace(/\D/g, '').slice(-10);
+    return apiClient.post('/auth/otp/send', { phone: cleanPhone, purpose: 'LOGIN' });
+  },
   
-  verifyOtp: (phone: string, code: string) =>
-    apiClient.post('/auth/otp/verify', { phone, otp: code, purpose: 'LOGIN' }),
+  verifyOtp: (phone: string, code: string) => {
+    const cleanPhone = phone.replace(/\D/g, '').slice(-10);
+    return apiClient.post('/auth/otp/verify', { phone: cleanPhone, otp: code, purpose: 'LOGIN' });
+  },
   
   getProfile: () =>
     apiClient.get('/users/profile/me'),

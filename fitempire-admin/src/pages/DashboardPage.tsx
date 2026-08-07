@@ -191,12 +191,12 @@ export function DashboardPage() {
         </Grid>
         <Grid item xs={12} sm={6} lg={3}>
           <StatCard
-            title={isPartner ? 'My Gym Outlets' : 'Active Gyms'}
-            value={formatNumber(stats.totalGyms)}
-            subtitle={isPartner ? 'Your listed gyms' : `${stats.pendingApprovals} pending review`}
+            title={isPartner ? 'Gym Status' : 'Active Gyms'}
+            value={isPartner ? 'Active & Live' : formatNumber(stats.totalGyms)}
+            subtitle={isPartner ? 'Your Listed Fitness Center' : `${stats.pendingApprovals} pending review`}
             icon={<FitnessCenter sx={{ color: '#fff', fontSize: 24 }} />}
             gradient="linear-gradient(135deg, #FF6584, #FFB038)"
-            trend={8.2}
+            trend={isPartner ? undefined : 8.2}
           />
         </Grid>
         <Grid item xs={12} sm={6} lg={3}>

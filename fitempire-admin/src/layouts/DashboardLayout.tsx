@@ -71,7 +71,7 @@ export function DashboardLayout() {
   const isPartner = user?.role === 'PARTNER' || user?.role === 'GYM_PARTNER';
 
   useEffect(() => {
-    const superAdminOnlyPaths = ['/users', '/onboarding', '/verification', '/settlements', '/analytics', '/memberships'];
+    const superAdminOnlyPaths = ['/gyms', '/users', '/onboarding', '/verification', '/settlements', '/analytics', '/memberships'];
     if (isPartner && superAdminOnlyPaths.some((p) => location.pathname.startsWith(p))) {
       navigate('/dashboard', { replace: true });
     }
@@ -172,7 +172,7 @@ export function DashboardLayout() {
         <List sx={{ flex: 1, px: 1.5, py: 2, overflowY: 'auto' }}>
           {NAV_ITEMS.filter((item) => {
             if (user?.role === 'PARTNER' || user?.role === 'GYM_PARTNER') {
-              return ['/dashboard', '/gyms', '/bookings', '/classes', '/payments', '/notifications', '/settings'].includes(item.path);
+              return ['/dashboard', '/bookings', '/classes', '/payments', '/notifications', '/settings'].includes(item.path);
             }
             return true;
           }).map((item) => {

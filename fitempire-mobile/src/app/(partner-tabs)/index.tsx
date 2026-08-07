@@ -103,8 +103,8 @@ export default function PartnerDashboard() {
             </View>
             <View style={styles.heroDivider} />
             <View>
-              <ThemedText style={styles.heroStatValue}>{stats.totalGyms}</ThemedText>
-              <ThemedText style={styles.heroStatLabel}>Active Gyms</ThemedText>
+              <ThemedText style={styles.heroStatValue}>Active</ThemedText>
+              <ThemedText style={styles.heroStatLabel}>Gym Status</ThemedText>
             </View>
           </View>
         </LinearGradient>

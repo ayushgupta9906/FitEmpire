@@ -1,9 +1,11 @@
 package com.fitempire.modules.auth.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class OtpVerifyRequest {
 
     @NotBlank(message = "Phone number is required")
@@ -15,5 +17,6 @@ public class OtpVerifyRequest {
     @Pattern(regexp = "^\\d{6}$", message = "OTP must contain only digits")
     private String otp;
 
+    private String purpose;
     private String fcmToken;
 }

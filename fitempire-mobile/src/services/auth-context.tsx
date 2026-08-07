@@ -8,6 +8,7 @@ interface AuthContextType {
   user: any;
   requestOtp: (phone: string) => Promise<string | null>;
   verifyOtp: (phone: string, code: string) => Promise<void>;
+  loginAsPartner: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   refreshProfile: () => Promise<void>;
 }
@@ -69,6 +70,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setIsAuthenticated(true);
   };
 
+  const loginAsPartner = async (email: string, password: string) => {
+    const res = await authApi.login(email, password);
+    const { accessToken, refreshToken, userId, role, email: userEmail, firstName } = res.data.data;
+    const userData = { id: userId, email: userEmail, firstName, role };
+    
+    await AsyncStorage.setItem('fitempire_access_token', accessToken);
+    if (refreshToken) {
+      await AsyncStorage.setItem('fitempire_refresh_token', refreshToken);
+    }
+    await AsyncStorage.setItem('fitempire_user', JSON.stringify(userData));
+    
+    setUser(userData);
+    setIsAuthenticated(true);
+    fetchUserProfile();
+  };
+
   const logout = async () => {
     await apiLogOut();
     setUser(null);
@@ -83,6 +100,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         user,
         requestOtp,
         verifyOtp,
+        loginAsPartner,
         logout,
         refreshProfile: fetchUserProfile,
       }}

@@ -21,7 +21,7 @@ spring:
   # ── JPA ──────────────────────────────────────────────────
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     show-sql: false
     properties:
       hibernate:
@@ -37,17 +37,17 @@ spring:
 
   # ── Database ──────────────────────────────────────────────
   datasource:
-    url: ${DATABASE_URL:${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/fitempire}}
-    username: ${DB_USER:${SPRING_DATASOURCE_USERNAME:postgres}}
-    password: ${DB_PASSWORD:${SPRING_DATASOURCE_PASSWORD:postgres}}
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://ep-lingering-sky-atwtj0vn-pooler.c-9.us-east-1.aws.neon.tech:5432/neondb?sslmode=require}
+    username: ${SPRING_DATASOURCE_USERNAME:neondb_owner}
+    password: ${SPRING_DATASOURCE_PASSWORD:npg_BsZ4re0zCHiS}
     driver-class-name: org.postgresql.Driver
     hikari:
       pool-name: FitEmpirePool
       maximum-pool-size: ${DB_POOL_SIZE:10}
       minimum-idle: 2
       connection-timeout: 30000
-      idle-timeout: 600000
-      max-lifetime: 1800000
+      idle-timeout: 300000
+      max-lifetime: 1200000
       connection-test-query: SELECT 1
 
   # ── Flyway ───────────────────────────────────────────────
@@ -75,7 +75,7 @@ spring:
 
   # ── Cache ────────────────────────────────────────────────
   cache:
-    type: redis
+    type: ${SPRING_CACHE_TYPE:simple}
     redis:
       time-to-live: ${REDIS_TTL_SECONDS:3600}000
       cache-null-values: false
@@ -157,7 +157,7 @@ management:
     mail:
       enabled: false
     redis:
-      enabled: true
+      enabled: false
     db:
       enabled: true
   info:
@@ -296,20 +296,22 @@ spring:
       on-profile: dev
   jpa:
     show-sql: true
+    hibernate:
+      ddl-auto: none
   flyway:
-    enabled: true
-    clean-disabled: false
+    enabled: false
   cache:
     type: simple
   autoconfigure:
     exclude:
       - org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.redis.RedisRepositoriesAutoConfiguration
 
 logging:
   level:
     com.fitempire: DEBUG
-    org.springframework.security: DEBUG
-    org.hibernate.SQL: DEBUG
+    org.springframework.security: WARN
+    org.hibernate.SQL: WARN
 
 ---
 # ── Test Profile ──────────────────────────────────────────

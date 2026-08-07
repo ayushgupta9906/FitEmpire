@@ -25,7 +25,7 @@ public class Wallet {
     private User user;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "wallet_type", nullable = false)
+    @Column(name = "wallet_type", columnDefinition = "VARCHAR(50) DEFAULT 'USER'")
     private WalletType walletType = WalletType.USER;
     
     @Column(name = "gym_id")

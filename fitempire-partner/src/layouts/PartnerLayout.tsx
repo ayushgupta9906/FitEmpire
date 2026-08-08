@@ -146,7 +146,7 @@ export const PartnerLayout: React.FC = () => {
                 boxShadow: '0 2px 10px rgba(59, 130, 246, 0.4)',
               }}
             >
-              <Dumbbell color="#FFF" size={16} />
+              <Dumbbell color="#FFF" size={16} style={{ transform: 'scaleX(-1)' }} />
             </div>
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>

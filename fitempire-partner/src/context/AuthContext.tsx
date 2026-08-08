@@ -33,39 +33,37 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<PartnerUser | null>(() => {
     const saved = localStorage.getItem('fitempire_partner_user');
-    return saved ? JSON.parse(saved) : DEFAULT_PARTNER;
+    return saved ? JSON.parse(saved) : null;
   });
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
     const token = localStorage.getItem('fitempire_partner_token');
-    return token ? true : true; // Default true so partner app opens directly
+    return !!token;
   });
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const login = async (email: string, password: string) => {
     setIsLoading(true);
     try {
-      const res = await partnerApi.login(email, password);
+      const res = await partnerApi.login(email.trim(), password);
       const data = res.data?.data;
-      const token = data?.accessToken || 'demo_partner_jwt';
+      const token = data?.accessToken;
+      if (!token) {
+        throw new Error('Authentication failed. No token received.');
+      }
+      
       const userData: PartnerUser = {
-        id: data?.userId || DEFAULT_PARTNER.id,
-        userId: data?.userId || DEFAULT_PARTNER.userId,
+        id: data?.userId,
+        userId: data?.userId,
         email: data?.email || email,
-        firstName: data?.firstName || 'FitEmpire Partner',
+        firstName: data?.firstName || 'Gym Partner',
         role: data?.role || 'GYM_PARTNER',
-        gymName: 'FitEmpire Flagship • Koramangala',
+        gymName: data?.gymName || 'FitEmpire Partner Gym',
       };
 
       localStorage.setItem('fitempire_partner_token', token);
       localStorage.setItem('fitempire_partner_user', JSON.stringify(userData));
 
       setUser(userData);
-      setIsAuthenticated(true);
-    } catch {
-      // Offline / fallback fallback demo mode
-      localStorage.setItem('fitempire_partner_token', 'demo_partner_jwt');
-      localStorage.setItem('fitempire_partner_user', JSON.stringify(DEFAULT_PARTNER));
-      setUser(DEFAULT_PARTNER);
       setIsAuthenticated(true);
     } finally {
       setIsLoading(false);

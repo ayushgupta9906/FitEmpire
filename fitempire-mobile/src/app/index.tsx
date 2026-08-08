@@ -34,7 +34,7 @@ export default function WelcomeScreen() {
                 colors={['#6C63FF', '#4F46E5']}
                 style={styles.logoBadge}
               >
-                <View style={{ transform: [{ scaleX: -1 }] }}>
+                <View style={{ transform: [{ scaleX: -1 }], ...(Platform.OS === 'web' ? { transform: 'scaleX(-1)' } : {}) }}>
                   <Dumbbell color="#FFFFFF" size={42} strokeWidth={2.3} />
                 </View>
               </LinearGradient>

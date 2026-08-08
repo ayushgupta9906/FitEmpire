@@ -12,6 +12,7 @@ import {
   ChevronRight, Logout, NotificationsNone, Search, CalendarMonth,
   VerifiedUser, CurrencyRupee,
 } from '@mui/icons-material';
+import { Dumbbell } from 'lucide-react';
 import type { AppDispatch, RootState } from '../store';
 import { logout, toggleSidebar } from '../store';
 import { authApi } from '../api';
@@ -34,28 +35,6 @@ const NAV_ITEMS = [
   { label: 'Notifications', icon: <Notifications />, path: '/notifications' },
   { label: 'Settings', icon: <Settings />, path: '/settings' },
 ];
-
-const DumbbellIcon = ({ size = 24, color = '#FFFFFF', style = {} }: any) => (
-  <svg
-    width={size}
-    height={size}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke={color}
-    strokeWidth="2.3"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    style={{ transform: 'scaleX(-1)', display: 'inline-block', verticalAlign: 'middle', ...style }}
-  >
-    <path d="M14.4 14.4 9.6 9.6" />
-    <path d="M18.657 21.485a2 2 0 1 1-2.829-2.828l.707-.707a2 2 0 1 1 2.829 2.828z" />
-    <path d="m21.5 21.5-1.4-1.4" />
-    <path d="M3.929 6.757a2 2 0 1 1 2.828-2.828l.707.707a2 2 0 1 1-2.828 2.828z" />
-    <path d="m2.5 2.5 1.4 1.4" />
-    <path d="m8.5 11.5-2.1-2.1a2 2 0 1 1 2.8-2.8l2.1 2.1" />
-    <path d="m15.5 18.5-2.1-2.1a2 2 0 1 1 2.8-2.8l2.1 2.1" />
-  </svg>
-);
 
 export function DashboardLayout() {
   const theme = useTheme();
@@ -131,7 +110,7 @@ export function DashboardLayout() {
                   boxShadow: '0 4px 15px rgba(108, 99, 255, 0.45)',
                 }}
               >
-                <DumbbellIcon size={20} color="#FFFFFF" />
+                <Dumbbell size={20} color="#FFFFFF" strokeWidth={2.3} style={{ transform: 'scaleX(-1)' }} />
               </Box>
               <Box>
                 <Typography variant="h6" sx={{ fontWeight: 800, lineHeight: 1, color: '#F0F0FF' }}>
@@ -156,7 +135,7 @@ export function DashboardLayout() {
                 boxShadow: '0 4px 15px rgba(108, 99, 255, 0.45)',
               }}
             >
-              <DumbbellIcon size={20} color="#FFFFFF" />
+              <Dumbbell size={20} color="#FFFFFF" strokeWidth={2.3} style={{ transform: 'scaleX(-1)' }} />
             </Box>
           )}
           {sidebarOpen && (

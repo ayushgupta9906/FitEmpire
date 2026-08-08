@@ -124,14 +124,14 @@ export function DashboardLayout() {
                   width: 38,
                   height: 38,
                   borderRadius: '12px',
-                  backgroundColor: '#FFFFFF',
+                  background: 'linear-gradient(135deg, #6366F1 0%, #4F46E5 100%)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  boxShadow: '0 4px 15px rgba(79, 70, 229, 0.35)',
+                  boxShadow: '0 4px 15px rgba(99, 102, 241, 0.4)',
                 }}
               >
-                <DumbbellIcon size={20} color="#4F46E5" />
+                <DumbbellIcon size={20} color="#FFFFFF" />
               </Box>
               <Box>
                 <Typography variant="h6" sx={{ fontWeight: 800, lineHeight: 1, color: '#F0F0FF' }}>
@@ -149,14 +149,14 @@ export function DashboardLayout() {
                 width: 38,
                 height: 38,
                 borderRadius: '12px',
-                backgroundColor: '#FFFFFF',
+                background: 'linear-gradient(135deg, #6366F1 0%, #4F46E5 100%)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                boxShadow: '0 4px 15px rgba(79, 70, 229, 0.35)',
+                boxShadow: '0 4px 15px rgba(99, 102, 241, 0.4)',
               }}
             >
-              <DumbbellIcon size={20} color="#4F46E5" />
+              <DumbbellIcon size={20} color="#FFFFFF" />
             </Box>
           )}
           {sidebarOpen && (

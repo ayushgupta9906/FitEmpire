@@ -151,7 +151,7 @@ export const PartnerLayout: React.FC = () => {
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
                 <span style={{ fontSize: '0.85rem', fontWeight: 800, color: '#FFF' }}>
-                  FitPass Partner
+                  FitEmpire Partner
                 </span>
                 <span className="badge-cyan" style={{ fontSize: '0.58rem', padding: '1px 5px' }}>
                   LIVE

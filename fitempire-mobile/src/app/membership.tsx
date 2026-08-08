@@ -72,7 +72,7 @@ export default function MembershipScreen() {
                   razorpayPaymentId: 'pay_test_' + Math.random().toString(36).substring(7),
                   razorpaySignature: 'sig_test_dummy',
                 });
-                Alert.alert('Payment Successful!', 'Your FitPass membership is now active.', [
+                Alert.alert('Payment Successful!', 'Your FitEmpire membership is now active.', [
                   { text: 'Great!', onPress: () => router.replace('/(tabs)') }
                 ]);
               } catch (verifyErr) {

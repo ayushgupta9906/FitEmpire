@@ -74,7 +74,7 @@ export const LoginPage: React.FC = () => {
                 marginBottom: 16,
               }}
             >
-              <Dumbbell color="#4F46E5" size={30} style={{ transform: 'scaleX(-1)', transformOrigin: 'center', display: 'inline-block' }} />
+              <div style={{ display: 'inline-flex', transform: 'scaleX(-1)' }}><Dumbbell color="#4F46E5" size={30} /></div>
             </div>
           <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#FFFFFF', marginBottom: 6 }}>
             FitEmpire Partner Portal

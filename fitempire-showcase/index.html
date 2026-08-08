@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FitEmpire - Unified Platform Showcase</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
   <style>
     :root {
       --bg-dark: #07080a;
@@ -28,7 +30,7 @@
 
     body {
       background-color: var(--bg-dark);
-      background-image: 
+      background-image:
         radial-gradient(circle at 10% 20%, rgba(108, 99, 255, 0.12) 0%, transparent 40%),
         radial-gradient(circle at 90% 80%, rgba(6, 182, 212, 0.1) 0%, transparent 40%);
       color: var(--text);
@@ -159,6 +161,7 @@
       border: 1px solid rgba(255, 255, 255, 0.25);
       color: #F8FAFC;
     }
+
     .live-link-member:hover {
       background: rgba(255, 255, 255, 0.2);
       border-color: rgba(255, 255, 255, 0.4);
@@ -171,6 +174,7 @@
       border: 1px solid rgba(59, 130, 246, 0.45);
       color: #38BDF8;
     }
+
     .live-link-partner:hover {
       background: rgba(59, 130, 246, 0.35);
       border-color: rgba(59, 130, 246, 0.6);
@@ -183,6 +187,7 @@
       border: 1px solid rgba(108, 99, 255, 0.55);
       color: #C7D2FE;
     }
+
     .live-link-admin:hover {
       background: linear-gradient(135deg, rgba(108, 99, 255, 0.55) 0%, rgba(79, 70, 229, 0.7) 100%);
       color: #FFFFFF;
@@ -220,6 +225,7 @@
       gap: 0.35rem;
       backdrop-filter: blur(8px);
     }
+
     .device-badge span {
       color: var(--accent);
       font-size: 0.58rem;
@@ -293,9 +299,17 @@
       border-radius: 50%;
     }
 
-    .dot-red { background-color: #ef4444; }
-    .dot-yellow { background-color: #f59e0b; }
-    .dot-green { background-color: #10b981; }
+    .dot-red {
+      background-color: #ef4444;
+    }
+
+    .dot-yellow {
+      background-color: #f59e0b;
+    }
+
+    .dot-green {
+      background-color: #10b981;
+    }
 
     .browser-address {
       flex: 1;
@@ -319,8 +333,15 @@
     }
 
     @keyframes blink {
-      0%, 100% { opacity: 0.3; }
-      50% { opacity: 1; }
+
+      0%,
+      100% {
+        opacity: 0.3;
+      }
+
+      50% {
+        opacity: 1;
+      }
     }
 
     @media (max-width: 1200px) {
@@ -328,34 +349,39 @@
         overflow: auto;
         height: auto;
       }
+
       .workspace {
         grid-template-columns: 1fr;
         height: auto;
         gap: 2rem;
       }
+
       .iphone-frame {
         height: 680px;
       }
+
       .browser-frame {
         height: 550px;
       }
     }
   </style>
 </head>
+
 <body>
 
   <!-- Minimal Clean Header without Right Corner Buttons -->
   <header>
     <div class="logo-container">
       <div class="logo-icon-box">
-        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4F46E5" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="transform: scaleX(-1);">
-          <path d="M14.4 14.4 9.6 9.6"/>
-          <path d="M18.657 21.485a2 2 0 1 1-2.829-2.828l.707-.707a2 2 0 1 1 2.829 2.828z"/>
-          <path d="m21.5 21.5-1.4-1.4"/>
-          <path d="M3.929 6.757a2 2 0 1 1 2.828-2.828l.707.707a2 2 0 1 1-2.828 2.828z"/>
-          <path d="m2.5 2.5 1.4 1.4"/>
-          <path d="m8.5 11.5-2.1-2.1a2 2 0 1 1 2.8-2.8l2.1 2.1"/>
-          <path d="m15.5 18.5-2.1-2.1a2 2 0 1 1 2.8-2.8l2.1 2.1"/>
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4F46E5"
+          stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="transform: scaleX(-1);">
+          <path d="M14.4 14.4 9.6 9.6" />
+          <path d="M18.657 21.485a2 2 0 1 1-2.829-2.828l.707-.707a2 2 0 1 1 2.829 2.828z" />
+          <path d="m21.5 21.5-1.4-1.4" />
+          <path d="M3.929 6.757a2 2 0 1 1 2.828-2.828l.707.707a2 2 0 1 1-2.828 2.828z" />
+          <path d="m2.5 2.5 1.4 1.4" />
+          <path d="m8.5 11.5-2.1-2.1a2 2 0 1 1 2.8-2.8l2.1 2.1" />
+          <path d="m15.5 18.5-2.1-2.1a2 2 0 1 1 2.8-2.8l2.1 2.1" />
         </svg>
       </div>
       <span class="logo-text">FitEmpire</span>
@@ -364,9 +390,7 @@
         Live Production
       </div>
     </div>
-    <div class="header-subtext">
-      Live Interactive Multi-Platform Showcase
-    </div>
+
   </header>
 
   <!-- 3-Screen Live Grid with Live Link Button on Each Screen -->
@@ -427,4 +451,5 @@
   </main>
 
 </body>
+
 </html>

@@ -134,20 +134,20 @@ export const PartnerLayout: React.FC = () => {
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <div
-              style={{
-                width: 32,
-                height: 32,
-                borderRadius: 10,
-                background: 'linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                boxShadow: '0 2px 10px rgba(59, 130, 246, 0.4)',
-              }}
-            >
-              <Dumbbell color="#FFF" size={16} style={{ transform: 'scaleX(-1)' }} />
-            </div>
+              <div
+                style={{
+                  width: 32,
+                  height: 32,
+                  borderRadius: 10,
+                  backgroundColor: '#FFFFFF',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  boxShadow: '0 2px 10px rgba(79, 70, 229, 0.35)',
+                }}
+              >
+                <Dumbbell color="#4F46E5" size={16} style={{ transform: 'scaleX(-1)' }} />
+              </div>
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
                 <span style={{ fontSize: '0.85rem', fontWeight: 800, color: '#FFF' }}>

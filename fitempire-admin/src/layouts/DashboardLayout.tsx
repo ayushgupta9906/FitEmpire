@@ -294,7 +294,7 @@ export function DashboardLayout() {
               <Tooltip title="Open FitEmpire Member App">
                 <Box
                   component="a"
-                  href="http://localhost:8081"
+                  href="https://firmempireapp.netlify.app"
                   target="_blank"
                   rel="noopener noreferrer"
                   sx={{

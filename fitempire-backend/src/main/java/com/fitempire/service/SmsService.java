@@ -32,11 +32,15 @@ public class SmsService {
 
     @Async
     public void sendOtp(String toPhone, String otp) {
-        String internationalPhone = "+91" + toPhone;
+        String digits = toPhone.replaceAll("\\D", "");
+        if (digits.length() > 10) {
+            digits = digits.substring(digits.length() - 10);
+        }
+        String internationalPhone = "+91" + digits;
         String messageBody = "Your FitEmpire OTP is: " + otp + ". Valid for 10 minutes. Do NOT share this with anyone. -FitEmpire";
 
         if (accountSid == null || accountSid.isBlank()) {
-            log.warn("SMS not sent (Twilio not configured). OTP for {}: {}", maskPhone(toPhone), otp);
+            log.warn("SMS not sent (Twilio not configured). OTP for {}: {}", maskPhone(digits), otp);
             return;
         }
 
@@ -55,9 +59,9 @@ public class SmsService {
                         messageBody
                 ).create();
             }
-            log.info("OTP SMS sent to {} [SID: {}]", maskPhone(toPhone), message.getSid());
+            log.info("OTP SMS sent to {} [Status: {}, SID: {}]", maskPhone(digits), message.getStatus(), message.getSid());
         } catch (Exception e) {
-            log.error("Failed to send OTP SMS to {}: {}", maskPhone(toPhone), e.getMessage());
+            log.error("Failed to send OTP SMS to {} (Twilio error: {})", maskPhone(digits), e.getMessage(), e);
         }
     }
 

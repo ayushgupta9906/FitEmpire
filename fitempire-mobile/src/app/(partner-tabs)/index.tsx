@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, ScrollView, TouchableOpacity, RefreshControl, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, ScrollView, TouchableOpacity, RefreshControl, ActivityIndicator, Platform } from 'react-native';
 import { useAuth } from '@/services/auth-context';
 import { apiClient } from '@/services/api';
 import { ThemedText } from '@/components/themed-text';
@@ -57,22 +57,30 @@ export default function PartnerDashboard() {
     fetchStats();
   };
 
-  const handleLogout = () => {
-    Alert.alert(
-      "Partner Log Out",
-      "Are you sure you want to log out of the Partner Portal?",
-      [
-        { text: "Cancel", style: "cancel" },
-        {
-          text: "Log Out",
-          style: "destructive",
-          onPress: async () => {
-            await logout();
-            router.replace('/login');
+  const handleLogout = async () => {
+    if (Platform.OS === 'web') {
+      try {
+        await logout();
+      } finally {
+        router.replace('/login');
+      }
+    } else {
+      Alert.alert(
+        "Partner Log Out",
+        "Are you sure you want to log out of the Partner Portal?",
+        [
+          { text: "Cancel", style: "cancel" },
+          {
+            text: "Log Out",
+            style: "destructive",
+            onPress: async () => {
+              await logout();
+              router.replace('/login');
+            },
           },
-        },
-      ]
-    );
+        ]
+      );
+    }
   };
 
   const formatCurrency = (val: number) => {

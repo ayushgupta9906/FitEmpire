@@ -39,39 +39,21 @@ export default function WelcomeScreen() {
               </ThemedText>
             </View>
 
-            {/* Selection Buttons */}
+            {/* Get Started Button for Members */}
             <View style={styles.buttonContainer}>
-              <ThemedText style={styles.prompt}>How would you like to continue?</ThemedText>
+              <TouchableOpacity
+                style={styles.getStartedBtn}
+                onPress={() => router.push('/login')}
+              >
+                <View style={styles.btnContent}>
+                  <ThemedText style={styles.btnText}>Get Started with FitEmpire</ThemedText>
+                  <ArrowRight color="#FFF" size={22} />
+                </View>
+              </TouchableOpacity>
               
-              {/* User Button */}
-              <TouchableOpacity 
-                style={[styles.actionCard, { backgroundColor: 'rgba(255,255,255,0.1)' }]}
-                onPress={() => router.push({ pathname: '/login', params: { mode: 'USER' } })}
-              >
-                <View style={[styles.iconBox, { backgroundColor: '#4F46E5' }]}>
-                  <User color="#FFF" size={24} />
-                </View>
-                <View style={styles.cardText}>
-                  <ThemedText style={styles.cardTitle}>I am a Member</ThemedText>
-                  <ThemedText style={styles.cardDesc}>Find gyms and book classes</ThemedText>
-                </View>
-                <ArrowRight color="#FFF" size={20} />
-              </TouchableOpacity>
-
-              {/* Partner Button */}
-              <TouchableOpacity 
-                style={[styles.actionCard, { backgroundColor: 'rgba(255,255,255,0.1)' }]}
-                onPress={() => router.push({ pathname: '/login', params: { mode: 'PARTNER' } })}
-              >
-                <View style={[styles.iconBox, { backgroundColor: '#10B981' }]}>
-                  <Dumbbell color="#FFF" size={24} />
-                </View>
-                <View style={styles.cardText}>
-                  <ThemedText style={styles.cardTitle}>I am a Gym Partner</ThemedText>
-                  <ThemedText style={styles.cardDesc}>Login with Admin-registered credentials</ThemedText>
-                </View>
-                <ArrowRight color="#FFF" size={20} />
-              </TouchableOpacity>
+              <ThemedText style={styles.memberTag}>
+                All-Access Gym Passes • AI Workout Coach • Instant Entry
+              </ThemedText>
             </View>
 
           </View>
@@ -135,43 +117,33 @@ const styles = StyleSheet.create({
   buttonContainer: {
     width: '100%',
   },
-  prompt: {
-    fontSize: 14,
-    color: 'rgba(255,255,255,0.5)',
-    textTransform: 'uppercase',
-    letterSpacing: 1,
-    fontWeight: '700',
-    marginBottom: 16,
-    marginLeft: 4,
+  getStartedBtn: {
+    backgroundColor: '#4F46E5',
+    paddingVertical: 18,
+    paddingHorizontal: 24,
+    borderRadius: 18,
+    shadowColor: '#4F46E5',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.4,
+    shadowRadius: 16,
+    elevation: 8,
   },
-  actionCard: {
+  btnContent: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 16,
-    borderRadius: 20,
-    marginBottom: 16,
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.1)',
-  },
-  iconBox: {
-    width: 52,
-    height: 52,
-    borderRadius: 16,
-    alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 16,
+    gap: 12,
   },
-  cardText: {
-    flex: 1,
-  },
-  cardTitle: {
+  btnText: {
     color: '#FFF',
     fontSize: 18,
-    fontWeight: '700',
-    marginBottom: 4,
+    fontWeight: '800',
   },
-  cardDesc: {
-    color: 'rgba(255,255,255,0.6)',
-    fontSize: 14,
+  memberTag: {
+    fontSize: 13,
+    color: 'rgba(255,255,255,0.5)',
+    textAlign: 'center',
+    marginTop: 16,
+    fontWeight: '600',
   }
 });

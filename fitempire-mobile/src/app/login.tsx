@@ -53,14 +53,10 @@ export default function LoginScreen() {
     setLoading(true);
     try {
       const cleanPhone = digits.slice(-10);
-      const otp = await requestOtp(cleanPhone);
+      await requestOtp(cleanPhone);
       setStep(2);
-      if (otp) {
-        setCode(otp);
-        setNotice(`Verification OTP: ${otp} (Auto-filled for testing)`);
-      } else {
-        setNotice('OTP sent via SMS to your phone.');
-      }
+      setCode('');
+      setNotice(`OTP has been sent to +91 ${cleanPhone} via SMS. Please enter the 6-digit code received on your phone.`);
     } catch (err: any) {
       const msg = err.response?.data?.message || 'Failed to send OTP. Please check your phone number.';
       setError(msg);
@@ -111,12 +107,8 @@ export default function LoginScreen() {
     }
     setLoading(true);
     try {
-      const user = await login(email.trim(), password);
-      if (user?.role === 'PARTNER' || user?.role === 'GYM_PARTNER') {
-        router.replace('/(partner-tabs)');
-      } else {
-        router.replace('/(tabs)');
-      }
+      await login(email.trim(), password);
+      router.replace('/(tabs)');
     } catch (err: any) {
       const msg = err.response?.data?.message || 'Invalid email or password. Please verify your credentials.';
       setError(msg);
@@ -153,63 +145,34 @@ export default function LoginScreen() {
             </ThemedText>
           </View>
 
-          {/* Mode Switch Tabs (Member vs Gym Partner) */}
-          <View style={[styles.modeSelector, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+          {/* Sub-selector: Phone OTP vs Email/Password */}
+          <View style={styles.subSelector}>
             <TouchableOpacity 
-              style={[styles.modeTab, loginMode === 'USER' && { backgroundColor: colors.primary }]}
-              onPress={() => { setLoginMode('USER'); setStep(1); setError(null); setNotice(null); }}
+              style={[styles.subTab, authMethod === 'OTP' && { borderColor: colors.primary, backgroundColor: 'rgba(108,99,255,0.1)' }]}
+              onPress={() => { setAuthMethod('OTP'); setStep(1); setError(null); setNotice(null); }}
             >
-              <ThemedText style={[styles.modeText, loginMode === 'USER' && { color: '#FFF', fontWeight: 'bold' }]}>
-                Member Login
+              <Phone size={14} color={authMethod === 'OTP' ? colors.primary : '#888'} />
+              <ThemedText style={[styles.subTabText, authMethod === 'OTP' && { color: colors.primary, fontWeight: '700' }]}>
+                Phone OTP
               </ThemedText>
             </TouchableOpacity>
+
             <TouchableOpacity 
-              style={[styles.modeTab, loginMode === 'PARTNER' && { backgroundColor: '#3B82F6' }]}
+              style={[styles.subTab, authMethod === 'PASSWORD' && { borderColor: colors.primary, backgroundColor: 'rgba(108,99,255,0.1)' }]}
               onPress={() => { 
-                setLoginMode('PARTNER'); 
                 setAuthMethod('PASSWORD'); 
-                setEmail('partner@fitempire.in'); 
-                setPassword('Partner@123');
+                setEmail('testuser@fitempire.in'); 
+                setPassword('Password@123');
                 setError(null);
                 setNotice(null);
               }}
             >
-              <ThemedText style={[styles.modeText, loginMode === 'PARTNER' && { color: '#FFF', fontWeight: 'bold' }]}>
-                Gym Partner
+              <Mail size={14} color={authMethod === 'PASSWORD' ? colors.primary : '#888'} />
+              <ThemedText style={[styles.subTabText, authMethod === 'PASSWORD' && { color: colors.primary, fontWeight: '700' }]}>
+                Email & Password
               </ThemedText>
             </TouchableOpacity>
           </View>
-
-          {/* Member Sub-selector: Phone OTP vs Email/Password */}
-          {loginMode === 'USER' && (
-            <View style={styles.subSelector}>
-              <TouchableOpacity 
-                style={[styles.subTab, authMethod === 'OTP' && { borderColor: colors.primary, backgroundColor: 'rgba(108,99,255,0.1)' }]}
-                onPress={() => { setAuthMethod('OTP'); setStep(1); setError(null); setNotice(null); }}
-              >
-                <Phone size={14} color={authMethod === 'OTP' ? colors.primary : '#888'} />
-                <ThemedText style={[styles.subTabText, authMethod === 'OTP' && { color: colors.primary, fontWeight: '700' }]}>
-                  Phone OTP
-                </ThemedText>
-              </TouchableOpacity>
-
-              <TouchableOpacity 
-                style={[styles.subTab, authMethod === 'PASSWORD' && { borderColor: colors.primary, backgroundColor: 'rgba(108,99,255,0.1)' }]}
-                onPress={() => { 
-                  setAuthMethod('PASSWORD'); 
-                  setEmail('testuser@fitempire.in'); 
-                  setPassword('Password@123');
-                  setError(null);
-                  setNotice(null);
-                }}
-              >
-                <Mail size={14} color={authMethod === 'PASSWORD' ? colors.primary : '#888'} />
-                <ThemedText style={[styles.subTabText, authMethod === 'PASSWORD' && { color: colors.primary, fontWeight: '700' }]}>
-                  Email & Password
-                </ThemedText>
-              </TouchableOpacity>
-            </View>
-          )}
 
           {/* Notice and Error Banners */}
           {notice && (
@@ -246,15 +209,9 @@ export default function LoginScreen() {
                     />
                   </View>
 
-                  <TouchableOpacity 
-                    onPress={() => setPhone('9876543210')} 
-                    style={styles.demoFillBtn}
-                  >
-                    <Sparkles size={13} color={colors.primary} />
-                    <ThemedText style={[styles.demoFillText, { color: colors.primary }]}>
-                      Fill Demo Number: 9876543210
-                    </ThemedText>
-                  </TouchableOpacity>
+                  <ThemedText style={styles.hintText}>
+                    A 6-digit verification code will be sent to your mobile phone via SMS.
+                  </ThemedText>
 
                   <TouchableOpacity 
                     style={[styles.submitButton, { backgroundColor: colors.primary }]}

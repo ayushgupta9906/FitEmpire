@@ -42,20 +42,18 @@ const DumbbellIcon = ({ size = 24, color = '#FFFFFF', style = {} }: any) => (
     viewBox="0 0 24 24"
     fill="none"
     stroke={color}
-    strokeWidth="2.4"
+    strokeWidth="2.3"
     strokeLinecap="round"
     strokeLinejoin="round"
     style={{ transform: 'scaleX(-1)', display: 'inline-block', verticalAlign: 'middle', ...style }}
   >
-    <path d="M6.5 6.5 17.5 17.5" />
-    <path d="m21 21-1-1" />
-    <path d="m3 3 1 1" />
-    <path d="m18 22 4-4" />
-    <path d="m2 6 4-4" />
-    <path d="m3 10 7-7" />
-    <path d="m14 21 7-7" />
-    <path d="M6.5 12.5 12.5 6.5" />
-    <path d="m11.5 17.5 6-6" />
+    <path d="M14.4 14.4 9.6 9.6" />
+    <path d="M18.657 21.485a2 2 0 1 1-2.829-2.828l.707-.707a2 2 0 1 1 2.829 2.828z" />
+    <path d="m21.5 21.5-1.4-1.4" />
+    <path d="M3.929 6.757a2 2 0 1 1 2.828-2.828l.707.707a2 2 0 1 1-2.828 2.828z" />
+    <path d="m2.5 2.5 1.4 1.4" />
+    <path d="m8.5 11.5-2.1-2.1a2 2 0 1 1 2.8-2.8l2.1 2.1" />
+    <path d="m15.5 18.5-2.1-2.1a2 2 0 1 1 2.8-2.8l2.1 2.1" />
   </svg>
 );
 
@@ -126,11 +124,11 @@ export function DashboardLayout() {
                   width: 38,
                   height: 38,
                   borderRadius: '12px',
-                  background: 'linear-gradient(135deg, #6366F1 0%, #4F46E5 100%)',
+                  background: 'linear-gradient(135deg, #6C63FF 0%, #4F46E5 100%)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  boxShadow: '0 4px 15px rgba(99, 102, 241, 0.4)',
+                  boxShadow: '0 4px 15px rgba(108, 99, 255, 0.45)',
                 }}
               >
                 <DumbbellIcon size={20} color="#FFFFFF" />
@@ -151,11 +149,11 @@ export function DashboardLayout() {
                 width: 38,
                 height: 38,
                 borderRadius: '12px',
-                background: 'linear-gradient(135deg, #6366F1 0%, #4F46E5 100%)',
+                background: 'linear-gradient(135deg, #6C63FF 0%, #4F46E5 100%)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                boxShadow: '0 4px 15px rgba(99, 102, 241, 0.4)',
+                boxShadow: '0 4px 15px rgba(108, 99, 255, 0.45)',
               }}
             >
               <DumbbellIcon size={20} color="#FFFFFF" />

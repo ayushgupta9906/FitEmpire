@@ -38,7 +38,7 @@
       flex-direction: column;
     }
 
-    /* Clean Minimal Header */
+    /* Clean Header with Logo and Live Status */
     header {
       display: flex;
       justify-content: space-between;
@@ -96,51 +96,10 @@
       animation: blink 1.5s infinite;
     }
 
-    .actions {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-
-    .btn {
-      padding: 0.5rem 1rem;
-      border-radius: 10px;
-      font-size: 0.82rem;
-      font-weight: 700;
-      text-decoration: none;
-      transition: all 0.2s ease;
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-    }
-
-    .btn-member {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--border);
-      color: var(--text);
-    }
-    .btn-member:hover {
-      background: rgba(255, 255, 255, 0.1);
-      border-color: rgba(255, 255, 255, 0.2);
-    }
-
-    .btn-partner {
-      background: rgba(59, 130, 246, 0.15);
-      border: 1px solid rgba(59, 130, 246, 0.35);
-      color: #38BDF8;
-    }
-    .btn-partner:hover {
-      background: rgba(59, 130, 246, 0.25);
-    }
-
-    .btn-admin {
-      background: linear-gradient(135deg, var(--primary), #4F46E5);
-      color: white;
-      border: none;
-      box-shadow: 0 4px 14px rgba(108, 99, 255, 0.35);
-    }
-    .btn-admin:hover {
-      opacity: 0.9;
+    .header-subtext {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 500;
     }
 
     /* 3-Column Workspace */
@@ -148,9 +107,9 @@
       flex: 1;
       display: grid;
       grid-template-columns: 28% 28% 44%;
-      padding: 1rem 1.5rem;
+      padding: 0.85rem 1.5rem 1rem 1.5rem;
       gap: 1.5rem;
-      height: calc(100vh - 65px);
+      height: calc(100vh - 62px);
       align-items: stretch;
     }
 
@@ -161,26 +120,66 @@
       min-width: 0;
     }
 
-    .pane-title {
-      font-size: 0.88rem;
-      font-weight: 700;
-      color: var(--text-muted);
-      margin-bottom: 0.6rem;
+    /* Prominent Live Link Header on Screen */
+    .pane-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
+      margin-bottom: 0.6rem;
+      gap: 0.5rem;
     }
 
-    .pane-link {
-      font-size: 0.75rem;
-      color: var(--secondary);
-      text-decoration: none;
+    .pane-title {
+      font-size: 0.92rem;
+      font-weight: 800;
+      color: #FFFFFF;
       display: flex;
       align-items: center;
-      gap: 3px;
+      gap: 0.4rem;
     }
-    .pane-link:hover {
-      text-decoration: underline;
+
+    .live-link-btn {
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: #FFFFFF;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.35rem 0.75rem;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .live-link-member {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #E2E8F0;
+    }
+    .live-link-member:hover {
+      background: rgba(255, 255, 255, 0.16);
+      border-color: rgba(255, 255, 255, 0.3);
+      color: #FFFFFF;
+    }
+
+    .live-link-partner {
+      background: rgba(59, 130, 246, 0.15);
+      border: 1px solid rgba(59, 130, 246, 0.35);
+      color: #38BDF8;
+    }
+    .live-link-partner:hover {
+      background: rgba(59, 130, 246, 0.28);
+      border-color: rgba(59, 130, 246, 0.5);
+    }
+
+    .live-link-admin {
+      background: linear-gradient(135deg, rgba(108, 99, 255, 0.3) 0%, rgba(79, 70, 229, 0.4) 100%);
+      border: 1px solid rgba(108, 99, 255, 0.45);
+      color: #A5B4FC;
+    }
+    .live-link-admin:hover {
+      background: linear-gradient(135deg, rgba(108, 99, 255, 0.5) 0%, rgba(79, 70, 229, 0.6) 100%);
+      color: #FFFFFF;
     }
 
     .frame-container {
@@ -337,7 +336,7 @@
 </head>
 <body>
 
-  <!-- Minimal Sleek Header -->
+  <!-- Minimal Clean Header -->
   <header>
     <div class="logo-container">
       <div class="logo-icon-box">
@@ -354,31 +353,23 @@
       <span class="logo-text">FitEmpire</span>
       <div class="badge">
         <span class="pulse"></span>
-        Live
+        Live Production
       </div>
     </div>
-
-    <!-- Clean Portal Links Only -->
-    <div class="actions">
-      <a href="https://firmempireapp.netlify.app" target="_blank" class="btn btn-member">
-        📱 Member App ↗
-      </a>
-      <a href="https://fitempirepartner.netlify.app" target="_blank" class="btn btn-partner">
-        🏢 Partner App ↗
-      </a>
-      <a href="https://fitempire.netlify.app" target="_blank" class="btn btn-admin">
-        🛡️ Admin Console ↗
-      </a>
+    <div class="header-subtext">
+      Live Interactive Multi-Platform Showcase
     </div>
   </header>
 
-  <!-- 3-Screen Live Grid -->
+  <!-- 3-Screen Live Grid with Direct Links on Screen -->
   <main class="workspace">
     <!-- 1. Member Mobile App Viewport -->
     <div class="pane">
-      <div class="pane-title">
-        <span>📱 FitEmpire Member App</span>
-        <a href="https://firmempireapp.netlify.app" target="_blank" class="pane-link">firmempireapp.netlify.app ↗</a>
+      <div class="pane-header">
+        <span class="pane-title">📱 Member App</span>
+        <a href="https://firmempireapp.netlify.app" target="_blank" class="live-link-btn live-link-member">
+          firmempireapp.netlify.app ↗
+        </a>
       </div>
       <div class="frame-container">
         <div class="device-badge">Member Mobile <span>Active</span></div>
@@ -390,9 +381,11 @@
 
     <!-- 2. Gym Partner App Viewport -->
     <div class="pane">
-      <div class="pane-title">
-        <span>🏢 FitEmpire Partner App</span>
-        <a href="https://fitempirepartner.netlify.app" target="_blank" class="pane-link">fitempirepartner.netlify.app ↗</a>
+      <div class="pane-header">
+        <span class="pane-title">🏢 Partner App</span>
+        <a href="https://fitempirepartner.netlify.app" target="_blank" class="live-link-btn live-link-partner">
+          fitempirepartner.netlify.app ↗
+        </a>
       </div>
       <div class="frame-container">
         <div class="device-badge">Partner Desk <span>Active</span></div>
@@ -404,9 +397,11 @@
 
     <!-- 3. Super Admin Console Viewport -->
     <div class="pane">
-      <div class="pane-title">
-        <span>🛡️ Super Admin Console</span>
-        <a href="https://fitempire.netlify.app" target="_blank" class="pane-link">fitempire.netlify.app ↗</a>
+      <div class="pane-header">
+        <span class="pane-title">🛡️ Admin Console</span>
+        <a href="https://fitempire.netlify.app" target="_blank" class="live-link-btn live-link-admin">
+          fitempire.netlify.app ↗
+        </a>
       </div>
       <div class="frame-container">
         <div class="device-badge">Admin Dashboard <span>Live</span></div>

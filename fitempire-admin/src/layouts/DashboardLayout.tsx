@@ -293,10 +293,10 @@ export function DashboardLayout() {
 
             {/* Portal Switcher Buttons */}
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mr: 1 }}>
-              <Tooltip title="Open FitPass Member App">
+              <Tooltip title="Open FitEmpire Member App">
                 <Box
                   component="a"
-                  href="http://localhost:8081/(tabs)"
+                  href="http://localhost:8081"
                   target="_blank"
                   rel="noopener noreferrer"
                   sx={{
@@ -320,7 +320,7 @@ export function DashboardLayout() {
                 </Box>
               </Tooltip>
 
-              <Tooltip title="Open FitPass Gym Partner App">
+              <Tooltip title="Open FitEmpire Gym Partner App">
                 <Box
                   component="a"
                   href="http://localhost:3001"
@@ -343,7 +343,7 @@ export function DashboardLayout() {
                     transition: 'all 0.15s ease',
                   }}
                 >
-                  🏢 FitPass Partner App
+                  🏢 FitEmpire Partner App
                 </Box>
               </Tooltip>
             </Box>

@@ -84,7 +84,7 @@ export const WelcomePage: React.FC = () => {
                 letterSpacing: '-0.04em',
               }}
             >
-              FitPass
+              FitEmpire
             </h1>
 
             <p
@@ -120,7 +120,7 @@ export const WelcomePage: React.FC = () => {
                 transition: 'all 0.2s ease',
               }}
             >
-              <span>Get Started with FitPass</span>
+              <span>Get Started with FitEmpire</span>
               <ArrowRight size={22} color="#FFF" />
             </button>
 

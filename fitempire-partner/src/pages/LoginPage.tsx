@@ -91,9 +91,9 @@ export const LoginPage: React.FC = () => {
             <Dumbbell color="#FFFFFF" size={30} />
           </div>
           <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#FFFFFF', marginBottom: 6 }}>
-            FitPass Partner Portal
+            FitEmpire Partner Portal
           </h1>
-          <p style={{ color: '#94A3B8', fontSize: '0.875rem' }}>
+          <p style={{ fontSize: '0.85rem', color: '#94A3B8' }}>
             Gym Desk Management & Pass Verification
           </p>
         </div>

@@ -82,7 +82,7 @@ export default function HomeScreen() {
           <View style={[styles.walletCard, { backgroundColor: '#6C63FF' }]}>
             <View style={styles.walletMeta}>
               <View>
-                <ThemedText style={styles.walletLabel}>FITPASS WALLET BALANCE</ThemedText>
+                <ThemedText style={styles.walletLabel}>FITEMPIRE WALLET BALANCE</ThemedText>
                 <ThemedText style={styles.walletValue}>₹{balance}</ThemedText>
               </View>
               <CreditCard size={32} color="#ffffff" opacity={0.8} />

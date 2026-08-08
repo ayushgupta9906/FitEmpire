@@ -6,6 +6,7 @@ import {
   InputAdornment, IconButton, CircularProgress,
 } from '@mui/material';
 import { Email, Lock, Visibility, VisibilityOff, FitnessCenter } from '@mui/icons-material';
+import { Dumbbell } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { useSnackbar } from 'notistack';
 import { authApi } from '../api';
@@ -16,28 +17,6 @@ interface LoginForm {
   email: string;
   password: string;
 }
-
-const DumbbellIcon = ({ size = 24, color = '#FFFFFF', style = {} }: any) => (
-  <svg
-    width={size}
-    height={size}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke={color}
-    strokeWidth="2.3"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    style={{ transform: 'scaleX(-1)', display: 'inline-block', verticalAlign: 'middle', ...style }}
-  >
-    <path d="M14.4 14.4 9.6 9.6" />
-    <path d="M18.657 21.485a2 2 0 1 1-2.829-2.828l.707-.707a2 2 0 1 1 2.829 2.828z" />
-    <path d="m21.5 21.5-1.4-1.4" />
-    <path d="M3.929 6.757a2 2 0 1 1 2.828-2.828l.707.707a2 2 0 1 1-2.828 2.828z" />
-    <path d="m2.5 2.5 1.4 1.4" />
-    <path d="m8.5 11.5-2.1-2.1a2 2 0 1 1 2.8-2.8l2.1 2.1" />
-    <path d="m15.5 18.5-2.1-2.1a2 2 0 1 1 2.8-2.8l2.1 2.1" />
-  </svg>
-);
 
 export function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -163,7 +142,7 @@ export function LoginPage() {
                 boxShadow: '0 10px 30px rgba(108, 99, 255, 0.45)',
               }}
             >
-              <DumbbellIcon size={38} color="#FFFFFF" />
+              <Dumbbell size={40} color="#FFFFFF" strokeWidth={2.3} style={{ transform: 'scaleX(-1)' }} />
             </Box>
             <Typography
               variant="h4"

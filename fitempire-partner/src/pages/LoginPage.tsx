@@ -175,27 +175,6 @@ export const LoginPage: React.FC = () => {
           </div>
 
           <button
-            type="button"
-            onClick={handleFillDemo}
-            style={{
-              background: 'transparent',
-              border: 'none',
-              color: '#3B82F6',
-              fontSize: '0.8rem',
-              fontWeight: 600,
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: 6,
-              alignSelf: 'flex-start',
-              padding: 0,
-            }}
-          >
-            <Sparkles size={14} />
-            <span>Use Demo Partner Credentials</span>
-          </button>
-
-          <button
             type="submit"
             disabled={isLoading}
             className="btn-primary"

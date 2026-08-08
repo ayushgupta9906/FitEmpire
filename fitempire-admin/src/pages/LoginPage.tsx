@@ -24,20 +24,18 @@ const DumbbellIcon = ({ size = 24, color = '#FFFFFF', style = {} }: any) => (
     viewBox="0 0 24 24"
     fill="none"
     stroke={color}
-    strokeWidth="2.4"
+    strokeWidth="2.3"
     strokeLinecap="round"
     strokeLinejoin="round"
     style={{ transform: 'scaleX(-1)', display: 'inline-block', verticalAlign: 'middle', ...style }}
   >
-    <path d="M6.5 6.5 17.5 17.5" />
-    <path d="m21 21-1-1" />
-    <path d="m3 3 1 1" />
-    <path d="m18 22 4-4" />
-    <path d="m2 6 4-4" />
-    <path d="m3 10 7-7" />
-    <path d="m14 21 7-7" />
-    <path d="M6.5 12.5 12.5 6.5" />
-    <path d="m11.5 17.5 6-6" />
+    <path d="M14.4 14.4 9.6 9.6" />
+    <path d="M18.657 21.485a2 2 0 1 1-2.829-2.828l.707-.707a2 2 0 1 1 2.829 2.828z" />
+    <path d="m21.5 21.5-1.4-1.4" />
+    <path d="M3.929 6.757a2 2 0 1 1 2.828-2.828l.707.707a2 2 0 1 1-2.828 2.828z" />
+    <path d="m2.5 2.5 1.4 1.4" />
+    <path d="m8.5 11.5-2.1-2.1a2 2 0 1 1 2.8-2.8l2.1 2.1" />
+    <path d="m15.5 18.5-2.1-2.1a2 2 0 1 1 2.8-2.8l2.1 2.1" />
   </svg>
 );
 
@@ -99,26 +97,6 @@ export function LoginPage() {
     }
   };
 
-  const handleDemoLogin = (role: 'ADMIN' | 'SUPER_ADMIN') => {
-    setLoading(true);
-    // Simulating login for demo bypass
-    setTimeout(() => {
-      dispatch(setCredentials({
-        user: {
-          id: role === 'ADMIN' ? 'demo-admin-id' : 'demo-superadmin-id',
-          email: role === 'ADMIN' ? 'admin@fitempire.in' : 'super@fitempire.in',
-          firstName: role === 'ADMIN' ? 'Admin' : 'Super Admin',
-          role: role
-        },
-        accessToken: 'demo-access-token',
-        refreshToken: 'demo-refresh-token'
-      }));
-      enqueueSnackbar('Demo Login successful.', { variant: 'success' });
-      navigate('/dashboard');
-      setLoading(false);
-    }, 800);
-  };
-
   return (
     <Box
       sx={{
@@ -169,23 +147,23 @@ export function LoginPage() {
         }}
       >
         <CardContent sx={{ p: 5 }}>
-          {/* Logo Badge (Matching Screenshot Exactly: Purple Rounded Square with White Mirrored Dumbbell) */}
+          {/* Logo Badge (Matching Member App Exactly: Purple Gradient with White Mirrored Dumbbell) */}
           <Box sx={{ textAlign: 'center', mb: 4 }}>
             <Box
               sx={{
-                width: 72,
-                height: 72,
-                borderRadius: '22px',
-                background: 'linear-gradient(135deg, #6366F1 0%, #4F46E5 100%)',
+                width: 76,
+                height: 76,
+                borderRadius: '24px',
+                background: 'linear-gradient(135deg, #6C63FF 0%, #4F46E5 100%)',
                 display: 'inline-flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 mx: 'auto',
                 mb: 2,
-                boxShadow: '0 10px 30px rgba(99, 102, 241, 0.45)',
+                boxShadow: '0 10px 30px rgba(108, 99, 255, 0.45)',
               }}
             >
-              <DumbbellIcon size={36} color="#FFFFFF" />
+              <DumbbellIcon size={38} color="#FFFFFF" />
             </Box>
             <Typography
               variant="h4"
@@ -265,29 +243,6 @@ export function LoginPage() {
               }}
             >
               {loading ? <CircularProgress size={24} color="inherit" /> : 'Sign In to Admin Portal'}
-            </Button>
-
-            <Button
-              variant="outlined"
-              fullWidth
-              size="medium"
-              onClick={() => {
-                setValue('email', 'admin@fitempire.in');
-                setValue('password', 'AdminPassword@123');
-                handleDemoLogin('SUPER_ADMIN');
-              }}
-              sx={{
-                borderColor: 'rgba(108, 99, 255, 0.4)',
-                color: '#9C94FF',
-                textTransform: 'none',
-                fontWeight: 600,
-                '&:hover': {
-                  borderColor: '#6C63FF',
-                  background: 'rgba(108, 99, 255, 0.1)',
-                },
-              }}
-            >
-              ⚡ Instant Super Admin Access
             </Button>
           </Box>
 

@@ -87,12 +87,6 @@ export default function LoginScreen() {
     }
   };
 
-  const handleDemoFill = () => {
-    setPhone('9876543210');
-    setError(null);
-    setNotice(null);
-  };
-
   return (
     <KeyboardAvoidingView 
       style={{ flex: 1 }} 
@@ -169,13 +163,6 @@ export default function LoginScreen() {
                       <ArrowRight size={18} color="#FFF" />
                     </>
                   )}
-                </TouchableOpacity>
-
-                <TouchableOpacity onPress={handleDemoFill} style={styles.demoFillBtn}>
-                  <Sparkles size={14} color={colors.primary} />
-                  <ThemedText style={[styles.demoFillText, { color: colors.primary }]}>
-                    Use Demo Mobile Number (+91 98765 43210)
-                  </ThemedText>
                 </TouchableOpacity>
               </View>
             ) : (

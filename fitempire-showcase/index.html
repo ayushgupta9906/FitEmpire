@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FitEmpire - Production & Live Showcase Console</title>
+  <title>FitEmpire - Unified Platform Showcase</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -29,9 +29,8 @@
     body {
       background-color: var(--bg-dark);
       background-image: 
-        radial-gradient(circle at 10% 20%, rgba(108, 99, 255, 0.15) 0%, transparent 40%),
-        radial-gradient(circle at 90% 80%, rgba(6, 182, 212, 0.12) 0%, transparent 40%),
-        radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.06) 0%, transparent 50%);
+        radial-gradient(circle at 10% 20%, rgba(108, 99, 255, 0.12) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(6, 182, 212, 0.1) 0%, transparent 40%);
       color: var(--text);
       height: 100vh;
       overflow: hidden;
@@ -39,14 +38,14 @@
       flex-direction: column;
     }
 
-    /* Header */
+    /* Clean Minimal Header */
     header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 0.6rem 1.75rem;
+      padding: 0.75rem 2rem;
       border-bottom: 1px solid var(--border);
-      background: rgba(7, 8, 10, 0.9);
+      background: rgba(7, 8, 10, 0.85);
       backdrop-filter: blur(16px);
       z-index: 20;
     }
@@ -54,7 +53,7 @@
     .logo-container {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
+      gap: 0.85rem;
     }
 
     .logo-icon-box {
@@ -71,7 +70,7 @@
     .logo-text {
       font-weight: 800;
       color: #FFFFFF;
-      font-size: 1.4rem;
+      font-size: 1.45rem;
       letter-spacing: -0.5px;
     }
 
@@ -97,80 +96,16 @@
       animation: blink 1.5s infinite;
     }
 
-    /* Mode View Switcher in Header */
-    .view-switcher {
-      display: flex;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 3px;
-      gap: 4px;
-    }
-
-    .view-tab {
-      padding: 0.35rem 0.85rem;
-      border-radius: 8px;
-      font-size: 0.78rem;
-      font-weight: 700;
-      color: var(--text-muted);
-      border: none;
-      background: transparent;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-      transition: all 0.15s ease;
-    }
-
-    .view-tab:hover {
-      color: #FFF;
-    }
-
-    .view-tab.active {
-      background: rgba(108, 99, 255, 0.25);
-      border: 1px solid rgba(108, 99, 255, 0.4);
-      color: #FFF;
-      box-shadow: 0 2px 10px rgba(108, 99, 255, 0.25);
-    }
-
-    /* Target Environment Switcher */
-    .env-switcher {
-      display: flex;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 2px;
-      gap: 2px;
-    }
-
-    .env-btn {
-      padding: 0.3rem 0.65rem;
-      border-radius: 7px;
-      font-size: 0.72rem;
-      font-weight: 700;
-      color: var(--text-muted);
-      border: none;
-      background: transparent;
-      cursor: pointer;
-      transition: all 0.15s ease;
-    }
-
-    .env-btn.active {
-      background: #10B981;
-      color: #000;
-      font-weight: 800;
-    }
-
     .actions {
       display: flex;
       align-items: center;
-      gap: 0.6rem;
+      gap: 0.75rem;
     }
 
     .btn {
-      padding: 0.45rem 0.85rem;
-      border-radius: 8px;
-      font-size: 0.78rem;
+      padding: 0.5rem 1rem;
+      border-radius: 10px;
+      font-size: 0.82rem;
       font-weight: 700;
       text-decoration: none;
       transition: all 0.2s ease;
@@ -179,14 +114,13 @@
       gap: 0.4rem;
     }
 
-    .btn-outline {
-      background: rgba(255, 255, 255, 0.04);
+    .btn-member {
+      background: rgba(255, 255, 255, 0.05);
       border: 1px solid var(--border);
       color: var(--text);
     }
-
-    .btn-outline:hover {
-      background: rgba(255, 255, 255, 0.08);
+    .btn-member:hover {
+      background: rgba(255, 255, 255, 0.1);
       border-color: rgba(255, 255, 255, 0.2);
     }
 
@@ -195,40 +129,29 @@
       border: 1px solid rgba(59, 130, 246, 0.35);
       color: #38BDF8;
     }
+    .btn-partner:hover {
+      background: rgba(59, 130, 246, 0.25);
+    }
 
-    .btn-primary {
+    .btn-admin {
       background: linear-gradient(135deg, var(--primary), #4F46E5);
       color: white;
       border: none;
       box-shadow: 0 4px 14px rgba(108, 99, 255, 0.35);
     }
+    .btn-admin:hover {
+      opacity: 0.9;
+    }
 
-    /* Main Console Workspace Grid */
+    /* 3-Column Workspace */
     .workspace {
       flex: 1;
       display: grid;
       grid-template-columns: 28% 28% 44%;
-      padding: 0.85rem 1.25rem;
-      gap: 1.25rem;
-      height: calc(100vh - 58px);
+      padding: 1rem 1.5rem;
+      gap: 1.5rem;
+      height: calc(100vh - 65px);
       align-items: stretch;
-    }
-
-    /* View Modes */
-    .workspace.grid-view {
-      grid-template-columns: 28% 28% 44%;
-    }
-
-    .workspace.member-only-view {
-      grid-template-columns: 1fr;
-    }
-
-    .workspace.partner-only-view {
-      grid-template-columns: 1fr;
-    }
-
-    .workspace.admin-only-view {
-      grid-template-columns: 1fr;
     }
 
     .pane {
@@ -242,7 +165,7 @@
       font-size: 0.88rem;
       font-weight: 700;
       color: var(--text-muted);
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.6rem;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -256,7 +179,6 @@
       align-items: center;
       gap: 3px;
     }
-
     .pane-link:hover {
       text-decoration: underline;
     }
@@ -268,7 +190,7 @@
       align-items: center;
       background: var(--bg-card);
       border: 1px solid var(--border);
-      border-radius: 16px;
+      border-radius: 18px;
       padding: 0.75rem;
       position: relative;
       overflow: hidden;
@@ -277,11 +199,11 @@
 
     .device-badge {
       position: absolute;
-      top: 10px;
-      left: 10px;
+      top: 12px;
+      left: 12px;
       background: rgba(18, 20, 26, 0.88);
       border: 1px solid var(--border);
-      padding: 0.25rem 0.6rem;
+      padding: 0.25rem 0.65rem;
       border-radius: 8px;
       font-size: 0.68rem;
       font-weight: 700;
@@ -300,7 +222,6 @@
       font-weight: 800;
     }
 
-    /* Device Mockups */
     /* 1. Phone Frame (Member & Partner) */
     .iphone-frame {
       width: 100%;
@@ -416,6 +337,7 @@
 </head>
 <body>
 
+  <!-- Minimal Sleek Header -->
   <header>
     <div class="logo-container">
       <div class="logo-icon-box">
@@ -432,83 +354,59 @@
       <span class="logo-text">FitEmpire</span>
       <div class="badge">
         <span class="pulse"></span>
-        Production Live
+        Live
       </div>
     </div>
 
-    <!-- Live Viewport Switcher -->
-    <div class="view-switcher">
-      <button class="view-tab active" onclick="switchView('grid', this)">
-        <span>🖥️ Multi-Portal Grid</span>
-      </button>
-      <button class="view-tab" onclick="switchView('member', this)">
-        <span>📱 Member App</span>
-      </button>
-      <button class="view-tab" onclick="switchView('partner', this)">
-        <span>🏢 Partner App</span>
-      </button>
-      <button class="view-tab" onclick="switchView('admin', this)">
-        <span>🛡️ Admin Console</span>
-      </button>
-    </div>
-
-    <!-- Live vs Local Toggle -->
-    <div class="env-switcher">
-      <button id="btn-env-prod" class="env-btn active" onclick="setEnvironment('prod')">
-        ☁️ Production Cloud
-      </button>
-      <button id="btn-env-local" class="env-btn" onclick="setEnvironment('local')">
-        💻 Localhost
-      </button>
-    </div>
-
+    <!-- Clean Portal Links Only -->
     <div class="actions">
-      <a id="ext-member-link" href="https://firmempireapp.netlify.app" target="_blank" class="btn btn-outline">
-        📱 Member ↗
+      <a href="https://firmempireapp.netlify.app" target="_blank" class="btn btn-member">
+        📱 Member App ↗
       </a>
-      <a id="ext-partner-link" href="https://fitempirepartner.netlify.app" target="_blank" class="btn btn-partner">
-        🏢 Partner ↗
+      <a href="https://fitempirepartner.netlify.app" target="_blank" class="btn btn-partner">
+        🏢 Partner App ↗
       </a>
-      <a id="ext-admin-link" href="https://fitempire.netlify.app" target="_blank" class="btn btn-primary">
-        🛡️ Admin ↗
+      <a href="https://fitempire.netlify.app" target="_blank" class="btn btn-admin">
+        🛡️ Admin Console ↗
       </a>
     </div>
   </header>
 
-  <main id="workspace" class="workspace grid-view">
+  <!-- 3-Screen Live Grid -->
+  <main class="workspace">
     <!-- 1. Member Mobile App Viewport -->
-    <div id="pane-member" class="pane">
+    <div class="pane">
       <div class="pane-title">
         <span>📱 FitEmpire Member App</span>
-        <a id="lbl-member-link" href="https://firmempireapp.netlify.app" target="_blank" class="pane-link">firmempireapp.netlify.app ↗</a>
+        <a href="https://firmempireapp.netlify.app" target="_blank" class="pane-link">firmempireapp.netlify.app ↗</a>
       </div>
       <div class="frame-container">
         <div class="device-badge">Member Mobile <span>Active</span></div>
         <div class="iphone-frame">
-          <iframe id="iframe-member" src="https://firmempireapp.netlify.app" title="FitEmpire Member App"></iframe>
+          <iframe src="https://firmempireapp.netlify.app" title="FitEmpire Member App"></iframe>
         </div>
       </div>
     </div>
 
     <!-- 2. Gym Partner App Viewport -->
-    <div id="pane-partner" class="pane">
+    <div class="pane">
       <div class="pane-title">
         <span>🏢 FitEmpire Partner App</span>
-        <a id="lbl-partner-link" href="https://fitempirepartner.netlify.app" target="_blank" class="pane-link">fitempirepartner.netlify.app ↗</a>
+        <a href="https://fitempirepartner.netlify.app" target="_blank" class="pane-link">fitempirepartner.netlify.app ↗</a>
       </div>
       <div class="frame-container">
         <div class="device-badge">Partner Desk <span>Active</span></div>
         <div class="iphone-frame">
-          <iframe id="iframe-partner" src="https://fitempirepartner.netlify.app" title="FitEmpire Partner App"></iframe>
+          <iframe src="https://fitempirepartner.netlify.app" title="FitEmpire Partner App"></iframe>
         </div>
       </div>
     </div>
 
     <!-- 3. Super Admin Console Viewport -->
-    <div id="pane-admin" class="pane">
+    <div class="pane">
       <div class="pane-title">
         <span>🛡️ Super Admin Console</span>
-        <a id="lbl-admin-link" href="https://fitempire.netlify.app" target="_blank" class="pane-link">fitempire.netlify.app ↗</a>
+        <a href="https://fitempire.netlify.app" target="_blank" class="pane-link">fitempire.netlify.app ↗</a>
       </div>
       <div class="frame-container">
         <div class="device-badge">Admin Dashboard <span>Live</span></div>
@@ -517,87 +415,13 @@
             <div class="browser-dot dot-red"></div>
             <div class="browser-dot dot-yellow"></div>
             <div class="browser-dot dot-green"></div>
-            <div id="browser-address-text" class="browser-address">https://fitempire.netlify.app/dashboard</div>
+            <div class="browser-address">https://fitempire.netlify.app/dashboard</div>
           </div>
-          <iframe id="iframe-admin" src="https://fitempire.netlify.app" title="FitEmpire Admin Console"></iframe>
+          <iframe src="https://fitempire.netlify.app" title="FitEmpire Admin Console"></iframe>
         </div>
       </div>
     </div>
   </main>
-
-  <script>
-    const URLS = {
-      prod: {
-        member: 'https://firmempireapp.netlify.app',
-        partner: 'https://fitempirepartner.netlify.app',
-        admin: 'https://fitempire.netlify.app',
-      },
-      local: {
-        member: 'http://localhost:8081',
-        partner: 'http://localhost:3001',
-        admin: 'http://localhost:3000',
-      }
-    };
-
-    let currentEnv = 'prod';
-
-    function setEnvironment(env) {
-      currentEnv = env;
-      document.getElementById('btn-env-prod').className = 'env-btn ' + (env === 'prod' ? 'active' : '');
-      document.getElementById('btn-env-local').className = 'env-btn ' + (env === 'local' ? 'active' : '');
-
-      const targets = URLS[env];
-
-      document.getElementById('iframe-member').src = targets.member;
-      document.getElementById('iframe-partner').src = targets.partner;
-      document.getElementById('iframe-admin').src = targets.admin;
-
-      document.getElementById('ext-member-link').href = targets.member;
-      document.getElementById('ext-partner-link').href = targets.partner;
-      document.getElementById('ext-admin-link').href = targets.admin;
-
-      document.getElementById('lbl-member-link').href = targets.member;
-      document.getElementById('lbl-member-link').innerText = targets.member.replace('https://', '').replace('http://', '') + ' ↗';
-
-      document.getElementById('lbl-partner-link').href = targets.partner;
-      document.getElementById('lbl-partner-link').innerText = targets.partner.replace('https://', '').replace('http://', '') + ' ↗';
-
-      document.getElementById('lbl-admin-link').href = targets.admin;
-      document.getElementById('lbl-admin-link').innerText = targets.admin.replace('https://', '').replace('http://', '') + ' ↗';
-
-      document.getElementById('browser-address-text').innerText = targets.admin + '/dashboard';
-    }
-
-    function switchView(mode, tabElement) {
-      document.querySelectorAll('.view-tab').forEach(t => t.classList.remove('active'));
-      tabElement.classList.add('active');
-
-      const workspace = document.getElementById('workspace');
-      const paneMember = document.getElementById('pane-member');
-      const panePartner = document.getElementById('pane-partner');
-      const paneAdmin = document.getElementById('pane-admin');
-
-      workspace.className = 'workspace ' + mode + '-view';
-
-      if (mode === 'grid') {
-        paneMember.style.display = 'flex';
-        panePartner.style.display = 'flex';
-        paneAdmin.style.display = 'flex';
-      } else if (mode === 'member') {
-        paneMember.style.display = 'flex';
-        panePartner.style.display = 'none';
-        paneAdmin.style.display = 'none';
-      } else if (mode === 'partner') {
-        paneMember.style.display = 'none';
-        panePartner.style.display = 'flex';
-        paneAdmin.style.display = 'none';
-      } else if (mode === 'admin') {
-        paneMember.style.display = 'none';
-        panePartner.style.display = 'none';
-        paneAdmin.style.display = 'flex';
-      }
-    }
-  </script>
 
 </body>
 </html>

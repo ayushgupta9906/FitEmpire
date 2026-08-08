@@ -167,23 +167,23 @@ export function LoginPage() {
         }}
       >
         <CardContent sx={{ p: 5 }}>
-          {/* Logo Badge (Matching Member App Exactly) */}
+          {/* Logo Badge (Matching Screenshot Exactly: Purple Rounded Square with White Mirrored Dumbbell) */}
           <Box sx={{ textAlign: 'center', mb: 4 }}>
             <Box
               sx={{
-                width: 76,
-                height: 76,
+                width: 72,
+                height: 72,
                 borderRadius: '22px',
-                backgroundColor: '#FFFFFF',
+                background: 'linear-gradient(135deg, #6366F1 0%, #4F46E5 100%)',
                 display: 'inline-flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 mx: 'auto',
                 mb: 2,
-                boxShadow: '0 10px 30px rgba(79, 70, 229, 0.35)',
+                boxShadow: '0 10px 30px rgba(99, 102, 241, 0.45)',
               }}
             >
-              <DumbbellIcon size={38} color="#4F46E5" />
+              <DumbbellIcon size={36} color="#FFFFFF" />
             </Box>
             <Typography
               variant="h4"

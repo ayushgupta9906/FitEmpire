@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FitEmpire - Unified Platform Showcase Console</title>
+  <title>FitEmpire - Production & Live Showcase Console</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -29,9 +29,9 @@
     body {
       background-color: var(--bg-dark);
       background-image: 
-        radial-gradient(circle at 10% 20%, rgba(108, 99, 255, 0.12) 0%, transparent 40%),
-        radial-gradient(circle at 90% 80%, rgba(6, 182, 212, 0.1) 0%, transparent 40%),
-        radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.05) 0%, transparent 50%);
+        radial-gradient(circle at 10% 20%, rgba(108, 99, 255, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(6, 182, 212, 0.12) 0%, transparent 40%),
+        radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.06) 0%, transparent 50%);
       color: var(--text);
       height: 100vh;
       overflow: hidden;
@@ -46,7 +46,7 @@
       align-items: center;
       padding: 0.6rem 1.75rem;
       border-bottom: 1px solid var(--border);
-      background: rgba(7, 8, 10, 0.85);
+      background: rgba(7, 8, 10, 0.9);
       backdrop-filter: blur(16px);
       z-index: 20;
     }
@@ -133,8 +133,37 @@
       box-shadow: 0 2px 10px rgba(108, 99, 255, 0.25);
     }
 
+    /* Target Environment Switcher */
+    .env-switcher {
+      display: flex;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 2px;
+      gap: 2px;
+    }
+
+    .env-btn {
+      padding: 0.3rem 0.65rem;
+      border-radius: 7px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .env-btn.active {
+      background: #10B981;
+      color: #000;
+      font-weight: 800;
+    }
+
     .actions {
       display: flex;
+      align-items: center;
       gap: 0.6rem;
     }
 
@@ -403,7 +432,7 @@
       <span class="logo-text">FitEmpire</span>
       <div class="badge">
         <span class="pulse"></span>
-        Ecosystem Live • Port 8080 API
+        Production Live
       </div>
     </div>
 
@@ -423,15 +452,25 @@
       </button>
     </div>
 
+    <!-- Live vs Local Toggle -->
+    <div class="env-switcher">
+      <button id="btn-env-prod" class="env-btn active" onclick="setEnvironment('prod')">
+        ☁️ Production Cloud
+      </button>
+      <button id="btn-env-local" class="env-btn" onclick="setEnvironment('local')">
+        💻 Localhost
+      </button>
+    </div>
+
     <div class="actions">
-      <a href="http://localhost:8081" target="_blank" class="btn btn-outline">
-        📱 Member (8081) ↗
+      <a id="ext-member-link" href="https://firmempireapp.netlify.app" target="_blank" class="btn btn-outline">
+        📱 Member ↗
       </a>
-      <a href="http://localhost:3001" target="_blank" class="btn btn-partner">
-        🏢 Partner (3001) ↗
+      <a id="ext-partner-link" href="http://localhost:3001" target="_blank" class="btn btn-partner">
+        🏢 Partner ↗
       </a>
-      <a href="http://localhost:3000" target="_blank" class="btn btn-primary">
-        🛡️ Admin (3000) ↗
+      <a id="ext-admin-link" href="https://fitempire.netlify.app" target="_blank" class="btn btn-primary">
+        🛡️ Admin ↗
       </a>
     </div>
   </header>
@@ -441,12 +480,12 @@
     <div id="pane-member" class="pane">
       <div class="pane-title">
         <span>📱 FitEmpire Member App</span>
-        <a href="http://localhost:8081" target="_blank" class="pane-link">localhost:8081 ↗</a>
+        <a id="lbl-member-link" href="https://firmempireapp.netlify.app" target="_blank" class="pane-link">firmempireapp.netlify.app ↗</a>
       </div>
       <div class="frame-container">
         <div class="device-badge">Member Mobile <span>Active</span></div>
         <div class="iphone-frame">
-          <iframe src="http://localhost:8081" title="FitEmpire Member App"></iframe>
+          <iframe id="iframe-member" src="https://firmempireapp.netlify.app" title="FitEmpire Member App"></iframe>
         </div>
       </div>
     </div>
@@ -455,12 +494,12 @@
     <div id="pane-partner" class="pane">
       <div class="pane-title">
         <span>🏢 FitEmpire Partner App</span>
-        <a href="http://localhost:3001" target="_blank" class="pane-link">localhost:3001 ↗</a>
+        <a id="lbl-partner-link" href="http://localhost:3001" target="_blank" class="pane-link">localhost:3001 ↗</a>
       </div>
       <div class="frame-container">
         <div class="device-badge">Partner Desk <span>Active</span></div>
         <div class="iphone-frame">
-          <iframe src="http://localhost:3001" title="FitEmpire Partner App"></iframe>
+          <iframe id="iframe-partner" src="http://localhost:3001" title="FitEmpire Partner App"></iframe>
         </div>
       </div>
     </div>
@@ -469,7 +508,7 @@
     <div id="pane-admin" class="pane">
       <div class="pane-title">
         <span>🛡️ Super Admin Console</span>
-        <a href="http://localhost:3000" target="_blank" class="pane-link">localhost:3000 ↗</a>
+        <a id="lbl-admin-link" href="https://fitempire.netlify.app" target="_blank" class="pane-link">fitempire.netlify.app ↗</a>
       </div>
       <div class="frame-container">
         <div class="device-badge">Admin Dashboard <span>Live</span></div>
@@ -478,15 +517,57 @@
             <div class="browser-dot dot-red"></div>
             <div class="browser-dot dot-yellow"></div>
             <div class="browser-dot dot-green"></div>
-            <div class="browser-address">http://localhost:3000/dashboard</div>
+            <div id="browser-address-text" class="browser-address">https://fitempire.netlify.app/dashboard</div>
           </div>
-          <iframe src="http://localhost:3000" title="FitEmpire Admin Console"></iframe>
+          <iframe id="iframe-admin" src="https://fitempire.netlify.app" title="FitEmpire Admin Console"></iframe>
         </div>
       </div>
     </div>
   </main>
 
   <script>
+    const URLS = {
+      prod: {
+        member: 'https://firmempireapp.netlify.app',
+        partner: 'http://localhost:3001',
+        admin: 'https://fitempire.netlify.app',
+      },
+      local: {
+        member: 'http://localhost:8081',
+        partner: 'http://localhost:3001',
+        admin: 'http://localhost:3000',
+      }
+    };
+
+    let currentEnv = 'prod';
+
+    function setEnvironment(env) {
+      currentEnv = env;
+      document.getElementById('btn-env-prod').className = 'env-btn ' + (env === 'prod' ? 'active' : '');
+      document.getElementById('btn-env-local').className = 'env-btn ' + (env === 'local' ? 'active' : '');
+
+      const targets = URLS[env];
+
+      document.getElementById('iframe-member').src = targets.member;
+      document.getElementById('iframe-partner').src = targets.partner;
+      document.getElementById('iframe-admin').src = targets.admin;
+
+      document.getElementById('ext-member-link').href = targets.member;
+      document.getElementById('ext-partner-link').href = targets.partner;
+      document.getElementById('ext-admin-link').href = targets.admin;
+
+      document.getElementById('lbl-member-link').href = targets.member;
+      document.getElementById('lbl-member-link').innerText = targets.member.replace('https://', '').replace('http://', '') + ' ↗';
+
+      document.getElementById('lbl-partner-link').href = targets.partner;
+      document.getElementById('lbl-partner-link').innerText = targets.partner.replace('https://', '').replace('http://', '') + ' ↗';
+
+      document.getElementById('lbl-admin-link').href = targets.admin;
+      document.getElementById('lbl-admin-link').innerText = targets.admin.replace('https://', '').replace('http://', '') + ' ↗';
+
+      document.getElementById('browser-address-text').innerText = targets.admin + '/dashboard';
+    }
+
     function switchView(mode, tabElement) {
       document.querySelectorAll('.view-tab').forEach(t => t.classList.remove('active'));
       tabElement.classList.add('active');

@@ -7,13 +7,8 @@ export const WelcomePage: React.FC = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
 
-  const handleGetStarted = async () => {
-    try {
-      await login('partner@fitempire.in', 'Partner@123');
-    } catch {
-      // Proceed with live desk
-    }
-    navigate('/dashboard');
+  const handleGetStarted = () => {
+    navigate('/login');
   };
 
   return (
@@ -109,23 +104,6 @@ export const WelcomePage: React.FC = () => {
             >
               <span>Get Started with FitEmpire</span>
               <ArrowRight size={22} color="#FFF" />
-            </button>
-
-            <button
-              onClick={() => navigate('/login')}
-              style={{
-                backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                color: 'rgba(255, 255, 255, 0.85)',
-                border: '1px solid rgba(255, 255, 255, 0.12)',
-                padding: '12px 20px',
-                borderRadius: 16,
-                fontSize: '0.85rem',
-                fontWeight: 600,
-                cursor: 'pointer',
-                textAlign: 'center',
-              }}
-            >
-              <span>Partner Email Login</span>
             </button>
 
             <div

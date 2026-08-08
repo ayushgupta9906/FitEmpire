@@ -321,7 +321,7 @@ export function DashboardLayout() {
               <Tooltip title="Open FitEmpire Gym Partner App">
                 <Box
                   component="a"
-                  href="http://localhost:3001"
+                  href="https://fitempirepartner.netlify.app"
                   target="_blank"
                   rel="noopener noreferrer"
                   sx={{

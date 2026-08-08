@@ -97,9 +97,10 @@
     }
 
     .header-subtext {
-      font-size: 0.8rem;
+      font-size: 0.82rem;
       color: var(--text-muted);
-      font-weight: 500;
+      font-weight: 600;
+      letter-spacing: 0.2px;
     }
 
     /* 3-Column Workspace */
@@ -130,56 +131,62 @@
     }
 
     .pane-title {
-      font-size: 0.92rem;
+      font-size: 0.95rem;
       font-weight: 800;
       color: #FFFFFF;
       display: flex;
       align-items: center;
       gap: 0.4rem;
+      letter-spacing: -0.2px;
     }
 
     .live-link-btn {
-      font-size: 0.76rem;
-      font-weight: 700;
+      font-size: 0.78rem;
+      font-weight: 800;
       color: #FFFFFF;
       text-decoration: none;
       display: inline-flex;
       align-items: center;
-      gap: 0.35rem;
-      padding: 0.35rem 0.75rem;
+      gap: 0.4rem;
+      padding: 0.35rem 0.85rem;
       border-radius: 8px;
       transition: all 0.2s ease;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
     }
 
     .live-link-member {
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      color: #E2E8F0;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: #F8FAFC;
     }
     .live-link-member:hover {
-      background: rgba(255, 255, 255, 0.16);
-      border-color: rgba(255, 255, 255, 0.3);
+      background: rgba(255, 255, 255, 0.2);
+      border-color: rgba(255, 255, 255, 0.4);
       color: #FFFFFF;
+      transform: translateY(-1px);
     }
 
     .live-link-partner {
-      background: rgba(59, 130, 246, 0.15);
-      border: 1px solid rgba(59, 130, 246, 0.35);
+      background: rgba(59, 130, 246, 0.2);
+      border: 1px solid rgba(59, 130, 246, 0.45);
       color: #38BDF8;
     }
     .live-link-partner:hover {
-      background: rgba(59, 130, 246, 0.28);
-      border-color: rgba(59, 130, 246, 0.5);
+      background: rgba(59, 130, 246, 0.35);
+      border-color: rgba(59, 130, 246, 0.6);
+      color: #FFFFFF;
+      transform: translateY(-1px);
     }
 
     .live-link-admin {
-      background: linear-gradient(135deg, rgba(108, 99, 255, 0.3) 0%, rgba(79, 70, 229, 0.4) 100%);
-      border: 1px solid rgba(108, 99, 255, 0.45);
-      color: #A5B4FC;
+      background: linear-gradient(135deg, rgba(108, 99, 255, 0.35) 0%, rgba(79, 70, 229, 0.5) 100%);
+      border: 1px solid rgba(108, 99, 255, 0.55);
+      color: #C7D2FE;
     }
     .live-link-admin:hover {
-      background: linear-gradient(135deg, rgba(108, 99, 255, 0.5) 0%, rgba(79, 70, 229, 0.6) 100%);
+      background: linear-gradient(135deg, rgba(108, 99, 255, 0.55) 0%, rgba(79, 70, 229, 0.7) 100%);
       color: #FFFFFF;
+      transform: translateY(-1px);
     }
 
     .frame-container {
@@ -253,6 +260,7 @@
       height: 100%;
       border: none;
       background: #070B14;
+      overflow: hidden;
     }
 
     /* 2. Web Browser Mockup (Admin) */
@@ -336,7 +344,7 @@
 </head>
 <body>
 
-  <!-- Minimal Clean Header -->
+  <!-- Minimal Clean Header without Right Corner Buttons -->
   <header>
     <div class="logo-container">
       <div class="logo-icon-box">
@@ -361,20 +369,20 @@
     </div>
   </header>
 
-  <!-- 3-Screen Live Grid with Direct Links on Screen -->
+  <!-- 3-Screen Live Grid with Live Link Button on Each Screen -->
   <main class="workspace">
     <!-- 1. Member Mobile App Viewport -->
     <div class="pane">
       <div class="pane-header">
         <span class="pane-title">📱 Member App</span>
         <a href="https://firmempireapp.netlify.app" target="_blank" class="live-link-btn live-link-member">
-          firmempireapp.netlify.app ↗
+          ⚡ Live Link ↗
         </a>
       </div>
       <div class="frame-container">
         <div class="device-badge">Member Mobile <span>Active</span></div>
         <div class="iphone-frame">
-          <iframe src="https://firmempireapp.netlify.app" title="FitEmpire Member App"></iframe>
+          <iframe src="https://firmempireapp.netlify.app" title="FitEmpire Member App" scrolling="no"></iframe>
         </div>
       </div>
     </div>
@@ -384,13 +392,13 @@
       <div class="pane-header">
         <span class="pane-title">🏢 Partner App</span>
         <a href="https://fitempirepartner.netlify.app" target="_blank" class="live-link-btn live-link-partner">
-          fitempirepartner.netlify.app ↗
+          ⚡ Live Link ↗
         </a>
       </div>
       <div class="frame-container">
         <div class="device-badge">Partner Desk <span>Active</span></div>
         <div class="iphone-frame">
-          <iframe src="https://fitempirepartner.netlify.app" title="FitEmpire Partner App"></iframe>
+          <iframe src="https://fitempirepartner.netlify.app" title="FitEmpire Partner App" scrolling="no"></iframe>
         </div>
       </div>
     </div>
@@ -400,7 +408,7 @@
       <div class="pane-header">
         <span class="pane-title">🛡️ Admin Console</span>
         <a href="https://fitempire.netlify.app" target="_blank" class="live-link-btn live-link-admin">
-          fitempire.netlify.app ↗
+          ⚡ Live Link ↗
         </a>
       </div>
       <div class="frame-container">

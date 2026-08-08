@@ -30,34 +30,20 @@ export const LoginPage: React.FC = () => {
   return (
     <div
       style={{
-        minHeight: '100vh',
-        backgroundColor: '#070B14',
+        height: '100vh',
+        width: '100%',
+        backgroundColor: '#0B0F19',
         display: 'flex',
-        alignItems: 'center',
+        flexDirection: 'column',
         justifyContent: 'center',
-        padding: '20px 10px',
+        padding: '28px 24px',
         fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif",
+        boxSizing: 'border-box',
+        overflow: 'hidden',
+        position: 'relative',
       }}
     >
-      {/* Mobile Phone Device Frame */}
-      <div
-        style={{
-          width: '100%',
-          maxWidth: 390,
-          minHeight: 800,
-          borderRadius: 44,
-          border: '4px solid rgba(255, 255, 255, 0.15)',
-          boxShadow: '0 25px 70px rgba(0, 0, 0, 0.95), 0 0 50px rgba(79, 70, 229, 0.25)',
-          overflow: 'hidden',
-          backgroundColor: '#0B0F19',
-          padding: '36px 24px',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          position: 'relative',
-        }}
-      >
-        <button
+      <button
           onClick={() => navigate('/welcome')}
           style={{
             position: 'absolute',
@@ -231,7 +217,6 @@ export const LoginPage: React.FC = () => {
             Registered partner with FitEmpire? Contact admin if your account is locked.
           </div>
         </div>
-      </div>
     </div>
   );
 };

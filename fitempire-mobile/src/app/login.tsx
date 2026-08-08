@@ -106,10 +106,10 @@ export default function LoginScreen() {
           {/* Header Banner */}
           <View style={styles.header}>
             <LinearGradient
-              colors={[colors.primary, colors.primaryDark]}
+              colors={['#6C63FF', '#4F46E5']}
               style={styles.logoContainer}
             >
-              <Dumbbell color="#FFF" size={32} />
+              <Dumbbell color="#FFF" size={32} style={{ transform: [{ scaleX: -1 }] }} />
             </LinearGradient>
             <ThemedText style={styles.title}>FitEmpire Member</ThemedText>
             <ThemedText style={styles.subtitle} themeColor="textSecondary">

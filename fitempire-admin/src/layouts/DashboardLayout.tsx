@@ -110,7 +110,7 @@ export function DashboardLayout() {
                   boxShadow: '0 4px 15px rgba(108, 99, 255, 0.45)',
                 }}
               >
-                <Dumbbell size={20} color="#FFFFFF" strokeWidth={2.3} style={{ transform: 'scaleX(-1)' }} />
+                <Dumbbell size={20} color="#FFFFFF" strokeWidth={2.3} style={{ transform: 'scaleX(-1)', transformOrigin: 'center', display: 'inline-block' }} />
               </Box>
               <Box>
                 <Typography variant="h6" sx={{ fontWeight: 800, lineHeight: 1, color: '#F0F0FF' }}>
@@ -135,7 +135,7 @@ export function DashboardLayout() {
                 boxShadow: '0 4px 15px rgba(108, 99, 255, 0.45)',
               }}
             >
-              <Dumbbell size={20} color="#FFFFFF" strokeWidth={2.3} style={{ transform: 'scaleX(-1)' }} />
+              <Dumbbell size={20} color="#FFFFFF" strokeWidth={2.3} style={{ transform: 'scaleX(-1)', transformOrigin: 'center', display: 'inline-block' }} />
             </Box>
           )}
           {sidebarOpen && (

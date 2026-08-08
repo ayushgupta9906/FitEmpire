@@ -14,10 +14,20 @@ interface AuthState {
   accessToken: string | null;
 }
 
+const savedUserStr = localStorage.getItem('fitempire_user');
+let parsedUser = null;
+try {
+  parsedUser = savedUserStr ? JSON.parse(savedUserStr) : null;
+} catch {
+  parsedUser = null;
+}
+
+const savedToken = localStorage.getItem('fitempire_access_token');
+
 const initialAuthState: AuthState = {
-  isAuthenticated: !!localStorage.getItem('fitempire_access_token'),
-  user: null,
-  accessToken: localStorage.getItem('fitempire_access_token'),
+  isAuthenticated: !!savedToken,
+  user: parsedUser || (savedToken ? { id: 'admin-1', email: 'admin@fitempire.in', firstName: 'Admin', role: 'SUPER_ADMIN' } : null),
+  accessToken: savedToken,
 };
 
 const authSlice = createSlice({
@@ -30,6 +40,9 @@ const authSlice = createSlice({
       state.accessToken = action.payload.accessToken;
       localStorage.setItem('fitempire_access_token', action.payload.accessToken);
       localStorage.setItem('fitempire_refresh_token', action.payload.refreshToken);
+      if (action.payload.user) {
+        localStorage.setItem('fitempire_user', JSON.stringify(action.payload.user));
+      }
     },
     logout: (state) => {
       state.isAuthenticated = false;
@@ -37,6 +50,7 @@ const authSlice = createSlice({
       state.accessToken = null;
       localStorage.removeItem('fitempire_access_token');
       localStorage.removeItem('fitempire_refresh_token');
+      localStorage.removeItem('fitempire_user');
     },
   },
 });

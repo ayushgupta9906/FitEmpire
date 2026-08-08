@@ -66,7 +66,10 @@ api.interceptors.response.use(
 function clearAuthAndRedirect() {
   localStorage.removeItem('fitempire_access_token');
   localStorage.removeItem('fitempire_refresh_token');
-  window.location.href = '/login';
+  localStorage.removeItem('fitempire_user');
+  if (!window.location.pathname.includes('/login')) {
+    window.location.href = '/login';
+  }
 }
 
 export default api;

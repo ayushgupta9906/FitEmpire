@@ -51,15 +51,15 @@ export const WelcomePage: React.FC = () => {
                 width: 80,
                 height: 80,
                 borderRadius: 24,
-                backgroundColor: '#FFFFFF',
+                background: 'linear-gradient(135deg, #6C63FF 0%, #4F46E5 100%)',
                 display: 'inline-flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 marginBottom: 20,
-                boxShadow: '0 10px 30px rgba(79, 70, 229, 0.35)',
+                boxShadow: '0 10px 30px rgba(108, 99, 255, 0.45)',
               }}
             >
-              <Dumbbell color="#4F46E5" size={40} style={{ transform: 'scaleX(-1)' }} />
+              <Dumbbell color="#FFFFFF" size={40} style={{ transform: 'scaleX(-1)' }} />
             </div>
 
             <h1

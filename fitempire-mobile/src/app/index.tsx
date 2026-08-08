@@ -30,9 +30,12 @@ export default function WelcomeScreen() {
             
             {/* Header / Logo */}
             <View style={styles.header}>
-              <View style={styles.logoBadge}>
-                <Dumbbell color="#4F46E5" size={40} />
-              </View>
+              <LinearGradient
+                colors={['#6C63FF', '#4F46E5']}
+                style={styles.logoBadge}
+              >
+                <Dumbbell color="#FFFFFF" size={40} style={{ transform: [{ scaleX: -1 }] }} />
+              </LinearGradient>
               <ThemedText style={styles.title}>FitEmpire</ThemedText>
               <ThemedText style={styles.subtitle}>
                 The ultimate platform for fitness enthusiasts and gym owners.
@@ -90,13 +93,12 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 24,
-    backgroundColor: '#FFF',
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 24,
-    shadowColor: '#4F46E5',
+    shadowColor: '#6C63FF',
     shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.3,
+    shadowOpacity: 0.45,
     shadowRadius: 20,
     elevation: 10,
   },

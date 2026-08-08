@@ -66,16 +66,16 @@ export const LoginPage: React.FC = () => {
                 width: 60,
                 height: 60,
                 borderRadius: 18,
-                background: 'linear-gradient(135deg, #6C63FF 0%, #4F46E5 100%)',
+                backgroundColor: '#FFFFFF',
                 display: 'inline-flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                boxShadow: '0 8px 24px rgba(108, 99, 255, 0.45)',
+                boxShadow: '0 8px 24px rgba(79, 70, 229, 0.35)',
                 marginBottom: 16,
               }}
             >
-            <Dumbbell color="#FFFFFF" size={30} style={{ transform: 'scaleX(-1)' }} />
-          </div>
+              <Dumbbell color="#4F46E5" size={30} style={{ transform: 'scaleX(-1)' }} />
+            </div>
           <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#FFFFFF', marginBottom: 6 }}>
             FitEmpire Partner Portal
           </h1>

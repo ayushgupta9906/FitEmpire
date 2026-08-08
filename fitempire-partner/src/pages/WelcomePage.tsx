@@ -19,44 +19,31 @@ export const WelcomePage: React.FC = () => {
   return (
     <div
       style={{
-        minHeight: '100vh',
+        height: '100vh',
+        width: '100%',
         backgroundColor: '#070B14',
         display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '20px 10px',
+        flexDirection: 'column',
         fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif",
+        overflow: 'hidden',
+        position: 'relative',
+        backgroundImage: `url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1200&auto=format&fit=crop')`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
       }}
     >
-      {/* Mobile Phone Device Frame (Matching Member App Screenshot) */}
+      {/* Dark Linear Gradient Overlay (Exactly Matching Member App) */}
       <div
         style={{
-          width: '100%',
-          maxWidth: 390,
-          height: 800,
-          borderRadius: 44,
-          border: '4px solid rgba(255, 255, 255, 0.15)',
-          boxShadow: '0 25px 70px rgba(0, 0, 0, 0.95), 0 0 50px rgba(79, 70, 229, 0.25)',
-          overflow: 'hidden',
-          position: 'relative',
+          flex: 1,
           display: 'flex',
           flexDirection: 'column',
-          backgroundImage: `url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1200&auto=format&fit=crop')`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
+          justifyContent: 'flex-end',
+          padding: '24px 20px 36px',
+          background: 'linear-gradient(180deg, rgba(11, 15, 25, 0.15) 0%, rgba(11, 15, 25, 0.75) 50%, rgba(11, 15, 25, 0.98) 85%, #0B0F19 100%)',
+          boxSizing: 'border-box',
         }}
       >
-        {/* Dark Linear Gradient Overlay (Exactly Matching Member App) */}
-        <div
-          style={{
-            flex: 1,
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'flex-end',
-            padding: '32px 24px 44px',
-            background: 'linear-gradient(180deg, rgba(11, 15, 25, 0.15) 0%, rgba(11, 15, 25, 0.75) 50%, rgba(11, 15, 25, 0.98) 85%, #0B0F19 100%)',
-          }}
-        >
           {/* Center Logo & Text */}
           <div style={{ alignItems: 'center', textAlign: 'center', marginBottom: 36 }}>
             <div
@@ -155,7 +142,6 @@ export const WelcomePage: React.FC = () => {
             </div>
           </div>
         </div>
-      </div>
     </div>
   );
 };

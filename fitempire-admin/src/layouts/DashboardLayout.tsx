@@ -291,6 +291,63 @@ export function DashboardLayout() {
               {NAV_ITEMS.find(n => n.path === location.pathname)?.label || 'FitEmpire Admin'}
             </Typography>
 
+            {/* Portal Switcher Buttons */}
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mr: 1 }}>
+              <Tooltip title="Open FitPass Member App">
+                <Box
+                  component="a"
+                  href="http://localhost:8081/(tabs)"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  sx={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: 0.8,
+                    px: 1.5,
+                    py: 0.6,
+                    borderRadius: 2,
+                    fontSize: '0.78rem',
+                    fontWeight: 700,
+                    textDecoration: 'none',
+                    color: '#6C63FF',
+                    bgcolor: 'rgba(108, 99, 255, 0.12)',
+                    border: '1px solid rgba(108, 99, 255, 0.25)',
+                    '&:hover': { bgcolor: 'rgba(108, 99, 255, 0.25)' },
+                    transition: 'all 0.15s ease',
+                  }}
+                >
+                  📱 Member App
+                </Box>
+              </Tooltip>
+
+              <Tooltip title="Open FitPass Gym Partner App">
+                <Box
+                  component="a"
+                  href="http://localhost:3001"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  sx={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: 0.8,
+                    px: 1.5,
+                    py: 0.6,
+                    borderRadius: 2,
+                    fontSize: '0.78rem',
+                    fontWeight: 700,
+                    textDecoration: 'none',
+                    color: '#3B82F6',
+                    bgcolor: 'rgba(59, 130, 246, 0.12)',
+                    border: '1px solid rgba(59, 130, 246, 0.25)',
+                    '&:hover': { bgcolor: 'rgba(59, 130, 246, 0.25)' },
+                    transition: 'all 0.15s ease',
+                  }}
+                >
+                  🏢 FitPass Partner App
+                </Box>
+              </Tooltip>
+            </Box>
+
             <IconButton sx={{ color: 'text.secondary' }}>
               <Search />
             </IconButton>

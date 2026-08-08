@@ -260,9 +260,9 @@ app:
     service-account-json: ${FIREBASE_SERVICE_ACCOUNT_JSON:/secrets/firebase-service-account.json}
 
   twilio:
-    account-sid: ${TWILIO_ACCOUNT_SID:}
-    auth-token: ${TWILIO_AUTH_TOKEN:}
-    from-number: ${TWILIO_FROM_NUMBER:}
+    account-sid: ${TWILIO_ACCOUNT_SID:AC61d9f9916a29a2677764c49a80ec9112}
+    auth-token: ${TWILIO_AUTH_TOKEN:499d08545b0cdbe581fab021db507cb7}
+    from-number: ${TWILIO_FROM_NUMBER:MG34b2425bf58161cb8c58260d517964e4}
 
   openai:
     api-key: ${OPENAI_API_KEY:}

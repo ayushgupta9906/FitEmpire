@@ -47,11 +47,8 @@ public class AuthController {
     @Operation(summary = "Send OTP to phone number for login")
     public ResponseEntity<ApiResponse<String>> sendOtp(
             @Valid @RequestBody OtpLoginRequest request) {
-        String otp = authService.sendOtp(request);
-        // Conditionally return the OTP for developer testing convenience
-        boolean isDev = activeProfile != null && (activeProfile.contains("dev") || activeProfile.contains("local"));
-        String responseOtp = isDev ? otp : null;
-        return ResponseEntity.ok(ApiResponse.success("OTP sent successfully.", responseOtp));
+        authService.sendOtp(request);
+        return ResponseEntity.ok(ApiResponse.success("OTP sent successfully to your mobile number.", null));
     }
 
     @PostMapping("/otp/verify")

@@ -167,32 +167,31 @@ export function LoginPage() {
         }}
       >
         <CardContent sx={{ p: 5 }}>
-          {/* Logo */}
+          {/* Logo Badge (Matching Member App Exactly) */}
           <Box sx={{ textAlign: 'center', mb: 4 }}>
             <Box
               sx={{
-                width: 64,
-                height: 64,
-                borderRadius: '18px', // matches mobile app's logoBadge borderRadius relative to size
-                background: '#6C63FF',
-                display: 'flex',
+                width: 76,
+                height: 76,
+                borderRadius: '22px',
+                backgroundColor: '#FFFFFF',
+                display: 'inline-flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 mx: 'auto',
                 mb: 2,
-                boxShadow: '0 12px 40px rgba(108, 99, 255, 0.4)',
+                boxShadow: '0 10px 30px rgba(79, 70, 229, 0.35)',
               }}
             >
-              <DumbbellIcon size={32} color="#ffffff" />
+              <DumbbellIcon size={38} color="#4F46E5" />
             </Box>
             <Typography
               variant="h4"
               sx={{
                 fontWeight: 800,
-                background: 'linear-gradient(135deg, #6C63FF 0%, #9C94FF 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
+                color: '#FFFFFF',
                 mb: 0.5,
+                letterSpacing: '-0.02em',
               }}
             >
               FitEmpire

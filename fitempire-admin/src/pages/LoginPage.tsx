@@ -142,7 +142,7 @@ export function LoginPage() {
                 boxShadow: '0 10px 30px rgba(108, 99, 255, 0.45)',
               }}
             >
-              <Dumbbell size={40} color="#FFFFFF" strokeWidth={2.3} style={{ transform: 'scaleX(-1)' }} />
+              <Dumbbell size={40} color="#FFFFFF" strokeWidth={2.3} style={{ transform: 'scaleX(-1)', transformOrigin: 'center', display: 'inline-block' }} />
             </Box>
             <Typography
               variant="h4"

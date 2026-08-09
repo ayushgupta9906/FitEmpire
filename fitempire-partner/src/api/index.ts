@@ -21,11 +21,7 @@ apiClient.interceptors.response.use(
   (res) => res,
   (err) => {
     if (err.response?.status === 401) {
-      localStorage.removeItem('fitempire_partner_token');
-      localStorage.removeItem('fitempire_partner_user');
-      if (window.location.pathname !== '/login') {
-        window.location.href = '/login';
-      }
+      console.warn('Partner API returned 401 for URL:', err.config?.url);
     }
     return Promise.reject(err);
   }
@@ -38,14 +34,23 @@ export const partnerApi = {
   getProfile: () =>
     apiClient.get('/users/profile/me'),
 
+  getDashboardStats: () =>
+    apiClient.get('/admin/dashboard/stats'),
+
   getDashboardActivity: () =>
     apiClient.get('/admin/dashboard/activity'),
 
-  getGymDetails: () =>
-    apiClient.get('/gyms/partner/my-gym'),
+  getRevenueChart: (period = 'week') =>
+    apiClient.get(`/admin/dashboard/revenue?period=${period}`),
 
-  verifyPass: (passCode: string) =>
-    apiClient.post('/bookings/verify-qr', { code: passCode }),
+  getGymDetails: () =>
+    apiClient.get('/gyms/my-gyms'),
+
+  verifyPass: (passCode: string, gymId?: string) =>
+    apiClient.post('/bookings/verify-qr', { code: passCode, gymId }),
+
+  getAttendances: (gymId?: string) =>
+    apiClient.get('/bookings/attendances', { params: { gymId } }),
 
   confirmCheckIn: (bookingId: string) =>
     apiClient.post(`/bookings/${bookingId}/check-in`),
@@ -53,12 +58,9 @@ export const partnerApi = {
   getClasses: () =>
     apiClient.get('/classes'),
 
-  addClassSlot: (slotData: any) =>
-    apiClient.post('/classes', slotData),
+  createClass: (classData: any) =>
+    apiClient.post('/classes', classData),
 
   getSettlements: () =>
-    apiClient.get('/settlements'),
-
-  requestPayout: (amount: number) =>
-    apiClient.post('/settlements/payout-request', { amount }),
+    apiClient.get('/admin/settlements'),
 };

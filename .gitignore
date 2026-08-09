@@ -124,3 +124,14 @@ Thumbs.db
 *.pem
 *.der
 dist/
+
+# Binary APKs, XAPKs, AABs & Archives
+*.apk
+*.xapk
+*.aab
+*.zip
+*.tar
+*.gz
+xapk_extracted/
+apk_extracted/
+

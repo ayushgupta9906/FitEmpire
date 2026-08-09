@@ -56,6 +56,10 @@ public interface OtpCodeRepository extends JpaRepository<OtpCode, UUID> {
     void invalidateAllByPhone(@Param("phone") String phone, @Param("purpose") OtpPurpose purpose);
 
     @Modifying
+    @Query("UPDATE OtpCode o SET o.used = true WHERE o.email = :email AND o.purpose = :purpose")
+    void invalidateAllByEmail(@Param("email") String email, @Param("purpose") OtpPurpose purpose);
+
+    @Modifying
     @Query("DELETE FROM OtpCode o WHERE o.expiresAt < :before")
     void deleteExpiredOtps(@Param("before") Instant before);
 }

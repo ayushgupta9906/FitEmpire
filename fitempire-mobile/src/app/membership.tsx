@@ -1,232 +1,557 @@
-import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import React, { useState } from 'react';
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  Image,
+  Dimensions,
+  Alert,
+} from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router';
 import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
 import { Colors } from '@/constants/theme';
-import { useTheme } from '@/hooks/use-theme';
-import { membershipsApi, paymentsApi } from '@/services/api';
-import { Check, Shield, Award, Sparkles, CreditCard, ChevronRight } from 'lucide-react-native';
 import { useColorScheme } from 'react-native';
+import {
+  ArrowLeft,
+  History,
+  Clock,
+  Check,
+  Zap,
+  Dumbbell,
+  Apple,
+  Sparkles,
+  ShoppingBag,
+  Ticket,
+  ChevronRight,
+  ArrowRight,
+  ShieldCheck,
+  Award,
+} from 'lucide-react-native';
+
+const { width } = Dimensions.get('window');
 
 export default function MembershipScreen() {
-  const { planId } = useLocalSearchParams<{ planId: string }>();
+  const insets = useSafeAreaInsets();
   const router = useRouter();
-  const scheme = useColorScheme();
-  const theme = useTheme();
-  const colors = Colors[scheme === 'unspecified' ? 'light' : scheme];
+  const scheme = useColorScheme() ?? 'dark';
+  const colors = Colors[scheme === 'unspecified' ? 'dark' : scheme] ?? Colors.dark;
 
-  const [plans, setPlans] = useState<any[]>([]);
-  const [selectedPlan, setSelectedPlan] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-  const [purchasing, setPurchasing] = useState(false);
+  const [isUpgraded, setIsUpgraded] = useState(false);
 
-  useEffect(() => {
-    fetchPlans();
-  }, []);
-
-  const fetchPlans = async () => {
-    setLoading(true);
-    try {
-      const res = await membershipsApi.getPlans();
-      const planList = res.data.data || [];
-      setPlans(planList);
-
-      // Select requested plan or default first
-      if (planId && planList.length > 0) {
-        const found = planList.find((p: any) => p.id === planId);
-        setSelectedPlan(found || planList[0]);
-      } else if (planList.length > 0) {
-        setSelectedPlan(planList[0]);
-      }
-    } catch (e) {
-      console.warn("Failed to load plans:", e);
-      Alert.alert('Error', 'Failed to load membership plans.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handlePurchase = async () => {
-    if (!selectedPlan) return;
-    setPurchasing(true);
-    try {
-      // Step 1: Initiate order
-      const orderRes = await paymentsApi.createOrder(selectedPlan.id);
-      const { paymentId, razorpayOrderId } = orderRes.data.data;
-
-      // Simulate real razorpay UI interaction by using Alert (since we don't have the Razorpay SDK installed in this MVP)
-      Alert.alert(
-        'Razorpay Checkout (Test Mode)',
-        `Pay ₹${selectedPlan.price} for ${selectedPlan.name}?`,
-        [
-          { text: 'Cancel', style: 'cancel', onPress: () => setPurchasing(false) },
-          {
-            text: 'Pay Now',
-            onPress: async () => {
-              try {
-                // Step 2: verify signature
-                await paymentsApi.verifyPayment({
-                  paymentId,
-                  razorpayOrderId: razorpayOrderId,
-                  razorpayPaymentId: 'pay_test_' + Math.random().toString(36).substring(7),
-                  razorpaySignature: 'sig_test_dummy',
-                });
-                Alert.alert('Payment Successful!', 'Your FitEmpire membership is now active.', [
-                  { text: 'Great!', onPress: () => router.replace('/(tabs)') }
-                ]);
-              } catch (verifyErr) {
-                Alert.alert('Payment Failed', 'Payment verification failed.');
-              } finally {
-                setPurchasing(false);
-              }
-            }
-          }
-        ]
-      );
-    } catch (e) {
-      console.warn("Payment error", e);
-      Alert.alert('Error', 'Failed to initiate payment checkout.');
-      setPurchasing(false);
-    }
-  };
-
-  if (loading) {
-    return (
-      <ThemedView style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#6C63FF" />
-      </ThemedView>
+  const handleUpgrade = () => {
+    Alert.alert(
+      'Upgrade to FitEmpire Pro Unlimited',
+      'Unlock all-access daily entry to 12,000+ partner centers, unlimited classes, and personal AI coaching starting at ₹1,001/month.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Proceed to Pay',
+          onPress: () => {
+            setIsUpgraded(true);
+            Alert.alert('Success 🎉', 'Your FitEmpire Pro Unlimited Pass is now active!');
+          },
+        },
+      ]
     );
-  }
-
-  const features = [
-    'Access to 400+ gyms and fitness centers',
-    'Unlimited class bookings (Yoga, HIIT, Zumba)',
-    'Easy QR-code scanner entry',
-    'Free nutrition and trainer consultations',
-    'Dynamic workout generation via AI',
-  ];
+  };
 
   return (
-    <ThemedView style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-          <ThemedText style={styles.backText}>← Back</ThemedText>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      {/* Top Navigation Bar */}
+      <View style={[styles.topBar, { paddingTop: insets.top + 8 }]}>
+        <TouchableOpacity
+          onPress={() => router.back()}
+          style={[styles.circleButton, { backgroundColor: colors.surface, borderColor: colors.border }]}
+        >
+          <ArrowLeft size={20} color={colors.text} />
         </TouchableOpacity>
-        <ThemedText style={styles.title}>Membership Plans</ThemedText>
+
+        {/* 3 Floating 3D Fitness Badges */}
+        <View style={styles.floatingBadgesRow}>
+          <View style={[styles.badgeCircle, { backgroundColor: 'rgba(245, 158, 11, 0.15)' }]}>
+            <Zap size={18} color="#F59E0B" />
+          </View>
+          <View style={[styles.badgeCircle, { backgroundColor: 'rgba(239, 68, 68, 0.15)' }]}>
+            <Dumbbell size={18} color="#EF4444" />
+          </View>
+          <View style={[styles.badgeCircle, { backgroundColor: 'rgba(16, 185, 129, 0.15)' }]}>
+            <Apple size={18} color="#10B981" />
+          </View>
+        </View>
+
+        <TouchableOpacity
+          onPress={() => router.push('/my-bookings' as any)}
+          style={[styles.circleButton, { backgroundColor: colors.surface, borderColor: colors.border }]}
+        >
+          <History size={18} color={colors.text} />
+        </TouchableOpacity>
       </View>
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scroll}>
-        {/* Intro */}
-        <View style={styles.introBlock}>
-          <Award size={36} color="#6C63FF" />
-          <ThemedText style={styles.introTitle}>Unlock the Empire Pass</ThemedText>
-          <ThemedText style={styles.introSubtitle} themeColor="textSecondary">
-            Purchase a single membership and work out at any gym, studio, or center near you.
-          </ThemedText>
-        </View>
-
-        {/* Plans Carousel/List */}
-        {plans.map((p) => {
-          const isSelected = selectedPlan?.id === p.id;
-          return (
-            <TouchableOpacity
-              key={p.id}
-              style={[
-                styles.planCard,
-                {
-                  backgroundColor: colors.backgroundElement,
-                  borderColor: isSelected ? '#6C63FF' : 'transparent',
-                  borderWidth: 1.5
-                }
-              ]}
-              onPress={() => setSelectedPlan(p)}
-            >
-              <View style={styles.planHeader}>
-                <View style={{ flex: 1 }}>
-                  <ThemedText style={styles.planName}>{p.name}</ThemedText>
-                  <ThemedText style={styles.planMeta} themeColor="textSecondary">
-                    Duration: {p.durationDays} Days • {p.type}
-                  </ThemedText>
-                </View>
-                <View style={styles.priceBlock}>
-                  <ThemedText style={styles.priceSymbol}>₹</ThemedText>
-                  <ThemedText style={styles.priceValue}>{p.price}</ThemedText>
-                </View>
-              </View>
-              <ThemedText style={styles.planDesc} themeColor="textSecondary">
-                {p.description}
-              </ThemedText>
-            </TouchableOpacity>
-          );
-        })}
-
-        {/* Features Card */}
-        <View style={[styles.featuresCard, { backgroundColor: colors.backgroundElement }]}>
-          <View style={styles.featuresHeader}>
-            <Sparkles size={18} color="#FFB038" />
-            <ThemedText style={styles.featuresTitle}>What's Included</ThemedText>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{
+          paddingBottom: insets.bottom + 40,
+        }}
+      >
+        {/* Membership Header Status */}
+        <View style={styles.memberStatusSection}>
+          <View style={styles.memberSincePill}>
+            <ThemedText style={styles.memberSinceText}>MEMBER SINCE </ThemedText>
+            <ThemedText style={styles.memberSinceDate}>Jul 2025</ThemedText>
           </View>
-          {features.map((f, i) => (
-            <View key={i} style={styles.featureItem}>
-              <Check size={16} color="#43D787" />
-              <ThemedText style={styles.featureText} themeColor="textSecondary">{f}</ThemedText>
-            </View>
-          ))}
-        </View>
 
-        {/* Security Info */}
-        <View style={styles.securityRow}>
-          <Shield size={16} color="#888" />
-          <ThemedText style={styles.securityText}>
-            Secured checkout via Razorpay/Stripe. Cancel subscription at any time.
+          <ThemedText style={styles.fitPassBrandTitle}>
+            FITEMPIRE <ThemedText style={{ color: '#EF4444' }}>PRO</ThemedText>
           </ThemedText>
-        </View>
-      </ScrollView>
 
-      {/* Purchase floating footer */}
-      {selectedPlan && (
-        <View style={[styles.footer, { backgroundColor: colors.backgroundElement, borderTopColor: 'rgba(255,255,255,0.05)' }]}>
-          <TouchableOpacity style={styles.payBtn} onPress={handlePurchase} disabled={purchasing}>
-            <CreditCard size={18} color="#ffffff" />
-            <ThemedText style={styles.payBtnText}>
-              {purchasing ? 'Processing...' : `Purchase Pass • ₹${selectedPlan.price}`}
+          <View style={styles.expiryRow}>
+            <Clock size={13} color="#94A3B8" />
+            <ThemedText style={styles.expiryText}>
+              Membership ends on <ThemedText style={{ fontWeight: '800', color: colors.text }}>02 Apr, 2027</ThemedText>
             </ThemedText>
-            <ChevronRight size={18} color="#ffffff" />
+          </View>
+
+          <TouchableOpacity
+            style={[styles.extendMembershipBtn, { borderColor: colors.border }]}
+            activeOpacity={0.8}
+            onPress={handleUpgrade}
+          >
+            <ThemedText style={styles.extendMembershipText}>Extend Membership</ThemedText>
           </TouchableOpacity>
         </View>
-      )}
-    </ThemedView>
+
+        {/* Section: Plan Benefits */}
+        <View style={styles.sectionBlock}>
+          <ThemedText style={styles.sectionHeaderLabel}>PLAN BENEFITS</ThemedText>
+
+          <View style={styles.benefitsList}>
+            <View style={styles.benefitItem}>
+              <View style={styles.bulletDot} />
+              <ThemedText style={styles.benefitText}>
+                Access to 12k+ premium gyms & fitness centres across 150+ cities
+              </ThemedText>
+            </View>
+
+            <View style={styles.benefitItem}>
+              <View style={styles.bulletDot} />
+              <ThemedText style={styles.benefitText}>
+                Expert nutritionist consults, personalised diet plans & meal logs
+              </ThemedText>
+            </View>
+
+            <View style={styles.benefitItem}>
+              <View style={styles.bulletDot} />
+              <ThemedText style={styles.benefitText}>
+                A.I. enabled personal fitness coaching
+              </ThemedText>
+            </View>
+          </View>
+        </View>
+
+        {/* Section: Store Benefits */}
+        <View style={styles.sectionBlock}>
+          <ThemedText style={styles.sectionHeaderLabel}>STORE BENEFITS</ThemedText>
+
+          <View style={styles.storeCardsGrid}>
+            {/* Card 1: Blue Smart Shopping */}
+            <View style={[styles.storeCard, styles.storeCardBlue]}>
+              <View style={{ flex: 1, paddingRight: 6 }}>
+                <ThemedText style={styles.storeCardTitle}>Stay fit, shop smart</ThemedText>
+              </View>
+              <View style={styles.storeCardIconWrap}>
+                <Award size={32} color="#93C5FD" />
+              </View>
+            </View>
+
+            {/* Card 2: Crimson Free Delivery */}
+            <View style={[styles.storeCard, styles.storeCardRed]}>
+              <View style={{ flex: 1, paddingRight: 6 }}>
+                <ThemedText style={styles.storeCardTitle}>Free delivery on all store purchases</ThemedText>
+              </View>
+              <View style={styles.storeCardIconWrap}>
+                <ShoppingBag size={32} color="#FCA5A5" />
+              </View>
+            </View>
+          </View>
+        </View>
+
+        {/* Section: Upgrade Plan */}
+        <View style={styles.sectionBlock}>
+          <ThemedText style={styles.sectionHeaderLabel}>UPGRADE PLAN</ThemedText>
+
+          <ThemedText style={styles.goldUpgradeLabel}>UPGRADE TO UNLIMITED ✨</ThemedText>
+          <ThemedText style={styles.upgradeSubtitle}>
+            Unlimited workouts, zero limits! Upgrade now & level up your fitness!
+          </ThemedText>
+
+          {/* Comparative Matrix Card */}
+          <View style={[styles.upgradeMatrixCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+            <View style={styles.upgradeComparisonHeader}>
+              <ThemedText style={styles.upgradeComparisonTitle}>
+                Unlimited workouts, zero limits! Upgrade now & level up your fitness!
+              </ThemedText>
+              <ThemedText style={styles.pricingTag}>Starting at ₹1,001/m</ThemedText>
+            </View>
+
+            {/* Comparison Visual Diagram */}
+            <View style={styles.comparisonVisualRow}>
+              {/* Left Box: 3 workouts */}
+              <View style={styles.comparisonBox}>
+                <View style={styles.activityPillsMiniRow}>
+                  <View style={[styles.miniPill, { backgroundColor: '#10B981' }]}>
+                    <ThemedText style={styles.miniPillText}>YOGA</ThemedText>
+                  </View>
+                  <View style={[styles.miniPill, { backgroundColor: '#F59E0B' }]}>
+                    <ThemedText style={styles.miniPillText}>CARDIO</ThemedText>
+                  </View>
+                  <View style={[styles.miniPill, { backgroundColor: '#3B82F6' }]}>
+                    <ThemedText style={styles.miniPillText}>DANCE</ThemedText>
+                  </View>
+                </View>
+                <ThemedText style={styles.comparisonBoxTitle}>
+                  <ThemedText style={{ color: '#EF4444', fontWeight: '900' }}>03 </ThemedText>
+                  workout per week
+                </ThemedText>
+              </View>
+
+              {/* Swap Arrows */}
+              <View style={styles.swapArrowsContainer}>
+                <ThemedText style={{ fontSize: 20 }}>🔁</ThemedText>
+              </View>
+
+              {/* Right Box: Unlimited matrix */}
+              <View style={[styles.comparisonBox, styles.comparisonBoxUnlimited]}>
+                <ThemedText style={styles.unlimitedHeaderLabel}>Unlimited workout</ThemedText>
+                <ThemedText style={styles.unlimitedSubLabel}>per week</ThemedText>
+                <View style={styles.miniMatrixGrid}>
+                  {['ZUMBA', 'DANCE', 'YOGA', 'AEROBIC', 'MMA', 'BOXING', 'SPORTS', 'SWIM'].map((item) => (
+                    <View key={item} style={styles.matrixTile}>
+                      <ThemedText style={styles.matrixTileText}>{item}</ThemedText>
+                    </View>
+                  ))}
+                </View>
+              </View>
+            </View>
+
+            {/* Gold CTA Button */}
+            <TouchableOpacity
+              style={styles.goldUpgradeButton}
+              activeOpacity={0.85}
+              onPress={handleUpgrade}
+            >
+              <ThemedText style={styles.goldUpgradeButtonText}>Upgrade To Premium</ThemedText>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        {/* Section: Payment Details */}
+        <View style={styles.sectionBlock}>
+          <ThemedText style={styles.sectionHeaderLabel}>PAYMENT DETAILS</ThemedText>
+
+          {/* Corporate Coupons */}
+          <TouchableOpacity style={[styles.couponCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+            <View style={styles.couponIconBox}>
+              <Ticket size={22} color="#EF4444" />
+            </View>
+            <ThemedText style={styles.couponCodeText}>CORPORATE-COUPONS</ThemedText>
+          </TouchableOpacity>
+
+          {/* View Payment History Link */}
+          <TouchableOpacity
+            style={[styles.historyRow, { borderColor: colors.border }]}
+            onPress={() => router.push('/wallet' as any)}
+          >
+            <ThemedText style={styles.historyRowText}>View payment history</ThemedText>
+            <ChevronRight size={18} color="#94A3B8" />
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
-  loadingContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-  header: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, paddingTop: 60, paddingBottom: 16 },
-  backButton: { paddingRight: 16 },
-  backText: { color: '#6C63FF', fontSize: 14, fontWeight: '700' },
-  title: { fontSize: 18, fontWeight: '800', flex: 1 },
-  scroll: { padding: 16, paddingBottom: 100 },
-  introBlock: { alignItems: 'center', marginVertical: 16, paddingHorizontal: 20 },
-  introTitle: { fontSize: 20, fontWeight: '900', marginTop: 12, textAlign: 'center' },
-  introSubtitle: { fontSize: 12, textAlign: 'center', marginTop: 6, lineHeight: 16 },
-  planCard: { borderRadius: 18, padding: 20, marginBottom: 16 },
-  planHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 },
-  planName: { fontSize: 15, fontWeight: '800' },
-  planMeta: { fontSize: 11, marginTop: 2 },
-  priceBlock: { flexDirection: 'row', alignItems: 'baseline' },
-  priceSymbol: { fontSize: 12, fontWeight: '700', color: '#6C63FF' },
-  priceValue: { fontSize: 20, fontWeight: '800', color: '#6C63FF' },
-  planDesc: { fontSize: 11, lineHeight: 16 },
-  featuresCard: { borderRadius: 18, padding: 20, marginVertical: 12 },
-  featuresHeader: { flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 16 },
-  featuresTitle: { fontSize: 14, fontWeight: '800' },
-  featureItem: { flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 12 },
-  featureText: { fontSize: 12 },
-  securityRow: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 16, justifyContent: 'center', marginVertical: 16 },
-  securityText: { fontSize: 10, color: '#888', textAlign: 'center' },
-  footer: { position: 'absolute', bottom: 0, left: 0, right: 0, padding: 16, borderTopWidth: 1 },
-  payBtn: { flexDirection: 'row', backgroundColor: '#6C63FF', height: 56, borderRadius: 14, justifyContent: 'center', alignItems: 'center', gap: 8 },
-  payBtnText: { color: '#ffffff', fontSize: 15, fontWeight: '800' },
+  container: {
+    flex: 1,
+  },
+  topBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingBottom: 8,
+  },
+  circleButton: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+  },
+  floatingBadgesRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  badgeCircle: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  memberStatusSection: {
+    alignItems: 'center',
+    paddingVertical: 18,
+    paddingHorizontal: 16,
+    gap: 8,
+  },
+  memberSincePill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(16, 185, 129, 0.12)',
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderRadius: 12,
+  },
+  memberSinceText: {
+    fontSize: 10,
+    fontWeight: '800',
+    color: '#10B981',
+  },
+  memberSinceDate: {
+    fontSize: 10,
+    fontWeight: '900',
+    color: '#10B981',
+  },
+  fitPassBrandTitle: {
+    fontSize: 32,
+    fontWeight: '900',
+    letterSpacing: 1.5,
+    marginTop: 4,
+  },
+  expiryRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  expiryText: {
+    fontSize: 12,
+    color: '#94A3B8',
+  },
+  extendMembershipBtn: {
+    marginTop: 10,
+    paddingHorizontal: 24,
+    paddingVertical: 10,
+    borderRadius: 20,
+    borderWidth: 1,
+  },
+  extendMembershipText: {
+    fontSize: 13,
+    fontWeight: '700',
+  },
+  sectionBlock: {
+    paddingHorizontal: 16,
+    marginTop: 24,
+  },
+  sectionHeaderLabel: {
+    fontSize: 11,
+    fontWeight: '800',
+    color: '#94A3B8',
+    letterSpacing: 1,
+    marginBottom: 12,
+  },
+  benefitsList: {
+    gap: 10,
+  },
+  benefitItem: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 10,
+  },
+  bulletDot: {
+    width: 5,
+    height: 5,
+    borderRadius: 2.5,
+    backgroundColor: '#94A3B8',
+    marginTop: 6,
+  },
+  benefitText: {
+    flex: 1,
+    fontSize: 13,
+    color: '#94A3B8',
+    lineHeight: 18,
+  },
+  storeCardsGrid: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  storeCard: {
+    flex: 1,
+    height: 90,
+    borderRadius: 16,
+    padding: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  storeCardBlue: {
+    backgroundColor: '#1E3A8A',
+  },
+  storeCardRed: {
+    backgroundColor: '#881337',
+  },
+  storeCardTitle: {
+    color: '#FFF',
+    fontSize: 12,
+    fontWeight: '800',
+    lineHeight: 16,
+  },
+  storeCardIconWrap: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  goldUpgradeLabel: {
+    fontSize: 13,
+    fontWeight: '900',
+    color: '#D97706',
+    letterSpacing: 0.5,
+  },
+  upgradeSubtitle: {
+    fontSize: 12,
+    color: '#94A3B8',
+    marginTop: 3,
+    marginBottom: 12,
+  },
+  upgradeMatrixCard: {
+    borderRadius: 20,
+    padding: 16,
+    borderWidth: 1,
+    gap: 14,
+  },
+  upgradeComparisonHeader: {
+    gap: 4,
+  },
+  upgradeComparisonTitle: {
+    fontSize: 14,
+    fontWeight: '800',
+  },
+  pricingTag: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#6C63FF',
+  },
+  comparisonVisualRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 8,
+  },
+  comparisonBox: {
+    flex: 1,
+    padding: 10,
+    borderRadius: 14,
+    backgroundColor: 'rgba(255, 255, 255, 0.04)',
+    alignItems: 'center',
+    gap: 8,
+  },
+  comparisonBoxUnlimited: {
+    backgroundColor: 'rgba(16, 185, 129, 0.08)',
+  },
+  activityPillsMiniRow: {
+    flexDirection: 'row',
+    gap: 4,
+  },
+  miniPill: {
+    paddingHorizontal: 5,
+    paddingVertical: 2,
+    borderRadius: 4,
+  },
+  miniPillText: {
+    fontSize: 8,
+    fontWeight: '900',
+    color: '#FFF',
+  },
+  comparisonBoxTitle: {
+    fontSize: 10,
+    fontWeight: '700',
+    textAlign: 'center',
+  },
+  swapArrowsContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  unlimitedHeaderLabel: {
+    fontSize: 10,
+    fontWeight: '800',
+    color: '#10B981',
+  },
+  unlimitedSubLabel: {
+    fontSize: 9,
+    color: '#94A3B8',
+  },
+  miniMatrixGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 3,
+    justifyContent: 'center',
+  },
+  matrixTile: {
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    paddingHorizontal: 4,
+    paddingVertical: 2,
+    borderRadius: 3,
+  },
+  matrixTileText: {
+    fontSize: 7,
+    fontWeight: '800',
+  },
+  goldUpgradeButton: {
+    backgroundColor: '#CA8A04',
+    paddingVertical: 14,
+    borderRadius: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  goldUpgradeButtonText: {
+    color: '#FFF',
+    fontSize: 14,
+    fontWeight: '800',
+  },
+  couponCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    padding: 14,
+    borderRadius: 16,
+    borderWidth: 1,
+    marginBottom: 10,
+  },
+  couponIconBox: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: 'rgba(239, 68, 68, 0.1)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  couponCodeText: {
+    fontSize: 13,
+    fontWeight: '800',
+    letterSpacing: 0.5,
+  },
+  historyRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 12,
+    paddingHorizontal: 4,
+  },
+  historyRowText: {
+    fontSize: 13,
+    fontWeight: '700',
+  },
 });

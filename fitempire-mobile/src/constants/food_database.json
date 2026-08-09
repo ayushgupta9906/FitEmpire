@@ -1,0 +1,22 @@
+[
+  { "id": "1", "name": "Chicken Breast (Grilled)", "calories": 165, "protein": 31.0, "carbs": 0.0, "fats": 3.6, "serving": "100g cooked" },
+  { "id": "2", "name": "Boiled Eggs (Whole)", "calories": 155, "protein": 13.0, "carbs": 1.1, "fats": 11.0, "serving": "2 large eggs (100g)" },
+  { "id": "3", "name": "Egg Whites (Cooked)", "calories": 52, "protein": 11.0, "carbs": 0.7, "fats": 0.2, "serving": "3 large egg whites" },
+  { "id": "4", "name": "Whey Protein Isolate", "calories": 120, "protein": 25.0, "carbs": 2.0, "fats": 1.0, "serving": "1 scoop (30g)" },
+  { "id": "5", "name": "Paneer / Cottage Cheese", "calories": 265, "protein": 18.0, "carbs": 3.0, "fats": 20.0, "serving": "100g" },
+  { "id": "6", "name": "Tofu (Firm / Organic)", "calories": 144, "protein": 17.0, "carbs": 3.0, "fats": 8.0, "serving": "100g" },
+  { "id": "7", "name": "Rolled Oats (Dry)", "calories": 389, "protein": 16.9, "carbs": 66.3, "fats": 6.9, "serving": "1 cup (100g)" },
+  { "id": "8", "name": "Brown Rice (Cooked)", "calories": 218, "protein": 4.5, "carbs": 45.8, "fats": 1.6, "serving": "1 cup (195g)" },
+  { "id": "9", "name": "Greek Yogurt (Plain 0%)", "calories": 97, "protein": 10.0, "carbs": 3.6, "fats": 0.4, "serving": "1 cup (170g)" },
+  { "id": "10", "name": "Peanut Butter (Natural)", "calories": 190, "protein": 8.0, "carbs": 7.0, "fats": 16.0, "serving": "2 tbsp (32g)" },
+  { "id": "11", "name": "Sweet Potato (Baked)", "calories": 103, "protein": 2.3, "carbs": 23.6, "fats": 0.2, "serving": "1 medium (114g)" },
+  { "id": "12", "name": "Atlantic Salmon (Fillet)", "calories": 208, "protein": 22.0, "carbs": 0.0, "fats": 13.0, "serving": "100g fillet" },
+  { "id": "13", "name": "Raw Almonds", "calories": 164, "protein": 6.0, "carbs": 6.0, "fats": 14.0, "serving": "1 handful (28g)" },
+  { "id": "14", "name": "Ripe Banana", "calories": 105, "protein": 1.3, "carbs": 27.0, "fats": 0.3, "serving": "1 medium (118g)" },
+  { "id": "15", "name": "Avocado (Fresh)", "calories": 160, "protein": 2.0, "carbs": 8.5, "fats": 14.7, "serving": "half avocado (100g)" },
+  { "id": "16", "name": "Quinoa (Cooked)", "calories": 222, "protein": 8.1, "carbs": 39.4, "fats": 3.6, "serving": "1 cup (185g)" },
+  { "id": "17", "name": "Broccoli (Steamed)", "calories": 55, "protein": 3.7, "carbs": 11.2, "fats": 0.6, "serving": "1 cup (150g)" },
+  { "id": "18", "name": "Lentils / Dal (Cooked)", "calories": 230, "protein": 18.0, "carbs": 40.0, "fats": 0.8, "serving": "1 cup (198g)" },
+  { "id": "19", "name": "Whole Wheat Roti / Chapati", "calories": 104, "protein": 3.0, "carbs": 22.0, "fats": 0.5, "serving": "1 medium roti" },
+  { "id": "20", "name": "Soya Chunks (Dry)", "calories": 345, "protein": 52.0, "carbs": 33.0, "fats": 0.5, "serving": "100g" }
+]

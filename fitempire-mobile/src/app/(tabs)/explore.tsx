@@ -1,167 +1,444 @@
-import { useState, useEffect } from 'react';
-import { StyleSheet, Pressable, View, Image, ScrollView, Platform, Dimensions } from 'react-native';
+import React, { useState } from 'react';
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  Image,
+  Dimensions,
+  TextInput,
+  Platform,
+} from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useLocalSearchParams, useRouter } from 'expo-router';
-import { BlurView } from 'expo-blur';
-import { LinearGradient } from 'expo-linear-gradient';
-
+import { useRouter } from 'expo-router';
 import { ThemedText } from '@/components/themed-text';
-import { BottomTabInset, Colors } from '@/constants/theme';
-import { useTheme } from '@/hooks/use-theme';
-import { Search, MapPin, Star, Heart, Navigation, Dumbbell } from 'lucide-react-native';
+import { Colors, BottomTabInset } from '@/constants/theme';
 import { useColorScheme } from 'react-native';
+import {
+  MapPin,
+  Search,
+  ChevronDown,
+  ArrowUpDown,
+  SlidersHorizontal,
+  Star,
+  Clock,
+  Heart,
+  CheckCircle,
+  Sparkles,
+  ArrowLeft,
+  X,
+} from 'lucide-react-native';
 
-const CATEGORIES = ['All', 'GYM', 'MMA', 'BOXING', 'KICKBOXING', 'DANCE', 'SWIMMING', 'YOGA', 'SPORTS'];
 const { width } = Dimensions.get('window');
 
-interface Center {
+interface SportCategory {
   id: string;
   name: string;
-  category: string;
-  description: string;
-  rating: number;
-  reviews: number;
-  distance: string;
-  address: string;
-  image: string;
-  amenities: string[];
+  heroTitle: string;
+  duration: string;
+  iconImage: string;
+  heroImage: string;
 }
 
-const DELHI_CENTERS: Center[] = [
-  { id: '1', name: 'Gold\'s Gym Elite', category: 'GYM', description: 'Premium fitness club with high-end machinery.', rating: 4.8, reviews: 240, distance: '1.2 km', address: 'Connaught Place, New Delhi', amenities: ['Sauna', 'Personal Training', 'Cafe'], image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&auto=format&fit=crop' },
-  { id: '2', name: 'Strike Force MMA', category: 'MMA', description: 'Train under expert coaches in Muay Thai, Boxing, and BJJ.', rating: 4.9, reviews: 110, distance: '2.5 km', address: 'Hauz Khas, New Delhi', amenities: ['Sparring Ring', 'Showers'], image: 'https://images.unsplash.com/photo-1599058917212-d750089bc07e?w=800&auto=format&fit=crop' },
-  { id: '3', name: 'Zen Yoga & Meditation', category: 'YOGA', description: 'Hatha and Vinyasa yoga inside a silent garden.', rating: 4.8, reviews: 72, distance: '0.9 km', address: 'GK-II, New Delhi', amenities: ['Mats provided', 'A/C Studio'], image: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=800&auto=format&fit=crop' },
-  { id: '4', name: 'Rhythm & Beats Studio', category: 'DANCE', description: 'A fun place for Zumba, Hip Hop, and salsa.', rating: 4.7, reviews: 154, distance: '3.0 km', address: 'Vasant Kunj, New Delhi', amenities: ['Lockers', 'Juice Bar'], image: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=800&auto=format&fit=crop' },
+const SPORT_CATEGORIES: SportCategory[] = [
+  {
+    id: 'badminton',
+    name: 'Badminton',
+    heroTitle: 'BADMINTON',
+    duration: '⏱ ~15-120 min',
+    iconImage: 'https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=200&auto=format&fit=crop',
+    heroImage: 'https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=800&auto=format&fit=crop',
+  },
+  {
+    id: 'all',
+    name: 'All Sports',
+    heroTitle: 'MULTI SPORTS',
+    duration: '⏱ ~30-180 min',
+    iconImage: 'https://images.unsplash.com/photo-1517649763962-0c623266ddc0?w=200&auto=format&fit=crop',
+    heroImage: 'https://images.unsplash.com/photo-1517649763962-0c623266ddc0?w=800&auto=format&fit=crop',
+  },
+  {
+    id: 'football',
+    name: 'Football',
+    heroTitle: 'FOOTBALL TURF',
+    duration: '⏱ ~60-90 min',
+    iconImage: 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=200&auto=format&fit=crop',
+    heroImage: 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=800&auto=format&fit=crop',
+  },
+  {
+    id: 'basketball',
+    name: 'Basketball',
+    heroTitle: 'BASKETBALL',
+    duration: '⏱ ~45-90 min',
+    iconImage: 'https://images.unsplash.com/photo-1546519638-68e109498ffc?w=200&auto=format&fit=crop',
+    heroImage: 'https://images.unsplash.com/photo-1546519638-68e109498ffc?w=800&auto=format&fit=crop',
+  },
+  {
+    id: 'pickleball',
+    name: 'Pickleball',
+    heroTitle: 'PICKLEBALL',
+    duration: '⏱ ~30-60 min',
+    iconImage: 'https://images.unsplash.com/photo-1554068865-24cecd4e34b8?w=200&auto=format&fit=crop',
+    heroImage: 'https://images.unsplash.com/photo-1554068865-24cecd4e34b8?w=800&auto=format&fit=crop',
+  },
+  {
+    id: 'tabletennis',
+    name: 'Table tennis',
+    heroTitle: 'TABLE TENNIS',
+    duration: '⏱ ~30-60 min',
+    iconImage: 'https://images.unsplash.com/photo-1534158914592-062992fbe900?w=200&auto=format&fit=crop',
+    heroImage: 'https://images.unsplash.com/photo-1534158914592-062992fbe900?w=800&auto=format&fit=crop',
+  },
+  {
+    id: 'snooker',
+    name: 'Snooker',
+    heroTitle: 'SNOOKER & POOL',
+    duration: '⏱ ~60-120 min',
+    iconImage: 'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=200&auto=format&fit=crop',
+    heroImage: 'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=800&auto=format&fit=crop',
+  },
+  {
+    id: 'cricket',
+    name: 'Cricket',
+    heroTitle: 'BOX CRICKET',
+    duration: '⏱ ~60-180 min',
+    iconImage: 'https://images.unsplash.com/photo-1531415074968-036ba1b575da?w=200&auto=format&fit=crop',
+    heroImage: 'https://images.unsplash.com/photo-1531415074968-036ba1b575da?w=800&auto=format&fit=crop',
+  },
+  {
+    id: 'archery',
+    name: 'Archery',
+    heroTitle: 'ARCHERY RANGE',
+    duration: '⏱ ~45-60 min',
+    iconImage: 'https://images.unsplash.com/photo-1511295742362-92c96b124e52?w=200&auto=format&fit=crop',
+    heroImage: 'https://images.unsplash.com/photo-1511295742362-92c96b124e52?w=800&auto=format&fit=crop',
+  },
+  {
+    id: 'swimming',
+    name: 'Swimming',
+    heroTitle: 'AQUATICS POOL',
+    duration: '⏱ ~45-90 min',
+    iconImage: 'https://images.unsplash.com/photo-1530549387789-4c1017266635?w=200&auto=format&fit=crop',
+    heroImage: 'https://images.unsplash.com/photo-1530549387789-4c1017266635?w=800&auto=format&fit=crop',
+  },
+];
+
+interface VenueItem {
+  id: string;
+  name: string;
+  sportId: string;
+  location: string;
+  distance: string;
+  image: string;
+  avatarLogo: string;
+  verified: boolean;
+  rating: number;
+  openStatus: string;
+}
+
+const VENUES: VenueItem[] = [
+  {
+    id: 'v1',
+    name: 'Kirney Bharat Badminton Academy',
+    sportId: 'badminton',
+    location: 'Gaur City 1',
+    distance: '14.02 km',
+    image: 'https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=800&auto=format&fit=crop',
+    avatarLogo: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=100&auto=format&fit=crop',
+    verified: true,
+    rating: 4.8,
+    openStatus: 'Open Now',
+  },
+  {
+    id: 'v2',
+    name: 'Smash Point Wooden Badminton Court',
+    sportId: 'badminton',
+    location: 'Sector 168, Noida',
+    distance: '1.40 km',
+    image: 'https://images.unsplash.com/photo-1521537634581-0dced2fee2ef?w=800&auto=format&fit=crop',
+    avatarLogo: 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=100&auto=format&fit=crop',
+    verified: true,
+    rating: 4.9,
+    openStatus: 'Open Now',
+  },
+  {
+    id: 'v3',
+    name: 'Huddle Arena Box Cricket & Turf',
+    sportId: 'cricket',
+    location: 'Whitefield, Bangalore',
+    distance: '3.20 km',
+    image: 'https://images.unsplash.com/photo-1531415074968-036ba1b575da?w=800&auto=format&fit=crop',
+    avatarLogo: 'https://images.unsplash.com/photo-1517649763962-0c623266ddc0?w=100&auto=format&fit=crop',
+    verified: true,
+    rating: 4.7,
+    openStatus: 'Open Now',
+  },
+  {
+    id: 'v4',
+    name: 'Pro Kickers Football Arena',
+    sportId: 'football',
+    location: 'Koramangala 4th Block',
+    distance: '2.10 km',
+    image: 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=800&auto=format&fit=crop',
+    avatarLogo: 'https://images.unsplash.com/photo-1599058917212-d750089bc07e?w=100&auto=format&fit=crop',
+    verified: true,
+    rating: 4.8,
+    openStatus: 'Open Now',
+  },
+  {
+    id: 'v5',
+    name: 'Blue Wave Olympic Swimming Academy',
+    sportId: 'swimming',
+    location: 'Indiranagar 100ft Rd',
+    distance: '4.50 km',
+    image: 'https://images.unsplash.com/photo-1530549387789-4c1017266635?w=800&auto=format&fit=crop',
+    avatarLogo: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=100&auto=format&fit=crop',
+    verified: true,
+    rating: 4.9,
+    openStatus: 'Open Now',
+  },
 ];
 
 export default function ExploreScreen() {
-  const params = useLocalSearchParams();
+  const insets = useSafeAreaInsets();
   const router = useRouter();
-  const safeAreaInsets = useSafeAreaInsets();
-  const theme = useTheme();
-  const scheme = useColorScheme();
-  const colors = Colors[scheme === 'unspecified' ? 'light' : scheme];
+  const scheme = useColorScheme() ?? 'dark';
+  const colors = Colors[scheme === 'unspecified' ? 'dark' : scheme] ?? Colors.dark;
 
-  const initialCat = (params.category as string) || 'All';
-  const [activeCategory, setActiveCategory] = useState(initialCat);
-  const [centers] = useState<Center[]>(DELHI_CENTERS);
+  const [selectedSport, setSelectedSport] = useState<SportCategory>(SPORT_CATEGORIES[0]);
+  const [selectedLocation, setSelectedLocation] = useState('Sector 168');
+  const [favorites, setFavorites] = useState<{ [key: string]: boolean }>({});
+  const [filterRating4Plus, setFilterRating4Plus] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchActive, setSearchActive] = useState(false);
 
-  useEffect(() => {
-    if (params.category) {
-      setActiveCategory(params.category as string);
-    }
-  }, [params.category]);
-
-  const filteredCenters = centers.filter((c) => {
-    if (activeCategory === 'All') return true;
-    return c.category.toUpperCase() === activeCategory.toUpperCase();
-  });
-
-  const insets = {
-    ...safeAreaInsets,
-    bottom: safeAreaInsets.bottom + BottomTabInset,
+  const toggleFavorite = (id: string) => {
+    setFavorites((prev) => ({ ...prev, [id]: !prev[id] }));
   };
+
+  const filteredVenues = VENUES.filter((v) => {
+    const matchSport = selectedSport.id === 'all' || v.sportId === selectedSport.id;
+    const matchRating = !filterRating4Plus || v.rating >= 4.0;
+    const matchSearch =
+      !searchQuery ||
+      v.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      v.location.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchSport && matchRating && matchSearch;
+  });
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      {/* Search & Header Section */}
-      <LinearGradient
-        colors={[colors.primary + '1A', 'transparent']}
-        style={[styles.headerGradient, { paddingTop: insets.top + 16 }]}
+      {/* Top Header Bar */}
+      <View style={[styles.topBar, { paddingTop: insets.top + 8 }]}>
+        <TouchableOpacity
+          onPress={() => router.back()}
+          style={[styles.circleButton, { backgroundColor: colors.surface, borderColor: colors.border }]}
+        >
+          <ArrowLeft size={20} color={colors.text} />
+        </TouchableOpacity>
+
+        {/* Location Dropdown Pill */}
+        <TouchableOpacity
+          style={[styles.locationPill, { backgroundColor: colors.surface, borderColor: colors.border }]}
+          onPress={() => {
+            const locs = ['Sector 168', 'Gurgaon Cyber City', 'Indiranagar Bangalore', 'Connaught Place Delhi'];
+            const next = locs[(locs.indexOf(selectedLocation) + 1) % locs.length];
+            setSelectedLocation(next);
+          }}
+        >
+          <MapPin size={15} color="#EF4444" />
+          <ThemedText style={styles.locationPillText}>{selectedLocation}</ThemedText>
+          <ChevronDown size={14} color={colors.textSecondary} />
+        </TouchableOpacity>
+
+        {/* Search Icon / Toggle */}
+        <TouchableOpacity
+          onPress={() => setSearchActive(!searchActive)}
+          style={[styles.circleButton, { backgroundColor: colors.surface, borderColor: colors.border }]}
+        >
+          <Search size={18} color={colors.text} />
+        </TouchableOpacity>
+      </View>
+
+      {/* Optional Search Bar */}
+      {searchActive && (
+        <View style={[styles.searchBarWrapper, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+          <Search size={16} color={colors.textSecondary} />
+          <TextInput
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            placeholder="Search academies, turfs, courts..."
+            placeholderTextColor={colors.textSecondary}
+            style={[styles.searchInput, { color: colors.text }]}
+            autoFocus
+          />
+          {searchQuery.length > 0 && (
+            <TouchableOpacity onPress={() => setSearchQuery('')}>
+              <X size={16} color={colors.textSecondary} />
+            </TouchableOpacity>
+          )}
+        </View>
+      )}
+
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: insets.bottom + BottomTabInset + 24 }}
       >
-        <View style={styles.headerContent}>
-          <View>
-            <ThemedText style={styles.greeting} themeColor="textSecondary">Location</ThemedText>
-            <View style={styles.locationRow}>
-              <MapPin size={18} color={colors.primary} />
-              <ThemedText style={styles.locationText}>New Delhi, India</ThemedText>
+        {/* Athletic Hero Visual Banner */}
+        <View style={styles.heroBanner}>
+          <View style={styles.heroImageContainer}>
+            <Image
+              source={{ uri: selectedSport.heroImage }}
+              style={styles.heroImage}
+              resizeMode="cover"
+            />
+            <View style={styles.heroOverlayGradient} />
+          </View>
+
+          <View style={styles.heroContent}>
+            <ThemedText style={styles.heroTitle}>{selectedSport.heroTitle}</ThemedText>
+            <View style={styles.durationBadge}>
+              <ThemedText style={styles.durationText}>{selectedSport.duration}</ThemedText>
             </View>
           </View>
-          <Pressable style={[styles.iconButton, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-            <Search size={22} color={colors.text} />
-          </Pressable>
         </View>
 
-        {/* Categories */}
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.categoryScroll} contentContainerStyle={styles.categoryContent}>
-          {CATEGORIES.map((cat) => {
-            const isActive = activeCategory === cat;
+        {/* Horizontal Filter Bar */}
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          style={styles.filterScroll}
+          contentContainerStyle={styles.filterContent}
+        >
+          <TouchableOpacity style={[styles.filterChip, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+            <ArrowUpDown size={13} color={colors.text} />
+            <ThemedText style={styles.filterChipText}>Sort</ThemedText>
+            <ChevronDown size={12} color={colors.textSecondary} />
+          </TouchableOpacity>
+
+          <TouchableOpacity style={[styles.filterChip, styles.filterChipActive, { borderColor: '#EF4444' }]}>
+            <SlidersHorizontal size={13} color="#EF4444" />
+            <ThemedText style={[styles.filterChipText, { color: '#EF4444' }]}>Filter</ThemedText>
+            <View style={styles.filterBadge}>
+              <ThemedText style={styles.filterBadgeText}>1</ThemedText>
+            </View>
+            <ChevronDown size={12} color="#EF4444" />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => setFilterRating4Plus(!filterRating4Plus)}
+            style={[
+              styles.filterChip,
+              filterRating4Plus ? styles.filterChipSelected : { backgroundColor: colors.surface, borderColor: colors.border },
+            ]}
+          >
+            <Star size={13} color={filterRating4Plus ? '#FFF' : '#F59E0B'} fill={filterRating4Plus ? '#FFF' : '#F59E0B'} />
+            <ThemedText style={[styles.filterChipText, filterRating4Plus && { color: '#FFF' }]}>Rating 4.0+</ThemedText>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={[styles.filterChip, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+            <ThemedText style={styles.filterChipText}>Open</ThemedText>
+            <ChevronDown size={12} color={colors.textSecondary} />
+          </TouchableOpacity>
+
+          <TouchableOpacity style={[styles.filterChip, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+            <Heart size={13} color="#EF4444" />
+            <ThemedText style={styles.filterChipText}>Favourite</ThemedText>
+          </TouchableOpacity>
+        </ScrollView>
+
+        {/* Horizontal Sport / Activity Icon Slider */}
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          style={styles.activityScroll}
+          contentContainerStyle={styles.activityContent}
+        >
+          {SPORT_CATEGORIES.map((sport) => {
+            const isSelected = selectedSport.id === sport.id;
             return (
-              <Pressable
-                key={cat}
-                onPress={() => setActiveCategory(cat)}
-                style={[
-                  styles.categoryPill,
-                  { backgroundColor: isActive ? colors.primary : colors.surface, borderColor: isActive ? colors.primary : colors.border }
-                ]}
+              <TouchableOpacity
+                key={sport.id}
+                onPress={() => setSelectedSport(sport)}
+                style={styles.activityItem}
+                activeOpacity={0.8}
               >
-                <ThemedText style={[styles.categoryText, { color: isActive ? '#FFF' : colors.text }]}>
-                  {cat}
+                <View
+                  style={[
+                    styles.activityIconBox,
+                    isSelected && styles.activityIconBoxActive,
+                  ]}
+                >
+                  <Image source={{ uri: sport.iconImage }} style={styles.activityIconImage} />
+                </View>
+                <ThemedText
+                  style={[
+                    styles.activityName,
+                    { color: isSelected ? '#EF4444' : colors.textSecondary },
+                    isSelected && styles.activityNameActive,
+                  ]}
+                >
+                  {sport.name}
                 </ThemedText>
-              </Pressable>
+                {isSelected && <View style={styles.activeUnderline} />}
+              </TouchableOpacity>
             );
           })}
         </ScrollView>
-      </LinearGradient>
 
-      {/* Main List */}
-      <ScrollView 
-        contentContainerStyle={[styles.listContent, { paddingBottom: insets.bottom + 20 }]}
-        showsVerticalScrollIndicator={false}
-      >
-        <ThemedText style={styles.sectionTitle}>
-          {activeCategory === 'All' ? 'Featured Gyms Near You' : `${activeCategory} Centers`}
-        </ThemedText>
-        
-        {filteredCenters.map((center) => (
-          <Pressable 
-            key={center.id} 
-            style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}
-            onPress={() => router.push(`/gym-detail?id=${center.id}`)}
-          >
-            <Image source={{ uri: center.image }} style={styles.cardImage} />
-            
-            <View style={styles.cardOverlay}>
-              <BlurView intensity={30} tint="dark" style={styles.ratingBadge}>
-                <Star size={12} color="#FBBF24" fill="#FBBF24" />
-                <ThemedText style={styles.ratingText}>{center.rating}</ThemedText>
-              </BlurView>
-              <Pressable style={styles.heartButton}>
-                <Heart size={20} color="#FFF" />
-              </Pressable>
+        {/* Venue / Academy Card Feed */}
+        <View style={styles.venuesContainer}>
+          {filteredVenues.length === 0 ? (
+            <View style={[styles.emptyBox, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+              <Sparkles size={32} color="#6C63FF" />
+              <ThemedText style={styles.emptyTitle}>No venues found</ThemedText>
+              <ThemedText style={styles.emptySubtitle}>Try changing your sport or location filter.</ThemedText>
             </View>
+          ) : (
+            filteredVenues.map((venue) => {
+              const isFav = !!favorites[venue.id];
+              return (
+                <TouchableOpacity
+                  key={venue.id}
+                  style={[styles.venueCard, { backgroundColor: colors.surface, borderColor: colors.border }]}
+                  activeOpacity={0.9}
+                  onPress={() => router.push(`/booking?gymId=${venue.id}` as any)}
+                >
+                  {/* Photo Container */}
+                  <View style={styles.venueImageContainer}>
+                    <Image source={{ uri: venue.image }} style={styles.venueImage} />
+                    <TouchableOpacity
+                      style={styles.favButton}
+                      onPress={() => toggleFavorite(venue.id)}
+                    >
+                      <Heart
+                        size={18}
+                        color={isFav ? '#EF4444' : '#FFF'}
+                        fill={isFav ? '#EF4444' : 'rgba(0,0,0,0.3)'}
+                      />
+                    </TouchableOpacity>
+                  </View>
 
-            <View style={styles.cardContent}>
-              <View style={styles.cardHeader}>
-                <ThemedText style={styles.cardTitle}>{center.name}</ThemedText>
-                <ThemedText style={[styles.categoryTag, { color: colors.primary }]}>{center.category}</ThemedText>
-              </View>
-              
-              <ThemedText style={styles.description} numberOfLines={1}>{center.description}</ThemedText>
-              
-              <View style={styles.cardFooter}>
-                <View style={styles.footerInfo}>
-                  <Navigation size={14} color={colors.textSecondary} style={{ marginRight: 4 }} />
-                  <ThemedText style={styles.footerText} themeColor="textSecondary">{center.distance}</ThemedText>
-                </View>
-                <View style={styles.footerInfo}>
-                  <Dumbbell size={14} color={colors.textSecondary} style={{ marginRight: 4, marginLeft: 12 }} />
-                  <ThemedText style={styles.footerText} themeColor="textSecondary">{center.amenities.length} amenities</ThemedText>
-                </View>
-              </View>
-            </View>
-          </Pressable>
-        ))}
-        
-        {filteredCenters.length === 0 && (
-          <View style={styles.emptyState}>
-            <Dumbbell size={48} color={colors.border} />
-            <ThemedText style={styles.emptyTitle}>No centers found</ThemedText>
-            <ThemedText style={styles.emptyText} themeColor="textSecondary">
-              Try exploring a different category or changing your location.
-            </ThemedText>
-          </View>
-        )}
+                  {/* Info Pill / Header */}
+                  <View style={styles.venueInfoRow}>
+                    <Image source={{ uri: venue.avatarLogo }} style={styles.venueAvatar} />
+                    <View style={{ flex: 1 }}>
+                      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+                        <ThemedText style={styles.venueName}>{venue.name}</ThemedText>
+                        {venue.verified && (
+                          <CheckCircle size={14} color="#3B82F6" fill="#3B82F6" />
+                        )}
+                      </View>
+                      <ThemedText style={styles.venueSubtitle}>
+                        {venue.location} • {venue.distance}
+                      </ThemedText>
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              );
+            })
+          )}
+        </View>
       </ScrollView>
     </View>
   );
@@ -171,169 +448,244 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  headerGradient: {
-    paddingBottom: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: 'rgba(0,0,0,0.05)',
-  },
-  headerContent: {
+  topBar: {
     flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    marginBottom: 20,
+    paddingHorizontal: 16,
+    paddingBottom: 10,
   },
-  greeting: {
-    fontSize: 13,
-    fontWeight: '600',
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
-    marginBottom: 2,
-  },
-  locationRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  locationText: {
-    fontSize: 18,
-    fontWeight: '700',
-    marginLeft: 6,
-  },
-  iconButton: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    borderWidth: 1,
+  circleButton: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 2,
+    borderWidth: 1,
   },
-  categoryScroll: {
-    flexGrow: 0,
-  },
-  categoryContent: {
-    paddingHorizontal: 20,
-    paddingRight: 40,
-    gap: 10,
-  },
-  categoryPill: {
-    paddingHorizontal: 20,
-    paddingVertical: 10,
+  locationPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingHorizontal: 14,
+    paddingVertical: 7,
     borderRadius: 20,
     borderWidth: 1,
   },
-  categoryText: {
-    fontSize: 14,
-    fontWeight: '600',
+  locationPillText: {
+    fontSize: 13,
+    fontWeight: '700',
   },
-  listContent: {
-    padding: 20,
-  },
-  sectionTitle: {
-    fontSize: 20,
-    fontWeight: '800',
-    marginBottom: 16,
-  },
-  card: {
-    borderRadius: 24,
+  searchBarWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginHorizontal: 16,
+    marginBottom: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 12,
     borderWidth: 1,
-    marginBottom: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.05,
-    shadowRadius: 12,
-    elevation: 3,
+    gap: 8,
+  },
+  searchInput: {
+    flex: 1,
+    fontSize: 13,
+    padding: 0,
+  },
+  heroBanner: {
+    position: 'relative',
+    height: 190,
+    marginHorizontal: 16,
+    borderRadius: 20,
     overflow: 'hidden',
+    marginTop: 6,
   },
-  cardImage: {
+  heroImageContainer: {
     width: '100%',
-    height: 180,
-    backgroundColor: '#E5E7EB',
+    height: '100%',
   },
-  cardOverlay: {
+  heroImage: {
+    width: '100%',
+    height: '100%',
+  },
+  heroOverlayGradient: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(10, 15, 30, 0.45)',
+  },
+  heroContent: {
     position: 'absolute',
-    top: 16,
+    bottom: 16,
     left: 16,
     right: 16,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  ratingBadge: {
-    flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 16,
-    overflow: 'hidden',
   },
-  ratingText: {
+  heroTitle: {
+    fontSize: 32,
+    fontWeight: '900',
     color: '#FFF',
-    fontSize: 13,
-    fontWeight: '700',
-    marginLeft: 4,
+    letterSpacing: 2,
+    textAlign: 'center',
+    textShadowColor: 'rgba(0, 0, 0, 0.75)',
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 6,
   },
-  heartButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: 'rgba(0,0,0,0.3)',
-    alignItems: 'center',
-    justifyContent: 'center',
+  durationBadge: {
+    marginTop: 4,
   },
-  cardContent: {
-    padding: 16,
-  },
-  cardHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 6,
-  },
-  cardTitle: {
-    fontSize: 18,
-    fontWeight: '700',
-    flex: 1,
-  },
-  categoryTag: {
+  durationText: {
     fontSize: 12,
     fontWeight: '700',
-    textTransform: 'uppercase',
+    color: '#E2E8F0',
   },
-  description: {
-    fontSize: 14,
-    color: '#6B7280',
-    marginBottom: 16,
+  filterScroll: {
+    marginTop: 14,
   },
-  cardFooter: {
+  filterContent: {
+    paddingHorizontal: 16,
+    gap: 8,
+  },
+  filterChip: {
     flexDirection: 'row',
     alignItems: 'center',
+    gap: 5,
+    paddingHorizontal: 12,
+    paddingVertical: 7,
+    borderRadius: 20,
+    borderWidth: 1,
   },
-  footerInfo: {
-    flexDirection: 'row',
-    alignItems: 'center',
+  filterChipActive: {
+    backgroundColor: 'rgba(239, 68, 68, 0.08)',
   },
-  footerText: {
-    fontSize: 13,
-    fontWeight: '500',
+  filterChipSelected: {
+    backgroundColor: '#EF4444',
+    borderColor: '#EF4444',
   },
-  emptyState: {
+  filterChipText: {
+    fontSize: 12,
+    fontWeight: '700',
+  },
+  filterBadge: {
+    backgroundColor: '#EF4444',
+    borderRadius: 10,
+    width: 16,
+    height: 16,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 60,
+  },
+  filterBadgeText: {
+    color: '#FFF',
+    fontSize: 9,
+    fontWeight: '900',
+  },
+  activityScroll: {
+    marginTop: 16,
+  },
+  activityContent: {
+    paddingHorizontal: 16,
+    gap: 14,
+  },
+  activityItem: {
+    alignItems: 'center',
+    width: 64,
+  },
+  activityIconBox: {
+    width: 52,
+    height: 52,
+    borderRadius: 16,
+    overflow: 'hidden',
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    borderWidth: 2,
+    borderColor: 'transparent',
+  },
+  activityIconBoxActive: {
+    borderColor: '#EF4444',
+  },
+  activityIconImage: {
+    width: '100%',
+    height: '100%',
+  },
+  activityName: {
+    fontSize: 11,
+    fontWeight: '600',
+    marginTop: 5,
+    textAlign: 'center',
+  },
+  activityNameActive: {
+    fontWeight: '800',
+  },
+  activeUnderline: {
+    width: 24,
+    height: 3,
+    borderRadius: 2,
+    backgroundColor: '#EF4444',
+    marginTop: 3,
+  },
+  venuesContainer: {
+    paddingHorizontal: 16,
+    marginTop: 16,
+    gap: 16,
+  },
+  venueCard: {
+    borderRadius: 18,
+    overflow: 'hidden',
+    borderWidth: 1,
+  },
+  venueImageContainer: {
+    position: 'relative',
+    height: 190,
+    width: '100%',
+  },
+  venueImage: {
+    width: '100%',
+    height: '100%',
+  },
+  favButton: {
+    position: 'absolute',
+    top: 12,
+    right: 12,
+    width: 34,
+    height: 34,
+    borderRadius: 17,
+    backgroundColor: 'rgba(0,0,0,0.4)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  venueInfoRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    padding: 12,
+  },
+  venueAvatar: {
+    width: 38,
+    height: 38,
+    borderRadius: 10,
+  },
+  venueName: {
+    fontSize: 14,
+    fontWeight: '800',
+  },
+  venueSubtitle: {
+    fontSize: 11,
+    color: '#94A3B8',
+    marginTop: 2,
+  },
+  emptyBox: {
+    padding: 30,
+    borderRadius: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    gap: 8,
   },
   emptyTitle: {
-    fontSize: 18,
-    fontWeight: '700',
-    marginTop: 16,
-    marginBottom: 8,
-  },
-  emptyText: {
     fontSize: 15,
+    fontWeight: '800',
+    marginTop: 6,
+  },
+  emptySubtitle: {
+    fontSize: 12,
+    color: '#94A3B8',
     textAlign: 'center',
-    paddingHorizontal: 32,
-  }
+  },
 });

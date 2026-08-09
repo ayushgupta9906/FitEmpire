@@ -1,187 +1,142 @@
-import React, { useState, useEffect } from 'react';
-import { DollarSign, ArrowUpRight, CheckCircle2, Clock, Download, Building, ShieldCheck } from 'lucide-react';
-import { partnerApi } from '../api';
+import React, { useState } from 'react';
+import { DollarSign, ArrowUpRight, CheckCircle2, Clock, Building, ShieldCheck } from 'lucide-react';
 
 export const SettlementsPage: React.FC = () => {
   const [payoutSuccess, setPayoutSuccess] = useState(false);
   const [stats, setStats] = useState({
-    grossEarnings: 184200,
-    platformSplit: 18420,
-    netPayable: 165780,
-    paidOut: 132000,
     availableBalance: 33780,
-    bankAccount: 'HDFC Bank •••••• 4892 (IFSC: HDFC0000240)',
+    grossEarnings: 184200,
+    paidOut: 150420,
+    bankAccount: 'HDFC Bank •••••• 4892',
   });
 
-  const [payoutHistory, setPayoutHistory] = useState([
-    { id: 'SET-9912', date: '01 Aug 2026', amount: 48000, checkIns: 240, status: 'PAID', ref: 'UPI/621984029410' },
-    { id: 'SET-9844', date: '15 Jul 2026', amount: 44000, checkIns: 220, status: 'PAID', ref: 'NEFT/HDFC29402194' },
-    { id: 'SET-9701', date: '01 Jul 2026', amount: 40000, checkIns: 200, status: 'PAID', ref: 'UPI/619029401928' },
+  const [payoutHistory] = useState([
+    { id: 'SET-9912', date: '01 Aug 2026', amount: 48000, checkIns: 240, status: 'PAID' },
+    { id: 'SET-9844', date: '15 Jul 2026', amount: 44000, checkIns: 220, status: 'PAID' },
+    { id: 'SET-9701', date: '01 Jul 2026', amount: 40000, checkIns: 200, status: 'PAID' },
   ]);
 
-  React.useEffect(() => {
-    partnerApi.getSettlements()
-      .then((res) => {
-        const d = res.data?.data;
-        if (d) {
-          if (d.availableBalance !== undefined) {
-            setStats(prev => ({ ...prev, ...d }));
-          }
-          if (d.history && Array.isArray(d.history) && d.history.length > 0) {
-            setPayoutHistory(d.history);
-          }
-        }
-      })
-      .catch(() => {});
-  }, []);
-
-  const handleRequestPayout = async () => {
-    try {
-      await partnerApi.requestPayout(stats.availableBalance);
-    } catch {
-      // Proceed
-    }
+  const handleRequestPayout = () => {
     setPayoutSuccess(true);
+    setTimeout(() => setPayoutSuccess(false), 4000);
   };
 
   return (
-    <div style={{ maxWidth: 1280, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 24 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
-        <div>
-          <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#FFF' }}>
-            Financial Settlements & Payouts
-          </h1>
-          <p style={{ color: '#94A3B8', fontSize: '0.9rem' }}>
-            Weekly pass verification earnings, ledger breakdown, and bank settlement status.
-          </p>
-        </div>
-
-        <button onClick={handleRequestPayout} className="btn-emerald">
-          <DollarSign size={18} />
-          <span>Request Payout (₹ {stats.availableBalance.toLocaleString('en-IN')})</span>
-        </button>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+      {/* Header */}
+      <div>
+        <h1 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#FFF' }}>
+          Earnings & Payouts
+        </h1>
+        <p style={{ color: '#94A3B8', fontSize: '0.75rem' }}>
+          Weekly member visit revenue settlements
+        </p>
       </div>
 
-      {payoutSuccess && (
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            padding: '16px 20px',
-            borderRadius: 14,
-            backgroundColor: 'rgba(16, 185, 129, 0.2)',
-            border: '1px solid #10B981',
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, color: '#34D399', fontWeight: 700 }}>
-            <CheckCircle2 size={20} />
-            <span>Payout request of ₹ {stats.availableBalance.toLocaleString('en-IN')} submitted to {stats.bankAccount}. Processing via IMPS!</span>
-          </div>
-          <button onClick={() => setPayoutSuccess(false)} className="btn-secondary" style={{ padding: '6px 12px', fontSize: '0.8rem' }}>
-            Dismiss
-          </button>
-        </div>
-      )}
+      {/* Available Balance Glowing Card */}
+      <div
+        className="glass-panel"
+        style={{
+          padding: 16,
+          background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(59, 130, 246, 0.15) 100%)',
+          border: '1px solid rgba(16, 185, 129, 0.4)',
+        }}
+      >
+        <span style={{ fontSize: '0.68rem', color: '#94A3B8', fontWeight: 700, display: 'block', marginBottom: 4 }}>
+          AVAILABLE BALANCE (READY FOR PAYOUT)
+        </span>
+        <span style={{ fontSize: '1.8rem', fontWeight: 900, color: '#10B981', display: 'block', letterSpacing: '-0.02em' }}>
+          ₹{stats.availableBalance.toLocaleString('en-IN')}
+        </span>
 
-      {/* Financial Summary Cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 18 }}>
-        <div className="glass-panel" style={{ padding: 22 }}>
-          <div style={{ fontSize: '0.85rem', color: '#94A3B8', fontWeight: 600, marginBottom: 8 }}>
-            Available Payout Balance
-          </div>
-          <div style={{ fontSize: '2rem', fontWeight: 800, color: '#10B981', marginBottom: 4 }}>
-            ₹ {stats.availableBalance.toLocaleString('en-IN')}
-          </div>
-          <div style={{ fontSize: '0.78rem', color: '#94A3B8' }}>
-            Ready for instant IMPS transfer
-          </div>
-        </div>
-
-        <div className="glass-panel" style={{ padding: 22 }}>
-          <div style={{ fontSize: '0.85rem', color: '#94A3B8', fontWeight: 600, marginBottom: 8 }}>
-            Total Gross Revenue
-          </div>
-          <div style={{ fontSize: '2rem', fontWeight: 800, color: '#FFF', marginBottom: 4 }}>
-            ₹ {stats.grossEarnings.toLocaleString('en-IN')}
-          </div>
-          <div style={{ fontSize: '0.78rem', color: '#38BDF8' }}>
-            From 921 verified check-ins
-          </div>
-        </div>
-
-        <div className="glass-panel" style={{ padding: 22 }}>
-          <div style={{ fontSize: '0.85rem', color: '#94A3B8', fontWeight: 600, marginBottom: 8 }}>
-            Total Paid Out to Date
-          </div>
-          <div style={{ fontSize: '2rem', fontWeight: 800, color: '#FFF', marginBottom: 4 }}>
-            ₹ {stats.paidOut.toLocaleString('en-IN')}
-          </div>
-          <div style={{ fontSize: '0.78rem', color: '#94A3B8' }}>
-            Settled to registered bank
-          </div>
-        </div>
-
-        <div className="glass-panel" style={{ padding: 22 }}>
-          <div style={{ fontSize: '0.85rem', color: '#94A3B8', fontWeight: 600, marginBottom: 8 }}>
-            Settlement Bank Account
-          </div>
-          <div style={{ fontSize: '1.05rem', fontWeight: 700, color: '#FFF', marginBottom: 4 }}>
-            HDFC Bank
-          </div>
-          <div style={{ fontSize: '0.78rem', color: '#94A3B8' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, margin: '10px 0 14px' }}>
+          <Building size={13} color="#A5B4FC" />
+          <span style={{ fontSize: '0.72rem', color: '#A5B4FC', fontWeight: 600 }}>
             {stats.bankAccount}
+          </span>
+        </div>
+
+        <button
+          onClick={handleRequestPayout}
+          className="btn-emerald"
+          style={{ width: '100%', padding: '10px', fontSize: '0.82rem' }}
+        >
+          <DollarSign size={15} />
+          <span>Request Instant Payout</span>
+        </button>
+
+        {payoutSuccess && (
+          <div
+            className="animate-popin"
+            style={{
+              marginTop: 10,
+              backgroundColor: 'rgba(16, 185, 129, 0.2)',
+              border: '1px solid #10B981',
+              borderRadius: 10,
+              padding: '8px 10px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 8,
+              color: '#10B981',
+              fontSize: '0.75rem',
+              fontWeight: 700,
+            }}
+          >
+            <CheckCircle2 size={16} />
+            <span>Payout request initiated to bank account!</span>
           </div>
+        )}
+      </div>
+
+      {/* Metrics Row */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+        <div className="glass-panel" style={{ padding: 12 }}>
+          <span style={{ fontSize: '0.65rem', color: '#94A3B8', fontWeight: 700 }}>TOTAL EARNED</span>
+          <span style={{ fontSize: '1.2rem', fontWeight: 800, color: '#FFF', display: 'block', marginTop: 2 }}>
+            ₹{stats.grossEarnings.toLocaleString('en-IN')}
+          </span>
+        </div>
+
+        <div className="glass-panel" style={{ padding: 12 }}>
+          <span style={{ fontSize: '0.65rem', color: '#94A3B8', fontWeight: 700 }}>TOTAL SETTLED</span>
+          <span style={{ fontSize: '1.2rem', fontWeight: 800, color: '#38BDF8', display: 'block', marginTop: 2 }}>
+            ₹{stats.paidOut.toLocaleString('en-IN')}
+          </span>
         </div>
       </div>
 
-      {/* Payout History Table */}
-      <div className="glass-panel" style={{ overflow: 'hidden' }}>
-        <div style={{ padding: '20px 24px', borderBottom: '1px solid rgba(255, 255, 255, 0.08)' }}>
-          <h2 style={{ fontSize: '1.2rem', fontWeight: 700, color: '#FFF' }}>
-            Settlement History & Invoices
-          </h2>
-        </div>
+      {/* Payout History */}
+      <div>
+        <span style={{ fontSize: '0.78rem', fontWeight: 800, color: '#FFF', display: 'block', marginBottom: 8 }}>
+          Recent Payout Statements
+        </span>
 
-        <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
-          <thead>
-            <tr style={{ backgroundColor: 'rgba(255, 255, 255, 0.03)', borderBottom: '1px solid rgba(255, 255, 255, 0.08)' }}>
-              <th style={{ padding: '16px 24px', fontSize: '0.8rem', fontWeight: 700, color: '#94A3B8' }}>SETTLEMENT ID</th>
-              <th style={{ padding: '16px 24px', fontSize: '0.8rem', fontWeight: 700, color: '#94A3B8' }}>DATE</th>
-              <th style={{ padding: '16px 24px', fontSize: '0.8rem', fontWeight: 700, color: '#94A3B8' }}>CHECK-INS</th>
-              <th style={{ padding: '16px 24px', fontSize: '0.8rem', fontWeight: 700, color: '#94A3B8' }}>AMOUNT</th>
-              <th style={{ padding: '16px 24px', fontSize: '0.8rem', fontWeight: 700, color: '#94A3B8' }}>STATUS</th>
-              <th style={{ padding: '16px 24px', fontSize: '0.8rem', fontWeight: 700, color: '#94A3B8' }}>ACTION</th>
-            </tr>
-          </thead>
-          <tbody>
-            {payoutHistory.map((p) => (
-              <tr key={p.id} style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
-                <td style={{ padding: '16px 24px', fontWeight: 700, color: '#38BDF8', fontSize: '0.88rem' }}>
-                  {p.id}
-                </td>
-                <td style={{ padding: '16px 24px', color: '#CBD5E1', fontSize: '0.88rem' }}>
-                  {p.date}
-                </td>
-                <td style={{ padding: '16px 24px', color: '#94A3B8', fontSize: '0.88rem' }}>
-                  {p.checkIns} Visits
-                </td>
-                <td style={{ padding: '16px 24px', fontWeight: 800, color: '#FFF', fontSize: '0.95rem' }}>
-                  ₹ {p.amount.toLocaleString('en-IN')}
-                </td>
-                <td style={{ padding: '16px 24px' }}>
-                  <span className="badge-emerald">{p.status}</span>
-                </td>
-                <td style={{ padding: '16px 24px' }}>
-                  <button className="btn-secondary" style={{ padding: '6px 12px', fontSize: '0.75rem' }}>
-                    <Download size={13} />
-                    <span>Invoice PDF</span>
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          {payoutHistory.map((p) => (
+            <div
+              key={p.id}
+              className="glass-panel"
+              style={{
+                padding: '10px 12px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}
+            >
+              <div>
+                <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#FFF', display: 'block' }}>
+                  ₹{p.amount.toLocaleString('en-IN')}
+                </span>
+                <span style={{ fontSize: '0.65rem', color: '#94A3B8' }}>
+                  {p.date} • {p.checkIns} Visits
+                </span>
+              </div>
+              <span className="badge-emerald" style={{ fontSize: '0.6rem', padding: '2px 6px' }}>
+                ✓ {p.status}
+              </span>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

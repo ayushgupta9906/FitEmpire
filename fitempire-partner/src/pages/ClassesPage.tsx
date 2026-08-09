@@ -1,15 +1,77 @@
 import React, { useState } from 'react';
-import { Plus, Calendar, Clock, User, CheckCircle2, X } from 'lucide-react';
+import { Plus, Calendar, Clock, User, CheckCircle2, X, Users, ChevronRight, Check } from 'lucide-react';
+
+interface ClassItem {
+  id: string;
+  name: string;
+  trainer: string;
+  time: string;
+  capacity: number;
+  booked: number;
+  room: string;
+  members: Array<{ id: string; name: string; phone: string; attended: boolean }>;
+}
 
 export const ClassesPage: React.FC = () => {
-  const [classes, setClasses] = useState([
-    { id: '1', name: 'High-Intensity Crossfit', trainer: 'Coach Vikram', time: '06:30 PM - 07:30 PM', capacity: 20, booked: 18, room: 'Studio 1' },
-    { id: '2', name: 'Power Yoga & Core', trainer: 'Ananya Roy', time: '07:30 PM - 08:30 PM', capacity: 15, booked: 14, room: 'Mind & Body Studio' },
-    { id: '3', name: 'Zumba Cardio Blast', trainer: 'Pooja Hegde', time: '08:30 PM - 09:30 PM', capacity: 20, booked: 20, room: 'Studio 2' },
-    { id: '4', name: 'Olympic Weightlifting', trainer: 'Karan Mehra', time: '06:00 AM - 07:00 AM', capacity: 12, booked: 9, room: 'Main Iron Zone' },
+  const [classes, setClasses] = useState<ClassItem[]>([
+    {
+      id: '1',
+      name: 'High-Intensity Crossfit',
+      trainer: 'Coach Vikram',
+      time: '06:30 PM',
+      capacity: 20,
+      booked: 18,
+      room: 'Studio 1',
+      members: [
+        { id: 'm1', name: 'Rahul Sharma', phone: '+91 98800 72520', attended: true },
+        { id: 'm2', name: 'Priya Patel', phone: '+91 98765 43210', attended: true },
+        { id: 'm3', name: 'Amit Kumar', phone: '+91 94104 30095', attended: false },
+        { id: 'm4', name: 'Sneha Verma', phone: '+91 94567 81234', attended: false },
+      ],
+    },
+    {
+      id: '2',
+      name: 'Power Yoga & Core',
+      trainer: 'Sarah Chen',
+      time: '07:30 PM',
+      capacity: 15,
+      booked: 14,
+      room: 'Studio 2',
+      members: [
+        { id: 'm5', name: 'Ananya Roy', phone: '+91 95432 19876', attended: true },
+        { id: 'm6', name: 'Kavita Singh', phone: '+91 97654 32190', attended: false },
+      ],
+    },
+    {
+      id: '3',
+      name: 'Zumba Cardio Blast',
+      trainer: 'Pooja Hegde',
+      time: '08:30 PM',
+      capacity: 20,
+      booked: 20,
+      room: 'Studio 1',
+      members: [
+        { id: 'm7', name: 'Rohan Gupta', phone: '+91 96543 21987', attended: true },
+        { id: 'm8', name: 'Deepak Joshi', phone: '+91 94321 98765', attended: true },
+      ],
+    },
+    {
+      id: '4',
+      name: 'Olympic Weightlifting',
+      trainer: 'Karan Mehra',
+      time: '06:00 AM',
+      capacity: 12,
+      booked: 9,
+      room: 'Iron Zone',
+      members: [
+        { id: 'm9', name: 'Vihaan Malhotra', phone: '+91 93210 98765', attended: false },
+      ],
+    },
   ]);
 
   const [modalOpen, setModalOpen] = useState(false);
+  const [selectedBatch, setSelectedBatch] = useState<ClassItem | null>(null);
+
   const [name, setName] = useState('');
   const [trainer, setTrainer] = useState('');
   const [time, setTime] = useState('');
@@ -19,7 +81,7 @@ export const ClassesPage: React.FC = () => {
   const handleAddClass = (e: React.FormEvent) => {
     e.preventDefault();
     if (!name || !trainer || !time) return;
-    const newClass = {
+    const newClass: ClassItem = {
       id: String(Date.now()),
       name,
       trainer,
@@ -27,6 +89,7 @@ export const ClassesPage: React.FC = () => {
       capacity: Number(capacity) || 20,
       booked: 0,
       room,
+      members: [],
     };
     setClasses([newClass, ...classes]);
     setModalOpen(false);
@@ -35,211 +98,324 @@ export const ClassesPage: React.FC = () => {
     setTime('');
   };
 
+  const toggleMemberAttended = (classId: string, memberId: string) => {
+    setClasses((prev) =>
+      prev.map((c) => {
+        if (c.id === classId) {
+          const updatedMembers = c.members.map((m) =>
+            m.id === memberId ? { ...m, attended: !m.attended } : m
+          );
+          const updated = { ...c, members: updatedMembers };
+          if (selectedBatch?.id === classId) {
+            setSelectedBatch(updated);
+          }
+          return updated;
+        }
+        return c;
+      })
+    );
+  };
+
   return (
-    <div style={{ maxWidth: 1280, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 24 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+      {/* Header */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
-          <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#FFF' }}>
-            Gym Classes & Schedule Management
+          <h1 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#FFF' }}>
+            Class Schedules
           </h1>
-          <p style={{ color: '#94A3B8', fontSize: '0.9rem' }}>
-            Manage daily group workout batches, certified instructors, and member capacity slots.
+          <p style={{ color: '#94A3B8', fontSize: '0.75rem' }}>
+            Workout batches, trainer roster & attendance
           </p>
         </div>
 
-        <button onClick={() => setModalOpen(true)} className="btn-primary">
-          <Plus size={18} />
-          <span>Add New Class Slot</span>
+        <button
+          onClick={() => setModalOpen(true)}
+          className="btn-primary"
+          style={{ padding: '6px 12px', fontSize: '0.72rem' }}
+        >
+          <Plus size={14} />
+          <span>Add Batch</span>
         </button>
       </div>
 
-      {/* Grid of Classes */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 18 }}>
+      {/* Classes List */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
         {classes.map((c) => (
-          <div key={c.id} className="glass-panel glass-panel-hover" style={{ padding: 24 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
+          <div
+            key={c.id}
+            className="glass-panel"
+            style={{ padding: 14, cursor: 'pointer', transition: 'all 0.15s ease' }}
+            onClick={() => setSelectedBatch(c)}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
               <div>
-                <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#FFF' }}>{c.name}</h3>
-                <div style={{ fontSize: '0.8rem', color: '#94A3B8', marginTop: 2 }}>{c.room}</div>
+                <span style={{ fontSize: '0.88rem', fontWeight: 800, color: '#FFF', display: 'block' }}>
+                  {c.name}
+                </span>
+                <span style={{ fontSize: '0.7rem', color: '#A5B4FC', fontWeight: 600 }}>
+                  Trainer: {c.trainer} • {c.room}
+                </span>
               </div>
-              <span className="badge-cyan">
-                {c.booked} / {c.capacity} BOOKED
+
+              <span
+                className={c.booked >= c.capacity ? 'badge-purple' : 'badge-emerald'}
+                style={{ fontSize: '0.62rem', padding: '2px 6px' }}
+              >
+                {c.booked >= c.capacity ? 'FULL' : `${c.capacity - c.booked} SLOTS LEFT`}
               </span>
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8, margin: '16px 0', fontSize: '0.85rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#CBD5E1' }}>
-                <User size={15} color="#3B82F6" />
-                <span>Trainer: <strong style={{ color: '#FFF' }}>{c.trainer}</strong></span>
+            <div
+              style={{
+                backgroundColor: 'rgba(255, 255, 255, 0.04)',
+                borderRadius: 10,
+                padding: '8px 10px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                <Clock size={12} color="#38BDF8" />
+                <span style={{ fontSize: '0.72rem', color: '#38BDF8', fontWeight: 700 }}>
+                  {c.time}
+                </span>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#CBD5E1' }}>
-                <Clock size={15} color="#10B981" />
-                <span>Timing: <strong style={{ color: '#FFF' }}>{c.time}</strong></span>
-              </div>
-            </div>
 
-            {/* Capacity Progress Bar */}
-            <div style={{ marginTop: 12 }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: '#94A3B8', marginBottom: 6 }}>
-                <span>Occupancy</span>
-                <span>{Math.round((c.booked / c.capacity) * 100)}%</span>
-              </div>
-              <div style={{ width: '100%', height: 6, borderRadius: 3, backgroundColor: 'rgba(255,255,255,0.08)', overflow: 'hidden' }}>
-                <div
-                  style={{
-                    width: `${(c.booked / c.capacity) * 100}%`,
-                    height: '100%',
-                    background: c.booked >= c.capacity ? '#EF4444' : 'linear-gradient(90deg, #3B82F6, #10B981)',
-                  }}
-                />
+              <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                <Users size={12} color="#10B981" />
+                <span style={{ fontSize: '0.72rem', color: '#FFF', fontWeight: 800 }}>
+                  {c.booked}/{c.capacity} Members
+                </span>
+                <ChevronRight size={14} color="#64748B" style={{ marginLeft: 4 }} />
               </div>
             </div>
           </div>
         ))}
       </div>
 
+      {/* Batch Member Roster Modal */}
+      {selectedBatch && (
+        <div
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0,0,0,0.88)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: 16,
+            zIndex: 100,
+          }}
+        >
+          <div
+            className="glass-panel animate-popin"
+            style={{
+              width: '100%',
+              backgroundColor: '#0F172A',
+              border: '1px solid rgba(59, 130, 246, 0.4)',
+              padding: 18,
+            }}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+              <div>
+                <span style={{ fontSize: '0.95rem', fontWeight: 800, color: '#FFF', display: 'block' }}>
+                  {selectedBatch.name} Roster
+                </span>
+                <span style={{ fontSize: '0.7rem', color: '#38BDF8' }}>
+                  {selectedBatch.time} • Trainer: {selectedBatch.trainer}
+                </span>
+              </div>
+              <button
+                onClick={() => setSelectedBatch(null)}
+                style={{ background: 'transparent', border: 'none', color: '#94A3B8', cursor: 'pointer' }}
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#94A3B8', display: 'block', marginBottom: 8 }}>
+              REGISTERED MEMBERS ({selectedBatch.members.length})
+            </span>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8, maxHeight: 240, overflowY: 'auto' }}>
+              {selectedBatch.members.map((m) => (
+                <div
+                  key={m.id}
+                  style={{
+                    backgroundColor: 'rgba(255, 255, 255, 0.04)',
+                    borderRadius: 10,
+                    padding: '8px 10px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                  }}
+                >
+                  <div>
+                    <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#FFF', display: 'block' }}>
+                      {m.name}
+                    </span>
+                    <span style={{ fontSize: '0.65rem', color: '#94A3B8' }}>{m.phone}</span>
+                  </div>
+
+                  <button
+                    onClick={() => toggleMemberAttended(selectedBatch.id, m.id)}
+                    style={{
+                      backgroundColor: m.attended ? 'rgba(16, 185, 129, 0.2)' : 'rgba(255, 255, 255, 0.08)',
+                      border: `1px solid ${m.attended ? '#10B981' : 'rgba(255, 255, 255, 0.2)'}`,
+                      borderRadius: 8,
+                      padding: '4px 8px',
+                      color: m.attended ? '#10B981' : '#94A3B8',
+                      fontSize: '0.68rem',
+                      fontWeight: 800,
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 4,
+                    }}
+                  >
+                    {m.attended ? <Check size={12} /> : null}
+                    <span>{m.attended ? 'Attended' : 'Mark Present'}</span>
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            <button
+              onClick={() => setSelectedBatch(null)}
+              className="btn-primary"
+              style={{ width: '100%', marginTop: 14, padding: '10px' }}
+            >
+              Done
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Add Class Modal */}
       {modalOpen && (
         <div
           style={{
-            position: 'fixed',
-            inset: 0,
-            backgroundColor: 'rgba(0,0,0,0.7)',
-            backdropFilter: 'blur(8px)',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0,0,0,0.85)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
+            padding: 16,
             zIndex: 100,
-            padding: 20,
           }}
         >
-          <div className="glass-panel" style={{ width: '100%', maxWidth: 500, padding: 32, position: 'relative' }}>
-            <button
-              onClick={() => setModalOpen(false)}
-              style={{ position: 'absolute', top: 20, right: 20, background: 'transparent', border: 'none', color: '#94A3B8', cursor: 'pointer' }}
-            >
-              <X size={20} />
-            </button>
+          <div
+            className="glass-panel animate-popin"
+            style={{
+              width: '100%',
+              backgroundColor: '#0F172A',
+              border: '1px solid rgba(59, 130, 246, 0.4)',
+              padding: 20,
+            }}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
+              <span style={{ fontSize: '1rem', fontWeight: 800, color: '#FFF' }}>
+                Add New Class Batch
+              </span>
+              <button
+                onClick={() => setModalOpen(false)}
+                style={{ background: 'transparent', border: 'none', color: '#94A3B8', cursor: 'pointer' }}
+              >
+                <X size={18} />
+              </button>
+            </div>
 
-            <h2 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#FFF', marginBottom: 20 }}>
-              Schedule New Class Slot
-            </h2>
-
-            <form onSubmit={handleAddClass} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <form onSubmit={handleAddClass} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               <div>
-                <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: '#CBD5E1', marginBottom: 6 }}>
-                  Class Title
-                </label>
+                <label style={{ fontSize: '0.72rem', color: '#94A3B8', fontWeight: 700 }}>Class Name</label>
                 <input
                   type="text"
-                  required
-                  placeholder="e.g. HIIT Strength & Conditioning"
+                  placeholder="e.g. Boxing Bootcamp"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
+                  required
                   style={{
                     width: '100%',
-                    height: 44,
+                    background: '#1E293B',
+                    border: '1px solid rgba(255,255,255,0.1)',
                     borderRadius: 10,
-                    backgroundColor: 'rgba(13, 20, 36, 0.9)',
-                    border: '1px solid rgba(59, 130, 246, 0.25)',
+                    padding: '8px 10px',
                     color: '#FFF',
-                    padding: '0 14px',
-                    outline: 'none',
+                    fontSize: '0.8rem',
                   }}
                 />
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: '#CBD5E1', marginBottom: 6 }}>
-                  Lead Instructor
-                </label>
+                <label style={{ fontSize: '0.72rem', color: '#94A3B8', fontWeight: 700 }}>Trainer Name</label>
                 <input
                   type="text"
-                  required
-                  placeholder="e.g. Coach Siddharth"
+                  placeholder="e.g. Coach David"
                   value={trainer}
                   onChange={(e) => setTrainer(e.target.value)}
-                  style={{
-                    width: '100%',
-                    height: 44,
-                    borderRadius: 10,
-                    backgroundColor: 'rgba(13, 20, 36, 0.9)',
-                    border: '1px solid rgba(59, 130, 246, 0.25)',
-                    color: '#FFF',
-                    padding: '0 14px',
-                    outline: 'none',
-                  }}
-                />
-              </div>
-
-              <div>
-                <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: '#CBD5E1', marginBottom: 6 }}>
-                  Time Slot
-                </label>
-                <input
-                  type="text"
                   required
-                  placeholder="e.g. 05:30 PM - 06:30 PM"
-                  value={time}
-                  onChange={(e) => setTime(e.target.value)}
                   style={{
                     width: '100%',
-                    height: 44,
+                    background: '#1E293B',
+                    border: '1px solid rgba(255,255,255,0.1)',
                     borderRadius: 10,
-                    backgroundColor: 'rgba(13, 20, 36, 0.9)',
-                    border: '1px solid rgba(59, 130, 246, 0.25)',
+                    padding: '8px 10px',
                     color: '#FFF',
-                    padding: '0 14px',
-                    outline: 'none',
+                    fontSize: '0.8rem',
                   }}
                 />
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
                 <div>
-                  <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: '#CBD5E1', marginBottom: 6 }}>
-                    Max Capacity
-                  </label>
+                  <label style={{ fontSize: '0.72rem', color: '#94A3B8', fontWeight: 700 }}>Time</label>
+                  <input
+                    type="text"
+                    placeholder="07:00 PM"
+                    value={time}
+                    onChange={(e) => setTime(e.target.value)}
+                    required
+                    style={{
+                      width: '100%',
+                      background: '#1E293B',
+                      border: '1px solid rgba(255,255,255,0.1)',
+                      borderRadius: 10,
+                      padding: '8px 10px',
+                      color: '#FFF',
+                      fontSize: '0.8rem',
+                    }}
+                  />
+                </div>
+                <div>
+                  <label style={{ fontSize: '0.72rem', color: '#94A3B8', fontWeight: 700 }}>Capacity</label>
                   <input
                     type="number"
                     value={capacity}
                     onChange={(e) => setCapacity(e.target.value)}
                     style={{
                       width: '100%',
-                      height: 44,
+                      background: '#1E293B',
+                      border: '1px solid rgba(255,255,255,0.1)',
                       borderRadius: 10,
-                      backgroundColor: 'rgba(13, 20, 36, 0.9)',
-                      border: '1px solid rgba(59, 130, 246, 0.25)',
+                      padding: '8px 10px',
                       color: '#FFF',
-                      padding: '0 14px',
-                      outline: 'none',
-                    }}
-                  />
-                </div>
-                <div>
-                  <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: '#CBD5E1', marginBottom: 6 }}>
-                    Studio / Room
-                  </label>
-                  <input
-                    type="text"
-                    value={room}
-                    onChange={(e) => setRoom(e.target.value)}
-                    style={{
-                      width: '100%',
-                      height: 44,
-                      borderRadius: 10,
-                      backgroundColor: 'rgba(13, 20, 36, 0.9)',
-                      border: '1px solid rgba(59, 130, 246, 0.25)',
-                      color: '#FFF',
-                      padding: '0 14px',
-                      outline: 'none',
+                      fontSize: '0.8rem',
                     }}
                   />
                 </div>
               </div>
 
-              <button type="submit" className="btn-primary" style={{ width: '100%', height: 46, marginTop: 10 }}>
-                Publish Class Slot
+              <button type="submit" className="btn-primary" style={{ marginTop: 8 }}>
+                Create Class
               </button>
             </form>
           </div>

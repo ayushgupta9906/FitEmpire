@@ -30,20 +30,37 @@ export const LoginPage: React.FC = () => {
   return (
     <div
       style={{
-        height: '100vh',
+        minHeight: '100vh',
         width: '100%',
-        backgroundColor: '#0B0F19',
+        backgroundColor: '#070B14',
         display: 'flex',
-        flexDirection: 'column',
+        alignItems: 'center',
         justifyContent: 'center',
-        padding: '28px 24px',
+        padding: '20px 10px',
         fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif",
-        boxSizing: 'border-box',
-        overflow: 'hidden',
-        position: 'relative',
       }}
     >
-      <button
+      {/* Sleek Mobile Device Frame */}
+      <div
+        style={{
+          width: '100%',
+          maxWidth: '420px',
+          height: '100vh',
+          maxHeight: '880px',
+          backgroundColor: '#0B0F19',
+          borderRadius: '36px',
+          border: '10px solid #1E293B',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          padding: '28px 24px',
+          boxSizing: 'border-box',
+          overflow: 'hidden',
+          position: 'relative',
+          boxShadow: '0 25px 60px -15px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.1)',
+        }}
+      >
+        <button
           onClick={() => navigate('/welcome')}
           style={{
             position: 'absolute',
@@ -59,24 +76,27 @@ export const LoginPage: React.FC = () => {
         >
           ← Back
         </button>
+
         {/* Logo and Header */}
-        <div style={{ textAlign: 'center', marginBottom: 32 }}>
-            <div
-              style={{
-                width: 60,
-                height: 60,
-                borderRadius: 18,
-                backgroundColor: '#FFFFFF',
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                boxShadow: '0 8px 24px rgba(79, 70, 229, 0.35)',
-                marginBottom: 16,
-              }}
-            >
-              <div style={{ display: 'inline-flex', transform: 'scaleX(-1)' }}><Dumbbell color="#4F46E5" size={30} /></div>
+        <div style={{ textAlign: 'center', marginBottom: 28 }}>
+          <div
+            style={{
+              width: 58,
+              height: 58,
+              borderRadius: 18,
+              backgroundColor: '#FFFFFF',
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              boxShadow: '0 8px 24px rgba(79, 70, 229, 0.35)',
+              marginBottom: 14,
+            }}
+          >
+            <div style={{ display: 'inline-flex', transform: 'scaleX(-1)' }}>
+              <Dumbbell color="#4F46E5" size={28} />
             </div>
-          <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#FFFFFF', marginBottom: 6 }}>
+          </div>
+          <h1 style={{ fontSize: '1.65rem', fontWeight: 800, color: '#FFFFFF', marginBottom: 6 }}>
             FitEmpire Partner Portal
           </h1>
           <p style={{ fontSize: '0.85rem', color: '#94A3B8' }}>
@@ -105,70 +125,72 @@ export const LoginPage: React.FC = () => {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           <div>
-            <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: '#CBD5E1', marginBottom: 6 }}>
-              Partner Business Email
+            <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: '#94A3B8', marginBottom: 6 }}>
+              Partner Email
             </label>
             <div
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                backgroundColor: 'rgba(13, 20, 36, 0.8)',
-                border: '1px solid rgba(59, 130, 246, 0.2)',
-                borderRadius: 12,
+                backgroundColor: '#161F30',
+                borderRadius: 14,
                 padding: '0 14px',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
               }}
             >
-              <Mail size={18} color="#64748B" style={{ marginRight: 10 }} />
+              <Mail color="#64748B" size={18} />
               <input
                 type="email"
-                required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="partner@fitempire.in"
+                required
                 style={{
                   width: '100%',
-                  height: 46,
                   background: 'transparent',
                   border: 'none',
                   outline: 'none',
+                  padding: '14px 10px',
                   color: '#FFFFFF',
                   fontSize: '0.9rem',
+                  fontWeight: 600,
                 }}
               />
             </div>
           </div>
 
           <div>
-            <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: '#CBD5E1', marginBottom: 6 }}>
-              Partner Portal Password
+            <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: '#94A3B8', marginBottom: 6 }}>
+              Password
             </label>
             <div
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                backgroundColor: 'rgba(13, 20, 36, 0.8)',
-                border: '1px solid rgba(59, 130, 246, 0.2)',
-                borderRadius: 12,
+                backgroundColor: '#161F30',
+                borderRadius: 14,
                 padding: '0 14px',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
               }}
             >
-              <Lock size={18} color="#64748B" style={{ marginRight: 10 }} />
+              <Lock color="#64748B" size={18} />
               <input
                 type="password"
-                required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
+                required
                 style={{
                   width: '100%',
-                  height: 46,
                   background: 'transparent',
                   border: 'none',
                   outline: 'none',
+                  padding: '14px 10px',
                   color: '#FFFFFF',
                   fontSize: '0.9rem',
+                  fontWeight: 600,
                 }}
               />
             </div>
@@ -177,25 +199,49 @@ export const LoginPage: React.FC = () => {
           <button
             type="submit"
             disabled={isLoading}
-            className="btn-primary"
-            style={{ width: '100%', height: 48, marginTop: 8 }}
+            style={{
+              marginTop: 10,
+              backgroundColor: '#4F46E5',
+              color: '#FFFFFF',
+              border: 'none',
+              borderRadius: 14,
+              padding: '14px',
+              fontSize: '0.95rem',
+              fontWeight: 800,
+              cursor: isLoading ? 'not-allowed' : 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 8,
+              boxShadow: '0 8px 20px rgba(79, 70, 229, 0.4)',
+              opacity: isLoading ? 0.7 : 1,
+            }}
           >
-            {isLoading ? (
-              <span>Authenticating...</span>
-            ) : (
-              <>
-                <span>Access Gym Partner Desk</span>
-                <ArrowRight size={18} />
-              </>
-            )}
+            <span>{isLoading ? 'Verifying...' : 'Sign In to Partner Portal'}</span>
+            <ArrowRight size={16} />
           </button>
         </form>
 
-        <div style={{ marginTop: 24, paddingTop: 20, borderTop: '1px solid rgba(255, 255, 255, 0.08)', textAlign: 'center' }}>
-          <div style={{ fontSize: '0.78rem', color: '#64748B' }}>
-            Registered partner with FitEmpire? Contact admin if your account is locked.
-          </div>
+        {/* Demo Fast Fill */}
+        <div style={{ marginTop: 24, textAlign: 'center' }}>
+          <button
+            type="button"
+            onClick={handleFillDemo}
+            style={{
+              background: 'rgba(255, 255, 255, 0.05)',
+              border: '1px dashed rgba(255, 255, 255, 0.15)',
+              borderRadius: 12,
+              padding: '8px 16px',
+              color: '#A5B4FC',
+              fontSize: '0.78rem',
+              fontWeight: 700,
+              cursor: 'pointer',
+            }}
+          >
+            ⚡ Auto-fill Partner Credentials
+          </button>
         </div>
+      </div>
     </div>
   );
 };

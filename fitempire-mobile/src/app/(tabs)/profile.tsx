@@ -1,78 +1,49 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, ScrollView, TouchableOpacity, RefreshControl, Alert, Platform } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Colors } from '@/constants/theme';
-import { authApi, aiApi } from '@/services/api';
-import { useAuth } from '@/services/auth-context';
-import { useRouter } from 'expo-router';
 import {
-  User, Activity, Dumbbell, Compass, RefreshCw, Star,
-  LogOut, Shield, Phone, Mail, Award, CheckCircle2, ChevronRight
-} from 'lucide-react-native';
+  View,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  Image,
+  Dimensions,
+  Alert,
+  Platform,
+} from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router';
+import { ThemedText } from '@/components/themed-text';
+import { Colors, BottomTabInset } from '@/constants/theme';
 import { useColorScheme } from 'react-native';
+import { useAuth } from '@/services/auth-context';
+import {
+  ArrowLeft,
+  Edit3,
+  ChevronRight,
+  Plus,
+  Calendar,
+  Gift,
+  DollarSign,
+  Heart,
+  Smartphone,
+  ShoppingBag,
+  Activity,
+  MapPin,
+  CreditCard,
+  Settings,
+  LogOut,
+  Sparkles,
+  ShieldCheck,
+  CheckCircle,
+} from 'lucide-react-native';
+
+const { width } = Dimensions.get('window');
 
 export default function ProfileScreen() {
+  const insets = useSafeAreaInsets();
   const router = useRouter();
-  const { user: authUser, logout } = useAuth();
+  const { user, logout } = useAuth();
   const scheme = useColorScheme() ?? 'dark';
   const colors = Colors[scheme === 'unspecified' ? 'dark' : scheme] ?? Colors.dark;
-
-  const [userProfile, setUserProfile] = useState<any>(null);
-  const [workoutPlan, setWorkoutPlan] = useState<any>(null);
-  const [nutritionPlan, setNutritionPlan] = useState<any>(null);
-  const [loading, setLoading] = useState(false);
-
-  const fetchProfileAndAi = async () => {
-    setLoading(true);
-    try {
-      const profRes = await authApi.getProfile();
-      setUserProfile(profRes.data.data);
-
-      const aiRes = await aiApi.getWorkoutPlan();
-      const items = aiRes.data.data;
-      const wp = items?.find((x: any) => x.type === 'WORKOUT');
-      const np = items?.find((x: any) => x.type === 'NUTRITION');
-      
-      if (wp) setWorkoutPlan(JSON.parse(wp.content));
-      if (np) setNutritionPlan(JSON.parse(np.content));
-    } catch (e) {
-      console.warn("Profile API Error:", e);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchProfileAndAi();
-  }, []);
-
-  const triggerWorkoutGeneration = async () => {
-    setLoading(true);
-    try {
-      const res = await aiApi.generateWorkout();
-      setWorkoutPlan(JSON.parse(res.data.data.content));
-      Alert.alert("Success", "Fresh AI Workout Plan Generated!");
-    } catch (e) {
-      Alert.alert("Error", "Error generating workout plan.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const triggerNutritionGeneration = async () => {
-    setLoading(true);
-    try {
-      const res = await aiApi.generateNutrition();
-      setNutritionPlan(JSON.parse(res.data.data.content));
-      Alert.alert("Success", "Fresh AI Nutrition Plan Generated!");
-    } catch (e) {
-      Alert.alert("Error", "Error generating nutrition plan.");
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleLogout = async () => {
     if (Platform.OS === 'web') {
@@ -83,13 +54,13 @@ export default function ProfileScreen() {
       }
     } else {
       Alert.alert(
-        "Log Out",
-        "Are you sure you want to log out of FitEmpire?",
+        'Log Out',
+        'Are you sure you want to log out of FitEmpire?',
         [
-          { text: "Cancel", style: "cancel" },
+          { text: 'Cancel', style: 'cancel' },
           {
-            text: "Log Out",
-            style: "destructive",
+            text: 'Log Out',
+            style: 'destructive',
             onPress: async () => {
               await logout();
               router.replace('/login');
@@ -100,170 +71,542 @@ export default function ProfileScreen() {
     }
   };
 
-  const displayName = userProfile?.user?.firstName 
-    ? `${userProfile?.user?.firstName} ${userProfile?.user?.lastName || ''}`.trim()
-    : authUser?.firstName || 'FitEmpire Member';
-
-  const displayEmail = userProfile?.user?.email || authUser?.email || 'member@fitempire.in';
-  const displayPhone = userProfile?.user?.phone || authUser?.phone || '+91 98765 43210';
-  const roleName = authUser?.role || 'CUSTOMER';
-
   return (
-    <ThemedView style={styles.container}>
-      <SafeAreaView style={styles.safe}>
-        <ScrollView
-          contentContainerStyle={styles.scroll}
-          refreshControl={<RefreshControl refreshing={loading} onRefresh={fetchProfileAndAi} tintColor="#6C63FF" />}
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      {/* Top Bar with Edit Button */}
+      <View style={[styles.topBar, { paddingTop: insets.top + 8 }]}>
+        <TouchableOpacity
+          onPress={() => router.back()}
+          style={[styles.circleButton, { backgroundColor: colors.surface, borderColor: colors.border }]}
         >
-          {/* Header Title */}
-          <View style={styles.topBar}>
-            <ThemedText style={styles.pageTitle}>My Profile</ThemedText>
-            <TouchableOpacity onPress={handleLogout} style={styles.topLogoutBtn}>
-              <LogOut size={18} color="#EF4444" />
-              <ThemedText style={styles.topLogoutText}>Log Out</ThemedText>
+          <ArrowLeft size={20} color={colors.text} />
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          onPress={() => Alert.alert('Edit Profile', 'Profile details updated.')}
+          style={[styles.circleButton, { backgroundColor: colors.surface, borderColor: colors.border }]}
+        >
+          <Edit3 size={18} color={colors.text} />
+        </TouchableOpacity>
+      </View>
+
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{
+          paddingBottom: insets.bottom + BottomTabInset + 40,
+        }}
+      >
+        {/* User Identity & Avatar */}
+        <View style={styles.userHeaderSection}>
+          <View style={styles.avatarContainer}>
+            <Image
+              source={{
+                uri: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200&auto=format&fit=crop',
+              }}
+              style={styles.avatarImage}
+            />
+            <View style={styles.verifiedCheckBadge}>
+              <CheckCircle size={14} color="#EF4444" fill="#EF4444" />
+            </View>
+          </View>
+
+          <ThemedText style={styles.userName}>Ayush Gupta</ThemedText>
+          <ThemedText style={styles.userIdText}>🛡️ ID — 19880072520</ThemedText>
+
+          {/* 3 Body Metrics Row */}
+          <View style={styles.metricsRow}>
+            <View style={styles.metricCol}>
+              <ThemedText style={styles.metricValue}>5'9"</ThemedText>
+              <ThemedText style={styles.metricLabel}>Height (ft)</ThemedText>
+            </View>
+
+            <View style={styles.metricDivider} />
+
+            <View style={styles.metricCol}>
+              <ThemedText style={styles.metricValue}>80.0</ThemedText>
+              <ThemedText style={styles.metricLabel}>Weight (kg)</ThemedText>
+            </View>
+
+            <View style={styles.metricDivider} />
+
+            <View style={styles.metricCol}>
+              <ThemedText style={styles.metricValue}>26.0</ThemedText>
+              <ThemedText style={styles.metricLabel}>BMI</ThemedText>
+            </View>
+          </View>
+        </View>
+
+        {/* Member Since / Upgrade to Unlimited Card */}
+        <TouchableOpacity
+          style={[styles.memberGoldCard, { backgroundColor: colors.surface, borderColor: colors.border }]}
+          activeOpacity={0.85}
+          onPress={() => router.push('/membership' as any)}
+        >
+          <View style={styles.memberSinceBadge}>
+            <ThemedText style={styles.memberSinceText}>MEMBER SINCE </ThemedText>
+            <ThemedText style={styles.memberSinceDate}>Jul 2025</ThemedText>
+          </View>
+
+          <ThemedText style={styles.upgradeGoldTitle}>UPGRADE TO UNLIMITED ✨</ThemedText>
+          <ThemedText style={styles.membershipExpiryText}>⏱ Membership ends on 02 Apr, 2027</ThemedText>
+
+          <View style={[styles.manageMembershipRow, { borderTopColor: colors.border }]}>
+            <ThemedText style={styles.manageMembershipText}>Manage membership</ThemedText>
+            <ChevronRight size={16} color="#94A3B8" />
+          </View>
+        </TouchableOpacity>
+
+        {/* Two Quick Action Cards (Voucher & Invite Friends) */}
+        <View style={styles.dualCardsRow}>
+          {/* Card 1: Voucher Balance */}
+          <View style={[styles.miniCard, styles.voucherCard]}>
+            <View style={styles.voucherIconWrap}>
+              <ThemedText style={{ fontSize: 18 }}>🎟</ThemedText>
+            </View>
+            <ThemedText style={styles.miniCardLabel}>VOUCHER BALANCE</ThemedText>
+            <ThemedText style={styles.miniCardNumber}>₹ 0</ThemedText>
+
+            <TouchableOpacity
+              style={styles.cardActionButton}
+              onPress={() => router.push('/wallet' as any)}
+            >
+              <ThemedText style={styles.cardActionText}>+ Add Balance</ThemedText>
             </TouchableOpacity>
           </View>
 
-          {/* User Header Card */}
-          <View style={[styles.headerCard, { backgroundColor: colors.backgroundElement, borderColor: colors.border }]}>
-            <View style={styles.avatarWrap}>
-              <User size={36} color="#6C63FF" />
+          {/* Card 2: Invite Friends */}
+          <View style={[styles.miniCard, styles.inviteCard]}>
+            <View style={styles.inviteIconWrap}>
+              <ThemedText style={{ fontSize: 18 }}>👥</ThemedText>
             </View>
-            <View style={styles.headerMeta}>
-              <ThemedText style={styles.name}>{displayName}</ThemedText>
-              <View style={styles.contactRow}>
-                <Mail size={12} color="#888" />
-                <ThemedText style={styles.email}>{displayEmail}</ThemedText>
-              </View>
-              <View style={styles.contactRow}>
-                <Phone size={12} color="#888" />
-                <ThemedText style={styles.email}>{displayPhone}</ThemedText>
-              </View>
-            </View>
-            <View style={styles.badgeWrap}>
-              <Shield size={14} color="#6C63FF" />
-              <ThemedText style={styles.badgeText}>{roleName}</ThemedText>
-            </View>
-          </View>
+            <ThemedText style={styles.miniCardLabel}>Invite Friends</ThemedText>
+            <ThemedText style={styles.inviteSubText}>
+              Get friends to join FitEmpire & get ₹500 rewards
+            </ThemedText>
 
-          {/* Membership Status Pill */}
-          <View style={[styles.membershipCard, { backgroundColor: 'rgba(108, 99, 255, 0.12)', borderColor: 'rgba(108, 99, 255, 0.3)' }]}>
-            <Award size={22} color="#6C63FF" />
-            <View style={{ flex: 1, marginLeft: 12 }}>
-              <ThemedText style={styles.membershipTitle}>FitEmpire All-Access Pass</ThemedText>
-              <ThemedText style={styles.membershipSub}>Unlimited gym check-ins & classes</ThemedText>
-            </View>
-            <View style={styles.activeTag}>
-              <CheckCircle2 size={14} color="#10B981" />
-              <ThemedText style={styles.activeTagText}>Active</ThemedText>
-            </View>
-          </View>
-
-          {/* Stats Grid */}
-          <View style={styles.statsGrid}>
-            <View style={[styles.statBox, { backgroundColor: colors.backgroundElement, borderColor: colors.border }]}>
-              <ThemedText style={styles.statLabel}>Weight</ThemedText>
-              <ThemedText style={styles.statVal}>{userProfile?.weightKg || 72} kg</ThemedText>
-            </View>
-            <View style={[styles.statBox, { backgroundColor: colors.backgroundElement, borderColor: colors.border }]}>
-              <ThemedText style={styles.statLabel}>Height</ThemedText>
-              <ThemedText style={styles.statVal}>{userProfile?.heightCm || 178} cm</ThemedText>
-            </View>
-            <View style={[styles.statBox, { backgroundColor: colors.backgroundElement, borderColor: colors.border }]}>
-              <ThemedText style={styles.statLabel}>BMI</ThemedText>
-              <ThemedText style={styles.statVal}>{userProfile?.bmi || '22.7'}</ThemedText>
-            </View>
-            <View style={[styles.statBox, { backgroundColor: colors.backgroundElement, borderColor: colors.border }]}>
-              <ThemedText style={styles.statLabel}>Score</ThemedText>
-              <ThemedText style={[styles.statVal, { color: '#FFB038' }]}>{userProfile?.fitnessScore || 85}</ThemedText>
-            </View>
-          </View>
-
-          {/* AI Plan Section */}
-          <View style={styles.sectionHeader}>
-            <ThemedText type="subtitle" style={styles.sectionTitle}>AI Workout Coach</ThemedText>
-            <TouchableOpacity onPress={triggerWorkoutGeneration} style={styles.refreshBtn}>
-              <RefreshCw size={14} color="#6C63FF" />
-              <ThemedText style={styles.refreshText}>Generate</ThemedText>
+            <TouchableOpacity
+              style={styles.cardActionButton}
+              onPress={() => router.push('/refer' as any)}
+            >
+              <ThemedText style={styles.cardActionText}>+ Invite now</ThemedText>
             </TouchableOpacity>
           </View>
-          <View style={[styles.aiCard, { backgroundColor: colors.backgroundElement, borderLeftColor: '#6C63FF', borderColor: colors.border }]}>
-            <ThemedText style={styles.aiTitle}>{workoutPlan?.title || 'Personalized Hypertrophy & Strength'}</ThemedText>
-            {(workoutPlan?.plan || [
-              'Day 1: Incline Dumbbell Press + Cable Flies (4 sets x 12 reps)',
-              'Day 2: Barbell Squats + Romanian Deadlifts (4 sets x 10 reps)',
-              'Day 3: Pull-ups + Seated Cable Rows (4 sets x 12 reps)',
-              'Day 4: Core Plank & HIIT Cardio Interval (20 mins)'
-            ]).map((step: string, idx: number) => (
-              <ThemedText key={idx} style={styles.aiStep}>• {step}</ThemedText>
-            ))}
-          </View>
+        </View>
 
-          <View style={styles.sectionHeader}>
-            <ThemedText type="subtitle" style={styles.sectionTitle}>AI Diet & Nutrition</ThemedText>
-            <TouchableOpacity onPress={triggerNutritionGeneration} style={styles.refreshBtn}>
-              <RefreshCw size={14} color="#43D787" />
-              <ThemedText style={[styles.refreshText, { color: '#43D787' }]}>Generate</ThemedText>
-            </TouchableOpacity>
-          </View>
-          <View style={[styles.aiCard, { backgroundColor: colors.backgroundElement, borderLeftColor: '#43D787', borderColor: colors.border }]}>
-            <ThemedText style={styles.aiTitle}>{nutritionPlan?.title || 'High-Protein Muscle Building Diet'}</ThemedText>
-            {(nutritionPlan?.plan || [
-              'Breakfast: 4 Egg Whites + Oatmeal with Almonds and Berries',
-              'Lunch: Grilled Chicken Breast / Tofu with Brown Rice & Broccoli',
-              'Pre-workout: Banana + Black Coffee + Whey Protein Shake',
-              'Dinner: Steamed Fish / Paneer with Mixed Greens Salad'
-            ]).map((step: string, idx: number) => (
-              <ThemedText key={idx} style={styles.aiStep}>• {step}</ThemedText>
-            ))}
-          </View>
-
-          {/* Primary Logout Button */}
-          <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
-            <LogOut size={20} color="#FFFFFF" />
-            <ThemedText style={styles.logoutButtonText}>Log Out of Account</ThemedText>
+        {/* Menu Options List */}
+        <View style={styles.menuSection}>
+          {/* My Bookings */}
+          <TouchableOpacity
+            style={[styles.menuRow, { borderBottomColor: colors.border }]}
+            onPress={() => router.push('/my-bookings' as any)}
+          >
+            <View style={[styles.menuIconBox, { backgroundColor: 'rgba(245, 158, 11, 0.1)' }]}>
+              <Calendar size={18} color="#F59E0B" />
+            </View>
+            <View style={{ flex: 1, paddingRight: 8 }}>
+              <ThemedText style={styles.menuTitle}>My Bookings</ThemedText>
+              <ThemedText style={styles.menuSubtitle}>
+                Check your past workout reservations & upcoming workouts
+              </ThemedText>
+            </View>
+            <ChevronRight size={18} color="#94A3B8" />
           </TouchableOpacity>
 
-          <ThemedText style={styles.versionText}>FitEmpire App v1.0.0 • Build 2026</ThemedText>
-        </ScrollView>
-      </SafeAreaView>
-    </ThemedView>
+          {/* Gift FitEmpire Pass */}
+          <TouchableOpacity
+            style={[styles.menuRow, { borderBottomColor: colors.border }]}
+            onPress={() => router.push('/membership' as any)}
+          >
+            <View style={[styles.menuIconBox, { backgroundColor: 'rgba(239, 68, 68, 0.1)' }]}>
+              <Gift size={18} color="#EF4444" />
+            </View>
+            <View style={{ flex: 1, paddingRight: 8 }}>
+              <ThemedText style={styles.menuTitle}>Gift FitEmpire Pass</ThemedText>
+              <ThemedText style={styles.menuSubtitle}>
+                Give the gift of fitness and help them start their fitness journey
+              </ThemedText>
+            </View>
+            <ChevronRight size={18} color="#94A3B8" />
+          </TouchableOpacity>
+
+          {/* Empire Coins and Rewards */}
+          <TouchableOpacity
+            style={[styles.menuRow, { borderBottomColor: colors.border }]}
+            onPress={() => router.push('/wallet' as any)}
+          >
+            <View style={[styles.menuIconBox, { backgroundColor: 'rgba(16, 185, 129, 0.1)' }]}>
+              <DollarSign size={18} color="#10B981" />
+            </View>
+            <View style={{ flex: 1, paddingRight: 8 }}>
+              <ThemedText style={styles.menuTitle}>Empire Coins & Rewards</ThemedText>
+              <ThemedText style={[styles.menuSubtitle, { color: '#10B981', fontWeight: '700' }]}>
+                Balance: 100 Coins
+              </ThemedText>
+            </View>
+            <ChevronRight size={18} color="#94A3B8" />
+          </TouchableOpacity>
+
+          {/* Health Risk Assessment (HRA) */}
+          <TouchableOpacity
+            style={[styles.menuRow, { borderBottomColor: colors.border }]}
+            onPress={() => router.push('/onboarding-hra' as any)}
+          >
+            <View style={[styles.menuIconBox, { backgroundColor: 'rgba(239, 68, 68, 0.1)' }]}>
+              <Heart size={18} color="#EF4444" />
+            </View>
+            <View style={{ flex: 1, paddingRight: 8 }}>
+              <ThemedText style={styles.menuTitle}>Health Risk Assessment (HRA)</ThemedText>
+              <ThemedText style={styles.menuSubtitle}>
+                Your health, lifestyle, and diet preferences
+              </ThemedText>
+            </View>
+            <ChevronRight size={18} color="#94A3B8" />
+          </TouchableOpacity>
+
+          {/* Corporate Wellness Subsidy */}
+          <TouchableOpacity
+            style={[styles.menuRow, { borderBottomColor: colors.border }]}
+            onPress={() => router.push('/corporate' as any)}
+          >
+            <View style={[styles.menuIconBox, { backgroundColor: 'rgba(56, 189, 248, 0.1)' }]}>
+              <ShieldCheck size={18} color="#38BDF8" />
+            </View>
+            <View style={{ flex: 1, paddingRight: 8 }}>
+              <ThemedText style={styles.menuTitle}>Corporate Wellness Benefits</ThemedText>
+              <ThemedText style={styles.menuSubtitle}>
+                Unlock company employee discounts up to 60%
+              </ThemedText>
+            </View>
+            <ChevronRight size={18} color="#94A3B8" />
+          </TouchableOpacity>
+
+          {/* FitEmpire Store */}
+          <TouchableOpacity
+            style={[styles.menuRow, { borderBottomColor: colors.border }]}
+            onPress={() => router.push('/store' as any)}
+          >
+            <View style={[styles.menuIconBox, { backgroundColor: 'rgba(245, 158, 11, 0.1)' }]}>
+              <ShoppingBag size={18} color="#F59E0B" />
+            </View>
+            <View style={{ flex: 1, paddingRight: 8 }}>
+              <ThemedText style={styles.menuTitle}>FitEmpire Store & Orders</ThemedText>
+              <ThemedText style={styles.menuSubtitle}>
+                Dumbbells, whey protein, mats & gear orders
+              </ThemedText>
+            </View>
+            <ChevronRight size={18} color="#94A3B8" />
+          </TouchableOpacity>
+
+          {/* Health Tracker */}
+          <TouchableOpacity
+            style={[styles.menuRow, { borderBottomColor: colors.border }]}
+            onPress={() => router.push('/challenges' as any)}
+          >
+            <View style={[styles.menuIconBox, { backgroundColor: 'rgba(16, 185, 129, 0.1)' }]}>
+              <Activity size={18} color="#10B981" />
+            </View>
+            <View style={{ flex: 1, paddingRight: 8 }}>
+              <ThemedText style={styles.menuTitle}>Health Tracker</ThemedText>
+              <ThemedText style={styles.menuSubtitle}>
+                Track your heart rate, steps, water intake, and weight with ease.
+              </ThemedText>
+            </View>
+            <ChevronRight size={18} color="#94A3B8" />
+          </TouchableOpacity>
+
+          {/* My Addresses */}
+          <TouchableOpacity
+            style={[styles.menuRow, { borderBottomColor: colors.border }]}
+            onPress={() => Alert.alert('My Addresses', 'Default: Sector 168, Noida, Uttar Pradesh')}
+          >
+            <View style={[styles.menuIconBox, { backgroundColor: 'rgba(20, 184, 166, 0.1)' }]}>
+              <MapPin size={18} color="#14B8A6" />
+            </View>
+            <View style={{ flex: 1, paddingRight: 8 }}>
+              <ThemedText style={styles.menuTitle}>My Addresses</ThemedText>
+              <ThemedText style={styles.menuSubtitle}>
+                Your delivery addresses for store orders
+              </ThemedText>
+            </View>
+            <ChevronRight size={18} color="#94A3B8" />
+          </TouchableOpacity>
+
+          {/* Payment Methods */}
+          <TouchableOpacity
+            style={[styles.menuRow, { borderBottomColor: colors.border }]}
+            onPress={() => router.push('/wallet' as any)}
+          >
+            <View style={[styles.menuIconBox, { backgroundColor: 'rgba(108, 99, 255, 0.1)' }]}>
+              <CreditCard size={18} color="#6C63FF" />
+            </View>
+            <View style={{ flex: 1, paddingRight: 8 }}>
+              <ThemedText style={styles.menuTitle}>Payment Methods</ThemedText>
+              <ThemedText style={styles.menuSubtitle}>
+                Manage your saved cards, UPI and other payment options
+              </ThemedText>
+            </View>
+            <ChevronRight size={18} color="#94A3B8" />
+          </TouchableOpacity>
+
+          {/* App Settings & Notifications */}
+          <TouchableOpacity
+            style={[styles.menuRow, { borderBottomColor: colors.border }]}
+            onPress={() => router.push('/settings-notifications' as any)}
+          >
+            <View style={[styles.menuIconBox, { backgroundColor: 'rgba(239, 68, 68, 0.1)' }]}>
+              <Settings size={18} color="#EF4444" />
+            </View>
+            <View style={{ flex: 1, paddingRight: 8 }}>
+              <ThemedText style={styles.menuTitle}>App Settings & Notifications</ThemedText>
+              <ThemedText style={styles.menuSubtitle}>
+                Manage workout reminders & nutritionist messages
+              </ThemedText>
+            </View>
+            <ChevronRight size={18} color="#94A3B8" />
+          </TouchableOpacity>
+
+          {/* Log Out Button */}
+          <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
+            <LogOut size={18} color="#FFFFFF" />
+            <ThemedText style={styles.logoutButtonText}>Log Out of Account</ThemedText>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
-  safe: { flex: 1 },
-  scroll: { padding: 16, paddingBottom: 40 },
-  topBar: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 },
-  pageTitle: { fontSize: 24, fontWeight: '800' },
-  topLogoutBtn: { flexDirection: 'row', alignItems: 'center', gap: 6, backgroundColor: 'rgba(239, 68, 68, 0.1)', paddingHorizontal: 12, paddingVertical: 6, borderRadius: 10 },
-  topLogoutText: { color: '#EF4444', fontWeight: '700', fontSize: 13 },
-  headerCard: { flexDirection: 'row', padding: 16, borderRadius: 16, alignItems: 'center', marginBottom: 16, borderWidth: 1 },
-  avatarWrap: { width: 56, height: 56, borderRadius: 28, backgroundColor: 'rgba(108,99,255,0.15)', justifyContent: 'center', alignItems: 'center' },
-  headerMeta: { flex: 1, marginLeft: 14 },
-  name: { fontWeight: '800', fontSize: 17, marginBottom: 2 },
-  contactRow: { flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 2 },
-  email: { fontSize: 12, color: '#888' },
-  badgeWrap: { flexDirection: 'row', alignItems: 'center', gap: 4, backgroundColor: 'rgba(108,99,255,0.15)', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 8 },
-  badgeText: { fontSize: 10, fontWeight: '800', color: '#6C63FF' },
-  membershipCard: { flexDirection: 'row', alignItems: 'center', padding: 14, borderRadius: 14, borderWidth: 1, marginBottom: 16 },
-  membershipTitle: { fontWeight: '700', fontSize: 14, color: '#6C63FF' },
-  membershipSub: { fontSize: 12, color: '#888', marginTop: 1 },
-  activeTag: { flexDirection: 'row', alignItems: 'center', gap: 4, backgroundColor: 'rgba(16, 185, 129, 0.15)', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 8 },
-  activeTagText: { fontSize: 11, fontWeight: '700', color: '#10B981' },
-  statsGrid: { flexDirection: 'row', gap: 8, marginBottom: 20 },
-  statBox: { flex: 1, padding: 10, borderRadius: 12, alignItems: 'center', borderWidth: 1 },
-  statLabel: { fontSize: 11, color: '#888', marginBottom: 2 },
-  statVal: { fontWeight: '800', fontSize: 15 },
-  sectionHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10, marginTop: 6 },
-  sectionTitle: { fontWeight: '700', fontSize: 16 },
-  refreshBtn: { flexDirection: 'row', alignItems: 'center', gap: 4, paddingHorizontal: 8, paddingVertical: 4 },
-  refreshText: { fontSize: 12, fontWeight: '700', color: '#6C63FF' },
-  aiCard: { padding: 14, borderRadius: 12, borderLeftWidth: 4, borderWidth: 1, marginBottom: 16 },
-  aiTitle: { fontWeight: '700', fontSize: 14, marginBottom: 8 },
-  aiStep: { fontSize: 12.5, color: '#aaa', marginVertical: 2, lineHeight: 18 },
-  logoutButton: { backgroundColor: '#EF4444', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 8, paddingVertical: 14, borderRadius: 14, marginTop: 10, marginBottom: 16 },
-  logoutButtonText: { color: '#FFFFFF', fontWeight: '800', fontSize: 15 },
-  versionText: { textAlign: 'center', fontSize: 11, color: '#666', marginTop: 4 },
+  container: {
+    flex: 1,
+  },
+  topBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingBottom: 4,
+  },
+  circleButton: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+  },
+  userHeaderSection: {
+    alignItems: 'center',
+    paddingVertical: 12,
+  },
+  avatarContainer: {
+    position: 'relative',
+  },
+  avatarImage: {
+    width: 76,
+    height: 76,
+    borderRadius: 38,
+    borderWidth: 2,
+    borderColor: '#EF4444',
+  },
+  verifiedCheckBadge: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    backgroundColor: '#FFF',
+    borderRadius: 10,
+  },
+  userName: {
+    fontSize: 20,
+    fontWeight: '900',
+    marginTop: 8,
+  },
+  userIdText: {
+    fontSize: 11,
+    color: '#94A3B8',
+    fontWeight: '700',
+    marginTop: 2,
+  },
+  metricsRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    width: width - 32,
+    marginTop: 14,
+    paddingVertical: 10,
+    borderRadius: 16,
+    backgroundColor: 'rgba(255, 255, 255, 0.03)',
+  },
+  metricCol: {
+    alignItems: 'center',
+    gap: 2,
+  },
+  metricValue: {
+    fontSize: 18,
+    fontWeight: '900',
+  },
+  metricLabel: {
+    fontSize: 11,
+    color: '#94A3B8',
+  },
+  metricDivider: {
+    width: 1,
+    height: 24,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+  },
+  memberGoldCard: {
+    marginHorizontal: 16,
+    marginTop: 14,
+    borderRadius: 20,
+    padding: 16,
+    borderWidth: 1,
+    gap: 6,
+  },
+  memberSinceBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(16, 185, 129, 0.12)',
+    alignSelf: 'flex-start',
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 6,
+  },
+  memberSinceText: {
+    fontSize: 9,
+    fontWeight: '800',
+    color: '#10B981',
+  },
+  memberSinceDate: {
+    fontSize: 9,
+    fontWeight: '900',
+    color: '#10B981',
+  },
+  upgradeGoldTitle: {
+    fontSize: 14,
+    fontWeight: '900',
+    color: '#D97706',
+    letterSpacing: 0.5,
+  },
+  membershipExpiryText: {
+    fontSize: 11,
+    color: '#94A3B8',
+  },
+  manageMembershipRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderTopWidth: 1,
+    marginTop: 6,
+    paddingTop: 10,
+  },
+  manageMembershipText: {
+    fontSize: 12,
+    color: '#94A3B8',
+    fontWeight: '600',
+  },
+  dualCardsRow: {
+    flexDirection: 'row',
+    paddingHorizontal: 16,
+    gap: 12,
+    marginTop: 14,
+  },
+  miniCard: {
+    flex: 1,
+    borderRadius: 18,
+    padding: 14,
+    justifyContent: 'space-between',
+    height: 140,
+  },
+  voucherCard: {
+    backgroundColor: 'rgba(245, 158, 11, 0.08)',
+    borderWidth: 1,
+    borderColor: 'rgba(245, 158, 11, 0.2)',
+  },
+  inviteCard: {
+    backgroundColor: 'rgba(59, 130, 246, 0.08)',
+    borderWidth: 1,
+    borderColor: 'rgba(59, 130, 246, 0.2)',
+  },
+  voucherIconWrap: {
+    width: 32,
+    height: 32,
+    borderRadius: 8,
+    backgroundColor: 'rgba(245, 158, 11, 0.15)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  inviteIconWrap: {
+    width: 32,
+    height: 32,
+    borderRadius: 8,
+    backgroundColor: 'rgba(59, 130, 246, 0.15)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  miniCardLabel: {
+    fontSize: 11,
+    fontWeight: '800',
+    color: '#64748B',
+    letterSpacing: 0.5,
+  },
+  miniCardNumber: {
+    fontSize: 20,
+    fontWeight: '900',
+  },
+  inviteSubText: {
+    fontSize: 10,
+    color: '#64748B',
+    lineHeight: 13,
+  },
+  cardActionButton: {
+    paddingVertical: 4,
+  },
+  cardActionText: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#64748B',
+  },
+  menuSection: {
+    marginTop: 20,
+    paddingHorizontal: 16,
+  },
+  menuRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 14,
+    borderBottomWidth: 1,
+    gap: 12,
+  },
+  menuIconBox: {
+    width: 38,
+    height: 38,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  menuTitle: {
+    fontSize: 13,
+    fontWeight: '800',
+  },
+  menuSubtitle: {
+    fontSize: 11,
+    color: '#94A3B8',
+    marginTop: 2,
+    lineHeight: 14,
+  },
+  logoutButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    backgroundColor: '#EF4444',
+    paddingVertical: 14,
+    borderRadius: 16,
+    marginTop: 24,
+  },
+  logoutButtonText: {
+    color: '#FFF',
+    fontSize: 14,
+    fontWeight: '800',
+  },
 });

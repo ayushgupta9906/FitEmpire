@@ -1,245 +1,883 @@
-import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, ScrollView, TouchableOpacity, RefreshControl, Image, ImageBackground } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import React, { useState } from 'react';
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  Image,
+  Dimensions,
+  Alert,
+} from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Colors, Spacing } from '@/constants/theme';
-import { useTheme } from '@/hooks/use-theme';
-import { authApi, walletApi } from '@/services/api';
-import { Dumbbell, CreditCard, Award, ChevronRight, Activity, Calendar, Compass, Star, Sparkles } from 'lucide-react-native';
+import { Colors, BottomTabInset } from '@/constants/theme';
 import { useColorScheme } from 'react-native';
+import {
+  MapPin,
+  ChevronDown,
+  Coins,
+  Mic,
+  Sparkles,
+  ChevronRight,
+  Play,
+  Star,
+  Plus,
+  Heart,
+  Flame,
+  Award,
+} from 'lucide-react-native';
 
-const CATEGORIES = [
-  { name: 'GYM', icon: 'dumbbell', desc: 'Fitness & weights' },
-  { name: 'MMA', icon: 'swords', desc: 'Martial arts' },
-  { name: 'BOXING', icon: 'boxing-glove', desc: 'Ring training' },
-  { name: 'DANCE', icon: 'music', desc: 'Zumba & cardio' },
-  { name: 'YOGA', icon: 'flower', desc: 'Mind & body' },
-  { name: 'SWIMMING', icon: 'waves', desc: 'Pool sessions' },
-  { name: 'SPORTS', icon: 'trophy', desc: 'Turf games' },
+const { width } = Dimensions.get('window');
+
+// 1. Ecosystem 3D Badges
+const ECOSYSTEM_SERVICES = [
+  { id: 'pass', name: 'EMPIRE PASS', icon: '🏋️', route: '/membership' },
+  { id: 'sports', name: 'SPORTS', icon: '🏸', route: '/explore' },
+  { id: 'feast', name: 'EMPIRE FEAST', icon: '🥗', route: '/ai-workout' },
+  { id: 'coach', name: 'AI COACH', icon: '⚡', route: '/ai-workout' },
+  { id: 'store', name: 'STORE', icon: '🛍️', badge: 'SALE', route: '/store' },
+  { id: 'tv', name: 'EMPIRE TV', icon: '📺', route: '/tv' },
+  { id: 'care', name: 'EMPIRE CARE', icon: '🩺', route: '/care' },
 ];
 
-const POPULAR_CENTERS = [
-  { id: '1', name: 'Gold\'s Gym Elite', category: 'GYM', rating: 4.8, distance: '1.2 km', image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=500&auto=format&fit=crop' },
-  { id: '2', name: 'Strike Force MMA', category: 'MMA', rating: 4.9, distance: '2.5 km', image: 'https://images.unsplash.com/photo-1599058917212-d750089bc07e?w=500&auto=format&fit=crop' },
-  { id: '3', name: 'Rhythm & Beats Studio', category: 'DANCE', rating: 4.7, distance: '3.0 km', image: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=500&auto=format&fit=crop' },
+// 2. What's On Your Mind (10-Card Colorful Matrix)
+const WHATS_ON_YOUR_MIND = [
+  { id: 'hiit', name: 'HIIT', color: '#0D9488', image: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=400&auto=format&fit=crop' },
+  { id: 'yoga', name: 'YOGA', color: '#7C3AED', image: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=400&auto=format&fit=crop' },
+  { id: 'gym', name: 'GYM\nWORKOUTS', color: '#78350F', image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=400&auto=format&fit=crop' },
+  { id: 'swimming', name: 'SWIMMING', color: '#4F46E5', image: 'https://images.unsplash.com/photo-1530549387789-4c1017266635?w=400&auto=format&fit=crop' },
+  { id: 'spin', name: 'SPIN N\nRPM', color: '#581C87', image: 'https://images.unsplash.com/photo-1502680390469-be75c86b636f?w=400&auto=format&fit=crop' },
+  { id: 'cardio', name: 'CARDIO', color: '#D97706', image: 'https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?w=400&auto=format&fit=crop' },
+  { id: 'mma', name: 'MMA', color: '#65A30D', image: 'https://images.unsplash.com/photo-1599058917212-d750089bc07e?w=400&auto=format&fit=crop' },
+  { id: 'zumba', name: 'ZUMBA', color: '#F59E0B', image: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?w=400&auto=format&fit=crop' },
+  { id: 'dance', name: 'DANCE', color: '#DB2777', image: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=400&auto=format&fit=crop' },
+  { id: 'toning', name: 'BODY TONING', color: '#DC2626', image: 'https://images.unsplash.com/photo-1517649763962-0c623266ddc0?w=400&auto=format&fit=crop' },
+];
+
+// 3. Workouts from around the world
+const VIDEO_WORKOUTS = [
+  { id: 'vw1', title: 'Kids Bootcamp #2', duration: '18 min', level: 'Beginner', image: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?w=500&auto=format&fit=crop' },
+  { id: 'vw2', title: '30-Minute Body Blast FightCamp', duration: '30 min', level: 'Non-Stop', image: 'https://images.unsplash.com/photo-1599058917212-d750089bc07e?w=500&auto=format&fit=crop' },
+  { id: 'vw3', title: '25 Minute HIIT Cardio', duration: '25 min', level: 'Cardio', image: 'https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?w=500&auto=format&fit=crop' },
+  { id: 'vw4', title: '30 Minute Ride #18', duration: '30 min', level: 'Cycling', image: 'https://images.unsplash.com/photo-1502680390469-be75c86b636f?w=500&auto=format&fit=crop' },
+];
+
+// 4. Fitness Centers Near You
+const NEARBY_CENTERS = [
+  { id: 'c1', name: 'Aries Fitness', rating: 4.8, location: 'Sector 168', image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600&auto=format&fit=crop' },
+  { id: 'c2', name: 'Fitmate Fitness Centre', rating: 4.9, location: 'Sector 142', image: 'https://images.unsplash.com/photo-1540497077202-7c8a3999166f?w=600&auto=format&fit=crop' },
+  { id: 'c3', name: 'Muscle World Gym', rating: 4.7, location: 'Gaur City', image: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=600&auto=format&fit=crop' },
+];
+
+// 5. Store Products
+const PRODUCTS_RECOMMENDED = [
+  { id: 'p1', name: 'Origami Foldable Yoga Mat', price: '₹2,299', oldPrice: '₹3,499', image: 'https://images.unsplash.com/photo-1601925260368-ae2f83cf8b7f?w=400&auto=format&fit=crop' },
+  { id: 'p2', name: 'Premium Stem Yoga Mat', price: '₹2,199', oldPrice: '₹3,499', image: 'https://images.unsplash.com/photo-1592432678016-e910b452f9a2?w=400&auto=format&fit=crop' },
+  { id: 'p3', name: 'QuickShift Adjustable Dumbbell', price: '₹8,999', oldPrice: '₹12,999', image: 'https://images.unsplash.com/photo-1586401100295-7a8096fd231a?w=400&auto=format&fit=crop' },
+];
+
+const PRODUCTS_NUTRITION = [
+  { id: 'pn1', name: 'Gutsy Immunity Defense - 7 Days Pack', price: '₹249', oldPrice: '₹499', image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&auto=format&fit=crop' },
+  { id: 'pn2', name: 'Gutsy Immunity Defense - 30 Days Pack', price: '₹1,099', oldPrice: '₹1,499', image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&auto=format&fit=crop' },
+  { id: 'pn3', name: 'Gutsy Metabolic Boost - 7 days Pack', price: '₹299', oldPrice: '₹599', image: 'https://images.unsplash.com/photo-1550572017-edd951aa8f72?w=400&auto=format&fit=crop' },
+];
+
+const PRODUCTS_COMPACT = [
+  { id: 'pc1', name: 'QuickShift Pro - 3-in-1 Dumbbell', price: '₹17,499', oldPrice: '₹34,999', image: 'https://images.unsplash.com/photo-1586401100295-7a8096fd231a?w=400&auto=format&fit=crop' },
+  { id: 'pc2', name: 'PowerBrick - Heavyweight Performance', price: '₹9,999', oldPrice: '₹19,999', image: 'https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?w=400&auto=format&fit=crop' },
+  { id: 'pc3', name: 'Lever Gym Belt - Built for Heavy Lifters', price: '₹6,999', oldPrice: '₹13,999', image: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=400&auto=format&fit=crop' },
+];
+
+const HEALTH_TOPICS = [
+  'Dance', 'Diet', 'Exercise', 'Flexibility', 'Gym',
+  'Health', 'Meditation', 'Nutrition', 'Pilates', 'Protein',
+  'Swimming', 'Workout', 'Yoga',
 ];
 
 export default function HomeScreen() {
+  const insets = useSafeAreaInsets();
   const router = useRouter();
   const scheme = useColorScheme() ?? 'dark';
-  const theme = useTheme();
   const colors = Colors[scheme === 'unspecified' ? 'dark' : scheme] ?? Colors.dark;
 
-  const [user, setUser] = useState<any>(null);
-  const [balance, setBalance] = useState('0.00');
-  const [loading, setLoading] = useState(false);
-
-  const fetchHomeData = async () => {
-    setLoading(true);
-    try {
-      const profRes = await authApi.getProfile();
-      // API returns { success, data: { ...userFields } } or { success, data: { user: {...} } }
-      const profileData = profRes.data?.data;
-      setUser(profileData?.user ?? profileData ?? null);
-
-      const walletRes = await walletApi.getWalletInfo();
-      const walletData = walletRes.data?.data;
-      const balanceNum = walletData?.balance ?? walletData?.walletBalance ?? 0;
-      setBalance(typeof balanceNum === 'number' ? balanceNum.toFixed(2) : '0.00');
-    } catch (e) {
-      console.warn('Home Screen Load Error:', e);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchHomeData();
-  }, []);
+  const [location, setLocation] = useState('Sector 167');
 
   return (
-    <ThemedView style={styles.container}>
-      <SafeAreaView style={styles.safe} edges={['top']}>
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.scroll}
-          refreshControl={<RefreshControl refreshing={loading} onRefresh={fetchHomeData} tintColor="#6C63FF" />}
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      {/* Top Header Location & Coins Bar */}
+      <View style={[styles.topHeaderBar, { paddingTop: insets.top + 8 }]}>
+        <TouchableOpacity
+          style={styles.locationWrap}
+          onPress={() => {
+            const locs = ['Sector 167', 'Sector 168', 'Indiranagar Bangalore', 'Cyber City Gurgaon'];
+            const next = locs[(locs.indexOf(location) + 1) % locs.length];
+            setLocation(next);
+          }}
         >
-          {/* Header */}
-          <View style={styles.header}>
-            <View>
-              <ThemedText style={styles.greeting} themeColor="textSecondary">Welcome Back,</ThemedText>
-              <ThemedText style={styles.name}>{user?.firstName || 'User'} 👋</ThemedText>
-            </View>
-            <TouchableOpacity onPress={() => router.push('/(tabs)/profile')} style={styles.avatar}>
-              <ThemedText style={styles.avatarText}>{user?.firstName?.[0] || 'U'}</ThemedText>
-            </TouchableOpacity>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+            <MapPin size={15} color="#EF4444" fill="#EF4444" />
+            <ThemedText style={styles.locationTitle}>{location}</ThemedText>
+            <ChevronDown size={14} color={colors.textSecondary} />
           </View>
+          <ThemedText style={styles.weatherSub}>35.6° • Thundery outbreaks in nearby</ThemedText>
+        </TouchableOpacity>
 
-          {/* Quick Wallet Card */}
-          <View style={[styles.walletCard, { backgroundColor: '#6C63FF' }]}>
-            <View style={styles.walletMeta}>
-              <View>
-                <ThemedText style={styles.walletLabel}>FITEMPIRE WALLET BALANCE</ThemedText>
-                <ThemedText style={styles.walletValue}>₹{balance}</ThemedText>
-              </View>
-              <CreditCard size={32} color="#ffffff" opacity={0.8} />
-            </View>
-            <TouchableOpacity style={styles.rechargeBtn} onPress={() => router.push('/(tabs)/wallet')}>
-              <ThemedText style={styles.rechargeBtnText}>Recharge & Top Up</ThemedText>
-              <ChevronRight size={16} color="#6C63FF" />
-            </TouchableOpacity>
-          </View>
-
-          {/* Active Membership Banner */}
-          <View style={[styles.membershipBanner, { backgroundColor: colors.backgroundElement }]}>
-            <Award size={20} color="#FFB038" fill="#FFB038" />
-            <ThemedText style={styles.membershipText}>
-              Active Plan: <ThemedText style={{ fontWeight: '700' }}>Silver Access Pass</ThemedText>
-            </ThemedText>
-          </View>
-
-          {/* AI Coach Banner */}
+        {/* Coins Pill & Avatar */}
+        <View style={styles.topRightWrap}>
           <TouchableOpacity
-            style={styles.aiCoachCard}
-            onPress={() => router.push('/ai-workout')}
-            activeOpacity={0.85}
+            style={[styles.coinsPill, { backgroundColor: colors.surface, borderColor: colors.border }]}
+            onPress={() => router.push('/wallet' as any)}
           >
-            <View style={styles.aiCoachIconWrap}>
-              <Sparkles size={22} color="#ffffff" />
-            </View>
-            <View style={{ flex: 1 }}>
-              <ThemedText style={styles.aiCoachTitle}>AI Workout & Diet Coach</ThemedText>
-              <ThemedText style={styles.aiCoachSub}>Generate customized workouts & diet recommendations</ThemedText>
-            </View>
-            <ChevronRight size={18} color="rgba(255, 255, 255, 0.7)" />
+            <Coins size={14} color="#F59E0B" />
+            <ThemedText style={styles.coinsText}>₹0</ThemedText>
           </TouchableOpacity>
 
-          {/* Activity Category Chips */}
-          <View style={styles.sectionHeader}>
-            <ThemedText style={styles.sectionTitle}>Explore Categories</ThemedText>
-            <TouchableOpacity onPress={() => router.push('/(tabs)/explore')}>
-              <ThemedText style={styles.seeAll} themeColor="textSecondary">See All</ThemedText>
+          <TouchableOpacity
+            onPress={() => router.push('/(tabs)/profile')}
+            style={styles.avatarButton}
+          >
+            <Image
+              source={{
+                uri: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&auto=format&fit=crop',
+              }}
+              style={styles.avatarImg}
+            />
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{
+          paddingBottom: insets.bottom + BottomTabInset + 40,
+        }}
+      >
+        {/* Dual Action Cards (Log Your Meal & Get Exercise Plan) */}
+        <View style={styles.dualActionRow}>
+          {/* Card 1: Log Meal */}
+          <View style={[styles.actionCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+              <ThemedText style={styles.actionCardMiniLabel}>Log Your Meal</ThemedText>
+              <ThemedText style={{ fontSize: 16 }}>🍲</ThemedText>
+            </View>
+            <ThemedText style={styles.actionCardTitle}>A Fresh Diet Plan is Co...</ThemedText>
+            <ThemedText style={styles.actionCardSub}>
+              Our nutritionists are crafting a plan to match your goals.
+            </ThemedText>
+            <TouchableOpacity
+              style={styles.logVoiceBtn}
+              onPress={() => router.push('/ai-workout')}
+            >
+              <Mic size={14} color="#EF4444" />
+              <ThemedText style={styles.logVoiceText}>Log</ThemedText>
             </TouchableOpacity>
           </View>
 
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.categoriesScroll}>
-            {CATEGORIES.map((cat) => (
+          {/* Card 2: Exercise Plan */}
+          <View style={[styles.actionCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+            <View style={styles.exercisePlanThumbsRow}>
+              <Image source={{ uri: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=100&auto=format&fit=crop' }} style={styles.miniThumb} />
+              <Image source={{ uri: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=100&auto=format&fit=crop' }} style={styles.miniThumb} />
+              <Image source={{ uri: 'https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?w=100&auto=format&fit=crop' }} style={styles.miniThumb} />
+            </View>
+            <ThemedText style={styles.actionCardTitle}>Get your own Exercise plan</ThemedText>
+            <TouchableOpacity
+              style={styles.setupNowBtn}
+              onPress={() => router.push('/ai-workout')}
+            >
+              <ThemedText style={styles.setupNowText}>Setup now</ThemedText>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        {/* Ecosystem 3D Services Icons Grid */}
+        <View style={styles.ecosystemGrid}>
+          {ECOSYSTEM_SERVICES.map((item) => (
+            <TouchableOpacity
+              key={item.id}
+              style={styles.ecosystemItem}
+              activeOpacity={0.8}
+              onPress={() => router.push(item.route as any)}
+            >
+              <View style={[styles.ecosystemIconCircle, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+                <ThemedText style={{ fontSize: 26 }}>{item.icon}</ThemedText>
+                {item.badge && (
+                  <View style={styles.saleBadge}>
+                    <ThemedText style={styles.saleBadgeText}>{item.badge}</ThemedText>
+                  </View>
+                )}
+              </View>
+              <ThemedText style={styles.ecosystemLabel}>{item.name}</ThemedText>
+            </TouchableOpacity>
+          ))}
+        </View>
+
+        {/* "What's on your mind" 10-Card Colorful Matrix */}
+        <View style={styles.sectionContainer}>
+          <ThemedText style={styles.sectionHeaderTitle}>What's on your mind</ThemedText>
+
+          <View style={styles.whatsOnMindGrid}>
+            {WHATS_ON_YOUR_MIND.map((cat) => (
               <TouchableOpacity
-                key={cat.name}
-                style={[styles.categoryCard, { backgroundColor: colors.backgroundElement }]}
-                onPress={() => router.push({ pathname: '/explore', params: { category: cat.name } })}
+                key={cat.id}
+                style={[styles.mindCard, { backgroundColor: cat.color }]}
+                activeOpacity={0.85}
+                onPress={() => router.push('/explore' as any)}
               >
-                <Activity size={24} color="#6C63FF" style={{ marginBottom: Spacing.one }} />
-                <ThemedText style={styles.categoryName}>{cat.name}</ThemedText>
-                <ThemedText style={styles.categoryDesc}>{cat.desc}</ThemedText>
+                <Image source={{ uri: cat.image }} style={styles.mindCardImage} />
+                <View style={styles.mindCardOverlay} />
+                <ThemedText style={styles.mindCardText}>{cat.name}</ThemedText>
               </TouchableOpacity>
             ))}
-          </ScrollView>
+          </View>
+        </View>
 
-          {/* Popular Centers */}
-          <View style={styles.sectionHeader}>
-            <ThemedText style={styles.sectionTitle}>Popular Near You</ThemedText>
-            <TouchableOpacity onPress={() => router.push('/(tabs)/explore')}>
-              <ThemedText style={styles.seeAll} themeColor="textSecondary">Explore Map</ThemedText>
+        {/* Upgrade Plan Card (Gold Gradient) */}
+        <TouchableOpacity
+          style={styles.goldUpgradeBanner}
+          activeOpacity={0.9}
+          onPress={() => router.push('/membership')}
+        >
+          <ThemedText style={styles.goldBannerHeader}>
+            Unlimited workouts, zero limits! Upgrade now & level up your fitness!
+          </ThemedText>
+          <ThemedText style={styles.goldBannerPrice}>Starting at ₹1,001/month</ThemedText>
+
+          <View style={styles.goldComparisonBox}>
+            <View style={styles.goldLeftBox}>
+              <ThemedText style={styles.goldBoxLabel}>
+                <ThemedText style={{ color: '#EF4444', fontWeight: '900' }}>03 </ThemedText>
+                workout per week
+              </ThemedText>
+            </View>
+
+            <ThemedText style={{ fontSize: 16 }}>🔁</ThemedText>
+
+            <View style={styles.goldRightBox}>
+              <ThemedText style={styles.goldUnlimitedLabel}>Unlimited workout per week</ThemedText>
+            </View>
+          </View>
+
+          <View style={styles.goldCtaButton}>
+            <ThemedText style={styles.goldCtaText}>Upgrade to Membership</ThemedText>
+          </View>
+        </TouchableOpacity>
+
+        {/* "Workouts from around the world at your fingertips" Carousel */}
+        <View style={styles.sectionContainer}>
+          <View style={styles.sectionHeaderRow}>
+            <ThemedText style={styles.sectionHeaderTitle}>
+              Workouts from around the world at your fingertips
+            </ThemedText>
+            <TouchableOpacity onPress={() => router.push('/classes')}>
+              <ThemedText style={styles.seeAllText}>View all</ThemedText>
             </TouchableOpacity>
           </View>
 
-          <View style={styles.centersList}>
-            {POPULAR_CENTERS.map((center) => (
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.horizontalScrollGap}
+          >
+            {VIDEO_WORKOUTS.map((vid) => (
               <TouchableOpacity
-                key={center.id}
-                style={[styles.centerRow, { backgroundColor: colors.backgroundElement }]}
-                onPress={() => router.push('/(tabs)/explore')}
+                key={vid.id}
+                style={[styles.videoCard, { backgroundColor: colors.surface, borderColor: colors.border }]}
+                activeOpacity={0.9}
+                onPress={() => router.push('/classes')}
               >
-                <Image source={{ uri: center.image }} style={styles.centerImage} />
-                <View style={styles.centerInfo}>
-                  <View style={styles.centerCategoryRow}>
-                    <ThemedText style={styles.centerCategory}>{center.category}</ThemedText>
-                    <View style={styles.ratingRow}>
-                      <Star size={12} color="#FFB038" fill="#FFB038" />
-                      <ThemedText style={styles.ratingText}>{center.rating}</ThemedText>
-                    </View>
-                  </View>
-                  <ThemedText style={styles.centerName}>{center.name}</ThemedText>
-                  <ThemedText style={styles.centerDistance} themeColor="textSecondary">📍 {center.distance}</ThemedText>
+                <Image source={{ uri: vid.image }} style={styles.videoThumb} />
+                <View style={styles.videoDurationPill}>
+                  <ThemedText style={styles.videoDurationText}>⏱ {vid.duration}</ThemedText>
+                </View>
+                <View style={styles.videoInfo}>
+                  <ThemedText style={styles.videoTitle} numberOfLines={1}>
+                    {vid.title}
+                  </ThemedText>
+                  <ThemedText style={styles.videoLevel}>{vid.level}</ThemedText>
                 </View>
               </TouchableOpacity>
             ))}
+          </ScrollView>
+        </View>
+
+        {/* "Fitness Centres Near You" Section */}
+        <View style={styles.sectionContainer}>
+          <View style={styles.sectionHeaderRow}>
+            <ThemedText style={styles.sectionHeaderTitle}>Fitness Centres Near You</ThemedText>
+            <TouchableOpacity onPress={() => router.push('/explore')}>
+              <ThemedText style={styles.seeAllText}>View all</ThemedText>
+            </TouchableOpacity>
           </View>
-        </ScrollView>
-      </SafeAreaView>
-    </ThemedView>
+
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.horizontalScrollGap}
+          >
+            {NEARBY_CENTERS.map((gym) => (
+              <TouchableOpacity
+                key={gym.id}
+                style={[styles.gymNearbyCard, { backgroundColor: colors.surface, borderColor: colors.border }]}
+                activeOpacity={0.9}
+                onPress={() => router.push('/explore')}
+              >
+                <Image source={{ uri: gym.image }} style={styles.gymNearbyImage} />
+                <View style={styles.gymNearbyInfo}>
+                  <ThemedText style={styles.gymNearbyName}>{gym.name}</ThemedText>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4, marginTop: 2 }}>
+                    <Star size={12} color="#F59E0B" fill="#F59E0B" />
+                    <ThemedText style={styles.gymNearbyRating}>{gym.rating}</ThemedText>
+                    <ThemedText style={styles.gymNearbyLoc}>• {gym.location}</ThemedText>
+                  </View>
+                </View>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+        </View>
+
+        {/* "Recommended Products" Store Section */}
+        <View style={styles.sectionContainer}>
+          <ThemedText style={styles.sectionHeaderTitle}>Recommended product</ThemedText>
+
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.horizontalScrollGap}
+          >
+            {PRODUCTS_RECOMMENDED.map((p) => (
+              <View
+                key={p.id}
+                style={[styles.productCard, { backgroundColor: colors.surface, borderColor: colors.border }]}
+              >
+                <Image source={{ uri: p.image }} style={styles.productImage} />
+                <ThemedText style={styles.productName} numberOfLines={2}>{p.name}</ThemedText>
+                <View style={styles.productPriceRow}>
+                  <View>
+                    <ThemedText style={styles.productPrice}>{p.price}</ThemedText>
+                    <ThemedText style={styles.productOldPrice}>{p.oldPrice}</ThemedText>
+                  </View>
+                  <TouchableOpacity
+                    style={styles.addBtn}
+                    onPress={() => Alert.alert('Added to Bag', `${p.name} added to cart.`)}
+                  >
+                    <ThemedText style={styles.addBtnText}>Add</ThemedText>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            ))}
+          </ScrollView>
+        </View>
+
+        {/* "Stronger gut, Stronger you" Section */}
+        <View style={styles.sectionContainer}>
+          <ThemedText style={styles.sectionHeaderTitle}>Stronger gut, Stronger you</ThemedText>
+
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.horizontalScrollGap}
+          >
+            {PRODUCTS_NUTRITION.map((p) => (
+              <View
+                key={p.id}
+                style={[styles.productCard, { backgroundColor: colors.surface, borderColor: colors.border }]}
+              >
+                <Image source={{ uri: p.image }} style={styles.productImage} />
+                <ThemedText style={styles.productName} numberOfLines={2}>{p.name}</ThemedText>
+                <View style={styles.productPriceRow}>
+                  <View>
+                    <ThemedText style={styles.productPrice}>{p.price}</ThemedText>
+                    <ThemedText style={styles.productOldPrice}>{p.oldPrice}</ThemedText>
+                  </View>
+                  <TouchableOpacity
+                    style={styles.addBtn}
+                    onPress={() => Alert.alert('Added to Bag', `${p.name} added to cart.`)}
+                  >
+                    <ThemedText style={styles.addBtnText}>Add</ThemedText>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            ))}
+          </ScrollView>
+        </View>
+
+        {/* "Compact fitness finds" Section */}
+        <View style={styles.sectionContainer}>
+          <ThemedText style={styles.sectionHeaderTitle}>Compact fitness finds</ThemedText>
+
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.horizontalScrollGap}
+          >
+            {PRODUCTS_COMPACT.map((p) => (
+              <View
+                key={p.id}
+                style={[styles.productCard, { backgroundColor: colors.surface, borderColor: colors.border }]}
+              >
+                <Image source={{ uri: p.image }} style={styles.productImage} />
+                <ThemedText style={styles.productName} numberOfLines={2}>{p.name}</ThemedText>
+                <View style={styles.productPriceRow}>
+                  <View>
+                    <ThemedText style={styles.productPrice}>{p.price}</ThemedText>
+                    <ThemedText style={styles.productOldPrice}>{p.oldPrice}</ThemedText>
+                  </View>
+                  <TouchableOpacity
+                    style={styles.addBtn}
+                    onPress={() => Alert.alert('Added to Bag', `${p.name} added to cart.`)}
+                  >
+                    <ThemedText style={styles.addBtnText}>Add</ThemedText>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            ))}
+          </ScrollView>
+        </View>
+
+        {/* Health & Wellness Topics Pills Grid */}
+        <View style={styles.sectionContainer}>
+          <ThemedText style={styles.sectionHeaderTitle}>Health & Wellness Topics</ThemedText>
+          <View style={styles.healthTopicsGrid}>
+            {HEALTH_TOPICS.map((topic) => (
+              <TouchableOpacity
+                key={topic}
+                style={[styles.healthTopicPill, { backgroundColor: colors.surface, borderColor: colors.border }]}
+                onPress={() => router.push('/explore')}
+              >
+                <ThemedText style={styles.healthTopicText}>{topic}</ThemedText>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </View>
+
+        {/* Rate Your Workout Banner */}
+        <TouchableOpacity
+          style={[styles.rateWorkoutCard, { backgroundColor: colors.surface, borderColor: colors.border }]}
+          onPress={() => Alert.alert('Rate Workout', 'Thank you for your rating!')}
+        >
+          <ThemedText style={{ fontSize: 24 }}>🏋️</ThemedText>
+          <View style={{ flex: 1, marginLeft: 10 }}>
+            <ThemedText style={styles.rateWorkoutTitle}>Rate Your Workout</ThemedText>
+            <ThemedText style={styles.rateWorkoutSub}>Take a moment to share your experience</ThemedText>
+          </View>
+          <ChevronRight size={18} color="#94A3B8" />
+        </TouchableOpacity>
+      </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
-  safe: { flex: 1 },
-  scroll: { padding: 16 },
-  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 },
-  greeting: { fontSize: 13, fontWeight: '600' },
-  name: { fontSize: 20, fontWeight: '800', marginTop: 2 },
-  avatar: { width: 44, height: 44, borderRadius: 22, backgroundColor: 'rgba(108,99,255,0.15)', justifyContent: 'center', alignItems: 'center' },
-  avatarText: { fontWeight: '700', color: '#6C63FF', fontSize: 16 },
-  walletCard: { borderRadius: 16, padding: 16, marginBottom: 16 },
-  walletMeta: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 },
-  walletLabel: { color: 'rgba(255,255,255,0.7)', fontSize: 10, fontWeight: '700', letterSpacing: 1 },
-  walletValue: { color: '#ffffff', fontSize: 28, fontWeight: '800', marginTop: 4 },
-  rechargeBtn: { flexDirection: 'row', backgroundColor: '#ffffff', paddingVertical: 10, paddingHorizontal: 16, borderRadius: 12, alignItems: 'center', justifyContent: 'space-between' },
-  rechargeBtnText: { color: '#6C63FF', fontWeight: '700', fontSize: 13 },
-  membershipBanner: { flexDirection: 'row', padding: 12, borderRadius: 12, alignItems: 'center', gap: 10, marginBottom: 16 },
-  membershipText: { fontSize: 13, fontWeight: '500' },
-  aiCoachCard: {
+  container: {
+    flex: 1,
+  },
+  topHeaderBar: {
     flexDirection: 'row',
-    padding: 16,
-    borderRadius: 16,
-    backgroundColor: '#6C63FF',
     alignItems: 'center',
-    gap: 12,
-    marginBottom: 24,
-    shadowColor: '#6C63FF',
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.3,
-    shadowRadius: 10,
-    elevation: 6,
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingBottom: 8,
   },
-  aiCoachIconWrap: {
-    width: 40,
-    height: 40,
-    borderRadius: 10,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    justifyContent: 'center',
-    alignItems: 'center',
+  locationWrap: {
+    flex: 1,
   },
-  aiCoachTitle: {
-    color: '#ffffff',
+  locationTitle: {
     fontSize: 14,
     fontWeight: '800',
   },
-  aiCoachSub: {
-    color: 'rgba(255, 255, 255, 0.8)',
+  weatherSub: {
     fontSize: 10,
+    color: '#94A3B8',
     marginTop: 2,
-    fontWeight: '500',
   },
-  sectionHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, marginTop: 12 },
-  sectionTitle: { fontSize: 16, fontWeight: '800' },
-  seeAll: { fontSize: 12, fontWeight: '600' },
-  categoriesScroll: { gap: 12, paddingRight: 16, marginBottom: 20 },
-  categoryCard: { padding: 12, borderRadius: 12, width: 120, alignItems: 'center', justifyContent: 'center' },
-  categoryName: { fontWeight: '700', fontSize: 12, marginTop: 4 },
-  categoryDesc: { fontSize: 9, color: '#888', marginTop: 2 },
-  centersList: { gap: 12 },
-  centerRow: { flexDirection: 'row', borderRadius: 12, overflow: 'hidden' },
-  centerImage: { width: 80, height: 80 },
-  centerInfo: { flex: 1, padding: 10, justifyContent: 'space-between' },
-  centerCategoryRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  centerCategory: { fontSize: 9, fontWeight: '800', color: '#6C63FF', letterSpacing: 0.5 },
-  ratingRow: { flexDirection: 'row', gap: 4, alignItems: 'center' },
-  ratingText: { fontSize: 10, fontWeight: '700' },
-  centerName: { fontSize: 13, fontWeight: '700' },
-  centerDistance: { fontSize: 10 },
+  topRightWrap: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  coinsPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 16,
+    borderWidth: 1,
+  },
+  coinsText: {
+    fontSize: 12,
+    fontWeight: '800',
+  },
+  avatarButton: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    overflow: 'hidden',
+    borderWidth: 1.5,
+    borderColor: '#EF4444',
+  },
+  avatarImg: {
+    width: '100%',
+    height: '100%',
+  },
+  dualActionRow: {
+    flexDirection: 'row',
+    paddingHorizontal: 16,
+    gap: 12,
+    marginTop: 10,
+  },
+  actionCard: {
+    flex: 1,
+    borderRadius: 18,
+    padding: 12,
+    borderWidth: 1,
+    justifyContent: 'space-between',
+    minHeight: 140,
+  },
+  actionCardMiniLabel: {
+    fontSize: 10,
+    fontWeight: '800',
+    color: '#94A3B8',
+  },
+  actionCardTitle: {
+    fontSize: 12,
+    fontWeight: '800',
+    marginTop: 4,
+  },
+  actionCardSub: {
+    fontSize: 9,
+    color: '#94A3B8',
+    marginTop: 2,
+    lineHeight: 12,
+  },
+  logVoiceBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    backgroundColor: 'rgba(239, 68, 68, 0.1)',
+    alignSelf: 'flex-start',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 12,
+    marginTop: 6,
+  },
+  logVoiceText: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: '#EF4444',
+  },
+  exercisePlanThumbsRow: {
+    flexDirection: 'row',
+    gap: 4,
+  },
+  miniThumb: {
+    width: 28,
+    height: 28,
+    borderRadius: 6,
+  },
+  setupNowBtn: {
+    backgroundColor: '#3B82F6',
+    paddingVertical: 6,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 6,
+  },
+  setupNowText: {
+    color: '#FFF',
+    fontSize: 11,
+    fontWeight: '800',
+  },
+  ecosystemGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    paddingHorizontal: 16,
+    marginTop: 18,
+    gap: 12,
+    justifyContent: 'space-between',
+  },
+  ecosystemItem: {
+    width: (width - 32 - 36) / 4,
+    alignItems: 'center',
+  },
+  ecosystemIconCircle: {
+    width: 54,
+    height: 54,
+    borderRadius: 27,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    position: 'relative',
+  },
+  saleBadge: {
+    position: 'absolute',
+    top: -4,
+    right: -4,
+    backgroundColor: '#8B5CF6',
+    paddingHorizontal: 4,
+    paddingVertical: 1,
+    borderRadius: 4,
+  },
+  saleBadgeText: {
+    color: '#FFF',
+    fontSize: 7,
+    fontWeight: '900',
+  },
+  ecosystemLabel: {
+    fontSize: 10,
+    fontWeight: '700',
+    color: '#94A3B8',
+    marginTop: 4,
+    textAlign: 'center',
+  },
+  sectionContainer: {
+    marginTop: 24,
+    paddingHorizontal: 16,
+  },
+  sectionHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 12,
+  },
+  sectionHeaderTitle: {
+    fontSize: 15,
+    fontWeight: '900',
+    marginBottom: 10,
+  },
+  seeAllText: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: '#EF4444',
+  },
+  whatsOnMindGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
+  mindCard: {
+    width: (width - 32 - 32) / 5,
+    height: 70,
+    borderRadius: 12,
+    overflow: 'hidden',
+    position: 'relative',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    paddingBottom: 4,
+  },
+  mindCardImage: {
+    ...StyleSheet.absoluteFillObject,
+    width: '100%',
+    height: '100%',
+  },
+  mindCardOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0,0,0,0.3)',
+  },
+  mindCardText: {
+    fontSize: 8,
+    fontWeight: '900',
+    color: '#FFF',
+    textAlign: 'center',
+  },
+  goldUpgradeBanner: {
+    marginHorizontal: 16,
+    marginTop: 24,
+    borderRadius: 20,
+    backgroundColor: 'rgba(217, 119, 6, 0.12)',
+    borderWidth: 1,
+    borderColor: '#D97706',
+    padding: 16,
+    gap: 8,
+  },
+  goldBannerHeader: {
+    fontSize: 13,
+    fontWeight: '800',
+    color: '#D97706',
+  },
+  goldBannerPrice: {
+    fontSize: 11,
+    color: '#94A3B8',
+  },
+  goldComparisonBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: 'rgba(0,0,0,0.2)',
+    padding: 8,
+    borderRadius: 10,
+    marginTop: 4,
+  },
+  goldLeftBox: {
+    flex: 1,
+  },
+  goldRightBox: {
+    flex: 1,
+    alignItems: 'flex-end',
+  },
+  goldBoxLabel: {
+    fontSize: 10,
+    fontWeight: '700',
+  },
+  goldUnlimitedLabel: {
+    fontSize: 10,
+    fontWeight: '800',
+    color: '#10B981',
+  },
+  goldCtaButton: {
+    backgroundColor: '#D97706',
+    paddingVertical: 10,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 4,
+  },
+  goldCtaText: {
+    color: '#FFF',
+    fontSize: 12,
+    fontWeight: '800',
+  },
+  horizontalScrollGap: {
+    gap: 12,
+  },
+  videoCard: {
+    width: 170,
+    borderRadius: 14,
+    overflow: 'hidden',
+    borderWidth: 1,
+  },
+  videoThumb: {
+    width: '100%',
+    height: 100,
+  },
+  videoDurationPill: {
+    position: 'absolute',
+    top: 6,
+    left: 6,
+    backgroundColor: 'rgba(0,0,0,0.6)',
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 6,
+  },
+  videoDurationText: {
+    fontSize: 9,
+    fontWeight: '800',
+    color: '#FFF',
+  },
+  videoInfo: {
+    padding: 8,
+  },
+  videoTitle: {
+    fontSize: 11,
+    fontWeight: '800',
+  },
+  videoLevel: {
+    fontSize: 9,
+    color: '#EF4444',
+    fontWeight: '700',
+    marginTop: 2,
+  },
+  gymNearbyCard: {
+    width: 200,
+    borderRadius: 14,
+    overflow: 'hidden',
+    borderWidth: 1,
+  },
+  gymNearbyImage: {
+    width: '100%',
+    height: 110,
+  },
+  gymNearbyInfo: {
+    padding: 10,
+  },
+  gymNearbyName: {
+    fontSize: 12,
+    fontWeight: '800',
+  },
+  gymNearbyRating: {
+    fontSize: 10,
+    fontWeight: '800',
+  },
+  gymNearbyLoc: {
+    fontSize: 10,
+    color: '#94A3B8',
+  },
+  productCard: {
+    width: 140,
+    borderRadius: 14,
+    overflow: 'hidden',
+    borderWidth: 1,
+    padding: 8,
+    gap: 6,
+  },
+  productImage: {
+    width: '100%',
+    height: 90,
+    borderRadius: 8,
+  },
+  productName: {
+    fontSize: 10,
+    fontWeight: '700',
+    height: 28,
+  },
+  productPriceRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  productPrice: {
+    fontSize: 11,
+    fontWeight: '900',
+  },
+  productOldPrice: {
+    fontSize: 9,
+    color: '#94A3B8',
+    textDecorationLine: 'line-through',
+  },
+  addBtn: {
+    backgroundColor: 'rgba(239, 68, 68, 0.1)',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 8,
+  },
+  addBtnText: {
+    fontSize: 10,
+    fontWeight: '800',
+    color: '#EF4444',
+  },
+  healthTopicsGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
+  healthTopicPill: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 14,
+    borderWidth: 1,
+  },
+  healthTopicText: {
+    fontSize: 11,
+    fontWeight: '700',
+  },
+  rateWorkoutCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginHorizontal: 16,
+    marginTop: 24,
+    padding: 14,
+    borderRadius: 16,
+    borderWidth: 1,
+  },
+  rateWorkoutTitle: {
+    fontSize: 13,
+    fontWeight: '800',
+  },
+  rateWorkoutSub: {
+    fontSize: 10,
+    color: '#94A3B8',
+    marginTop: 2,
+  },
 });

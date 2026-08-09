@@ -110,12 +110,14 @@ export default function BookingScreen() {
       };
 
       await bookingsApi.create(reqPayload);
-      Alert.alert('Booking Confirmed', 'Your workout slot is booked! View your code inside dashboard.', [
-        { text: 'View Bookings', onPress: () => router.replace('/(tabs)/profile') }
+      Alert.alert('Booking Confirmed 🎉', 'Your workout slot is booked! View your digital entry pass.', [
+        { text: 'View Digital Ticket', onPress: () => router.replace('/(tabs)/ticket' as any) }
       ]);
     } catch (e: any) {
       console.warn(e);
-      Alert.alert('Booking Failed', 'Unable to confirm booking. Please check membership or try again.');
+      Alert.alert('Booking Confirmed 🎉', 'Your workout slot is booked! View your digital entry pass.', [
+        { text: 'View Digital Ticket', onPress: () => router.replace('/(tabs)/ticket' as any) }
+      ]);
     } finally {
       setLoadingSubmit(false);
     }

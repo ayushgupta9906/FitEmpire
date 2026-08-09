@@ -80,6 +80,17 @@ export const membershipsApi = {
     }),
 };
 
+// ── Bookings & Attendances ────────────────────────────────────
+
+export const bookingsApi = {
+  getAll: (page = 0, size = 20, status?: string) =>
+    api.get<ApiResponse<PagedResponse<any>>>('/v1/admin/bookings', {
+      params: { page, size, status },
+    }),
+  getAttendances: () =>
+    api.get<ApiResponse<any[]>>('/v1/bookings/attendances'),
+};
+
 // ── Payments ──────────────────────────────────────────────────
 
 export const paymentsApi = {

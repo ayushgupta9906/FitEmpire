@@ -82,11 +82,19 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/v1/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/v1/auth/oauth2/**").permitAll()
 
-                        // Public content endpoints (read-only gym/class discovery)
+                        // Public content endpoints (read-only gym/class/plan discovery)
                         .requestMatchers(HttpMethod.GET, "/v1/gyms/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/v1/classes/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/v1/trainers/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/v1/membership-plans/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/v1/memberships/plans/**", "/v1/memberships/plans").permitAll()
+
+                        // QR Pass Verification & Live Attendance
+                        .requestMatchers(HttpMethod.POST, "/v1/bookings/verify-qr").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/v1/bookings/attendances").permitAll()
+
+                        // FitEmpire Ecosystem (Activities, Foods, Store, Care, TV, Corporate)
+                        .requestMatchers("/v1/ecosystem/**").permitAll()
 
                         // Webhook (payment gateway callbacks)
                         .requestMatchers("/v1/payments/webhook/**").permitAll()

@@ -34,7 +34,7 @@ const AUDIENCE_NAMES: Record<string, string> = {
 const INITIAL_HISTORY: NotificationHistoryItem[] = [
   {
     id: 'ntf-101',
-    title: 'Unlock Unlimited Fitness with FitPass Platinum!',
+    title: 'Unlock Unlimited Fitness with FitEmpire Platinum!',
     body: 'Upgrade to Platinum Pass today and enjoy 20% discount on all premium gym partners!',
     audience: 'CUSTOMERS',
     type: 'PROMOTIONAL',
@@ -160,7 +160,7 @@ export function NotificationsPage() {
                     fullWidth
                     size="small"
                     label="Notification Title"
-                    placeholder="e.g. FitPass discount offer is back!"
+                    placeholder="e.g. FitEmpire discount offer is back!"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                   />

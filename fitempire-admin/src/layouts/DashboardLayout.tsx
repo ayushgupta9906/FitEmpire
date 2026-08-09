@@ -116,8 +116,8 @@ export function DashboardLayout() {
                 <Typography variant="h6" sx={{ fontWeight: 800, lineHeight: 1, color: '#F0F0FF' }}>
                   FitEmpire
                 </Typography>
-                <Typography variant="caption" sx={{ color: '#8B5CF6', fontWeight: 600 }}>
-                  Admin Portal
+                <Typography variant="caption" sx={{ color: '#8B5CF6', fontWeight: 700 }}>
+                  Admin Console
                 </Typography>
               </Box>
             </Box>

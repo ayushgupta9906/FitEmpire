@@ -134,4 +134,6 @@ dist/
 *.gz
 xapk_extracted/
 apk_extracted/
+.vite/
+**/.vite/
 

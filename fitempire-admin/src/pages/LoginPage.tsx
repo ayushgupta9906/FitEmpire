@@ -155,8 +155,8 @@ export function LoginPage() {
             >
               FitEmpire
             </Typography>
-            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              Admin Portal — Sign in to continue
+            <Typography variant="body2" sx={{ color: 'text.secondary', fontWeight: 600 }}>
+              Super Admin & FitEmpire Management Console
             </Typography>
           </Box>
 

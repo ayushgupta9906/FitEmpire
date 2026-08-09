@@ -77,13 +77,11 @@ export const authApi = {
     apiClient.post('/auth/login', { email, password }),
 
   requestOtp: (phone: string) => {
-    const cleanPhone = phone.replace(/\D/g, '').slice(-10);
-    return apiClient.post('/auth/otp/send', { phone: cleanPhone, purpose: 'LOGIN' });
+    return apiClient.post('/auth/otp/send', { phone: phone.trim(), purpose: 'LOGIN' });
   },
   
   verifyOtp: (phone: string, code: string) => {
-    const cleanPhone = phone.replace(/\D/g, '').slice(-10);
-    return apiClient.post('/auth/otp/verify', { phone: cleanPhone, otp: code, purpose: 'LOGIN' });
+    return apiClient.post('/auth/otp/verify', { phone: phone.trim(), otp: code.trim(), purpose: 'LOGIN' });
   },
   
   getProfile: () =>
@@ -178,3 +176,24 @@ export const aiApi = {
   generateNutrition: () =>
     apiClient.post('/ai/recommendations/nutrition'),
 };
+
+export const ecosystemApi = {
+  getActivities: () =>
+    apiClient.get('/ecosystem/activities'),
+
+  getFoods: () =>
+    apiClient.get('/ecosystem/foods'),
+
+  getStoreProducts: () =>
+    apiClient.get('/ecosystem/store/products'),
+
+  getDoctors: () =>
+    apiClient.get('/ecosystem/care/doctors'),
+
+  getVideoClasses: () =>
+    apiClient.get('/ecosystem/tv/videos'),
+
+  verifyCorporate: (email: string) =>
+    apiClient.post('/ecosystem/corporate/verify', { email }),
+};
+

@@ -32,15 +32,24 @@ public class SmsService {
 
     @Async
     public void sendOtp(String toPhone, String otp) {
-        String digits = toPhone.replaceAll("\\D", "");
-        if (digits.length() > 10) {
-            digits = digits.substring(digits.length() - 10);
+        String cleaned = toPhone != null ? toPhone.trim() : "";
+        String internationalPhone;
+        if (cleaned.startsWith("+")) {
+            internationalPhone = "+" + cleaned.replaceAll("\\D", "");
+        } else {
+            String digits = cleaned.replaceAll("\\D", "");
+            if (digits.length() == 10) {
+                internationalPhone = "+91" + digits;
+            } else if (digits.length() == 11 && digits.startsWith("1")) {
+                internationalPhone = "+" + digits;
+            } else {
+                internationalPhone = "+" + digits;
+            }
         }
-        String internationalPhone = "+91" + digits;
         String messageBody = "Your FitEmpire OTP is: " + otp + ". Valid for 10 minutes. Do NOT share this with anyone. -FitEmpire";
 
         if (accountSid == null || accountSid.isBlank()) {
-            log.warn("SMS not sent (Twilio not configured). OTP for {}: {}", maskPhone(digits), otp);
+            log.warn("SMS not sent (Twilio not configured). OTP for {}: {}", maskPhone(internationalPhone), otp);
             return;
         }
 
@@ -59,9 +68,9 @@ public class SmsService {
                         messageBody
                 ).create();
             }
-            log.info("OTP SMS sent to {} [Status: {}, SID: {}]", maskPhone(digits), message.getStatus(), message.getSid());
+            log.info("OTP SMS sent to {} [Status: {}, SID: {}]", maskPhone(internationalPhone), message.getStatus(), message.getSid());
         } catch (Exception e) {
-            log.error("Failed to send OTP SMS to {} (Twilio error: {})", maskPhone(digits), e.getMessage(), e);
+            log.error("Failed to send OTP SMS to {} (Twilio error: {})", maskPhone(internationalPhone), e.getMessage(), e);
         }
     }
 

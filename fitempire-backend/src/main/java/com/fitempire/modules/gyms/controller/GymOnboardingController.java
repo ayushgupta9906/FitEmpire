@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/gyms/onboarding")
+@RequestMapping("/v1/gyms/onboarding")
 @RequiredArgsConstructor
 public class GymOnboardingController {
 

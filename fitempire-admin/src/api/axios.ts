@@ -25,7 +25,7 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Response interceptor — handle 401, auto-refresh
+// Response interceptor — handle 401, auto-refresh smoothly without kicking user out
 api.interceptors.response.use(
   (response: AxiosResponse) => response,
   async (error: AxiosError) => {
@@ -37,7 +37,6 @@ api.interceptors.response.use(
       try {
         const refreshToken = localStorage.getItem('fitempire_refresh_token');
         if (!refreshToken) {
-          clearAuthAndRedirect();
           return Promise.reject(error);
         }
 
@@ -45,16 +44,18 @@ api.interceptors.response.use(
           headers: { 'X-Refresh-Token': refreshToken },
         });
 
-        const { accessToken, refreshToken: newRefreshToken } = response.data.data;
-        localStorage.setItem('fitempire_access_token', accessToken);
-        if (newRefreshToken) {
-          localStorage.setItem('fitempire_refresh_token', newRefreshToken);
-        }
+        if (response.data?.data?.accessToken) {
+          const { accessToken, refreshToken: newRefreshToken } = response.data.data;
+          localStorage.setItem('fitempire_access_token', accessToken);
+          if (newRefreshToken) {
+            localStorage.setItem('fitempire_refresh_token', newRefreshToken);
+          }
 
-        originalRequest.headers.Authorization = `Bearer ${accessToken}`;
-        return api(originalRequest);
+          originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+          return api(originalRequest);
+        }
       } catch (refreshError) {
-        clearAuthAndRedirect();
+        console.warn('Silent refresh failed:', refreshError);
         return Promise.reject(refreshError);
       }
     }
@@ -62,14 +63,5 @@ api.interceptors.response.use(
     return Promise.reject(error);
   }
 );
-
-function clearAuthAndRedirect() {
-  localStorage.removeItem('fitempire_access_token');
-  localStorage.removeItem('fitempire_refresh_token');
-  localStorage.removeItem('fitempire_user');
-  if (!window.location.pathname.includes('/login')) {
-    window.location.href = '/login';
-  }
-}
 
 export default api;

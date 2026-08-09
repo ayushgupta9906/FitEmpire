@@ -97,7 +97,7 @@ export const LoginPage: React.FC = () => {
             </div>
           </div>
           <h1 style={{ fontSize: '1.65rem', fontWeight: 800, color: '#FFFFFF', marginBottom: 6 }}>
-            FitEmpire Partner Portal
+            FitEmpire Partner App
           </h1>
           <p style={{ fontSize: '0.85rem', color: '#94A3B8' }}>
             Gym Desk Management & Pass Verification

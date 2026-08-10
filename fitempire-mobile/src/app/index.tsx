@@ -44,20 +44,30 @@ export default function WelcomeScreen() {
               </ThemedText>
             </View>
 
-            {/* Get Started Button for Members */}
+            {/* Get Started Options */}
             <View style={styles.buttonContainer}>
               <TouchableOpacity
                 style={styles.getStartedBtn}
                 onPress={() => router.push('/login')}
               >
                 <View style={styles.btnContent}>
-                  <ThemedText style={styles.btnText}>Get Started with FitEmpire</ThemedText>
-                  <ArrowRight color="#FFF" size={22} />
+                  <ThemedText style={styles.btnText}>Member App Login</ThemedText>
+                  <ArrowRight color="#FFF" size={20} />
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.partnerBtn}
+                onPress={() => router.push('/(partner-tabs)' as any)}
+              >
+                <View style={styles.btnContent}>
+                  <ThemedText style={styles.partnerBtnText}>Gym Partner App (Desk & Scanner)</ThemedText>
+                  <ArrowRight color="#38BDF8" size={18} />
                 </View>
               </TouchableOpacity>
               
               <ThemedText style={styles.memberTag}>
-                All-Access Gym Passes • AI Workout Coach • Instant Entry
+                All-Access Passes • QR Pass Scanner • AI Coach • Live Check-In
               </ThemedText>
             </View>
 
@@ -123,28 +133,47 @@ const styles = StyleSheet.create({
   },
   getStartedBtn: {
     backgroundColor: '#4F46E5',
-    paddingVertical: 18,
+    paddingVertical: 16,
     paddingHorizontal: 24,
-    borderRadius: 18,
+    borderRadius: 16,
     shadowColor: '#4F46E5',
     shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.4,
     shadowRadius: 16,
     elevation: 8,
+    marginBottom: 12,
+  },
+  partnerBtn: {
+    backgroundColor: 'rgba(15, 23, 42, 0.85)',
+    borderWidth: 1.5,
+    borderColor: 'rgba(56, 189, 248, 0.4)',
+    paddingVertical: 15,
+    paddingHorizontal: 24,
+    borderRadius: 16,
+    shadowColor: '#38BDF8',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 10,
+    elevation: 4,
   },
   btnContent: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 12,
+    gap: 10,
   },
   btnText: {
     color: '#FFF',
-    fontSize: 18,
+    fontSize: 17,
+    fontWeight: '800',
+  },
+  partnerBtnText: {
+    color: '#38BDF8',
+    fontSize: 16,
     fontWeight: '800',
   },
   memberTag: {
-    fontSize: 13,
+    fontSize: 12,
     color: 'rgba(255,255,255,0.5)',
     textAlign: 'center',
     marginTop: 16,

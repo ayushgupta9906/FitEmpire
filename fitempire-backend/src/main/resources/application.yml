@@ -21,7 +21,7 @@ spring:
   # ── JPA ──────────────────────────────────────────────────
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO:update}
     show-sql: false
     properties:
       hibernate:

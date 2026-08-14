@@ -18,11 +18,14 @@ public class StorageService {
 
     private final S3Client s3Client;
 
-    @Value("${app.aws.s3-bucket}")
+    @Value("${app.aws.s3-bucket:fitempire-media}")
     private String bucketName;
 
-    @Value("${app.aws.cdn-url}")
+    @Value("${app.aws.cdn-url:}")
     private String cdnUrl;
+
+    @Value("${app.aws.region:ap-south-1}")
+    private String region;
 
     public String uploadFile(String key, byte[] data, String contentType) {
         try {
@@ -34,7 +37,12 @@ public class StorageService {
 
             s3Client.putObject(request, RequestBody.fromBytes(data));
 
-            String url = cdnUrl + "/" + key;
+            String url;
+            if (cdnUrl != null && !cdnUrl.isBlank() && !cdnUrl.contains("cdn.fitempire.in")) {
+                url = cdnUrl.replaceAll("/+$", "") + "/" + key;
+            } else {
+                url = "https://" + bucketName + ".s3." + region + ".amazonaws.com/" + key;
+            }
             log.info("File uploaded to S3: {}", url);
             return url;
         } catch (Exception e) {

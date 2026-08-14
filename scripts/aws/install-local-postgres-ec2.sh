@@ -28,23 +28,28 @@ sudo -u postgres psql -tc "SELECT 1 FROM pg_database WHERE datname = '$DB_NAME'"
     sudo -u postgres psql -c "CREATE DATABASE $DB_NAME;"
 
 echo "Creating PostgreSQL User: $DB_USER..."
-sudo -u postgres psql -tc "SELECT 1 FROM pg_roles WHERE rolname = '$DB_USER'" | grep -q 1 || \
-    sudo -u postgres psql -c "CREATE USER $DB_USER WITH ENCRYPTED PASSWORD '$DB_PASS';"
+sudo -u postgres psql -c "DO \$\$ BEGIN IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = '$DB_USER') THEN CREATE USER $DB_USER WITH ENCRYPTED PASSWORD '$DB_PASS'; ELSE ALTER USER $DB_USER WITH ENCRYPTED PASSWORD '$DB_PASS'; END IF; END \$\$;"
 
+sudo -u postgres psql -c "ALTER DATABASE $DB_NAME OWNER TO $DB_USER;"
 sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE $DB_NAME TO $DB_USER;"
 sudo -u postgres psql -d $DB_NAME -c "GRANT ALL ON SCHEMA public TO $DB_USER;"
 sudo -u postgres psql -d $DB_NAME -c "ALTER SCHEMA public OWNER TO $DB_USER;"
 
-# 4. Update /opt/fitempire/.env to use Local PostgreSQL
+# 4. Configure Authentication in pg_hba.conf for localhost md5
+echo "Configuring pg_hba.conf for local password authentication..."
+sudo sed -i 's/scram-sha-256/md5/g' /etc/postgresql/*/main/pg_hba.conf 2>/dev/null || true
+sudo systemctl restart postgresql
+
+# 5. Update /opt/fitempire/.env to use Local PostgreSQL
 echo "Updating /opt/fitempire/.env to use Local PostgreSQL..."
 cat << 'EOF' > /opt/fitempire/.env
 # ---- Local EC2 PostgreSQL ----
-DB_HOST=localhost
+DB_HOST=127.0.0.1
 DB_PORT=5432
 DB_NAME=fitempire
 DB_USER=fitempire_admin
 DB_PASSWORD=FitEmpireSecure@2026
-SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/fitempire
+SPRING_DATASOURCE_URL=jdbc:postgresql://127.0.0.1:5432/fitempire
 SPRING_DATASOURCE_USERNAME=fitempire_admin
 SPRING_DATASOURCE_PASSWORD=FitEmpireSecure@2026
 
@@ -66,13 +71,14 @@ TWILIO_AUTH_TOKEN=499d08545b0cdbe581fab021db507cb7
 TWILIO_FROM_NUMBER=+16592745532
 EOF
 
-# 5. Restart Backend Service to auto-create tables & seed data
+# 6. Restart Backend Service
 echo "Restarting FitEmpire Backend on Local Database..."
+sudo systemctl daemon-reload
 sudo systemctl restart fitempire-backend
 
 echo "========================================================"
 echo "✓ Local PostgreSQL Installed & Connected Successfully!"
 echo "Database Name: $DB_NAME"
-echo "Database Host: localhost:5432"
-echo "Status Check:  sudo systemctl status fitempire-backend"
+echo "Database Host: 127.0.0.1:5432"
+echo "Live Logs:     sudo journalctl -u fitempire-backend -f"
 echo "========================================================"

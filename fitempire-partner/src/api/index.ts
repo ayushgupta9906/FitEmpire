@@ -1,6 +1,10 @@
 import axios from 'axios';
 
-export const API_BASE = (import.meta.env.VITE_API_URL || 'http://localhost:8080/api') + '/v1';
+let rawPartnerBase = (import.meta.env.VITE_API_URL || 'http://3.109.213.45/api').trim();
+if (rawPartnerBase.endsWith('/')) rawPartnerBase = rawPartnerBase.slice(0, -1);
+if (!rawPartnerBase.endsWith('/v1')) rawPartnerBase += '/v1';
+
+export const API_BASE = rawPartnerBase;
 
 export const apiClient = axios.create({
   baseURL: API_BASE,

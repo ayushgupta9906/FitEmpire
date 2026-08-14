@@ -32,7 +32,8 @@ EnvironmentFile=$APP_DIR/.env
 WantedBy=multi-user.target
 EOF
 
-# 2. Enable Auto-Start on System Boot
+# 2. Enable Auto-Start on System Boot & Clean Port 8080
+sudo fuser -k 8080/tcp 2>/dev/null || true
 sudo systemctl daemon-reload
 sudo systemctl enable postgresql
 sudo systemctl enable nginx

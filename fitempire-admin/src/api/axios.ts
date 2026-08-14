@@ -1,8 +1,12 @@
 import axios, { AxiosError } from 'axios';
 import type { AxiosInstance, AxiosResponse } from 'axios';
 
-// Use env var VITE_API_BASE_URL in production; fall back to local backend
-const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api';
+// Normalize base URL so trailing /v1 or / does not produce /v1/v1 duplicates
+let rawBase = (import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_URL || 'http://3.109.213.45/api').trim();
+if (rawBase.endsWith('/')) rawBase = rawBase.slice(0, -1);
+if (rawBase.endsWith('/v1')) rawBase = rawBase.slice(0, -3);
+
+const BASE_URL = rawBase;
 
 const api: AxiosInstance = axios.create({
   baseURL: BASE_URL,

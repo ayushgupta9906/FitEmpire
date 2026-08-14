@@ -78,9 +78,11 @@ public class SecurityConfig {
                         // CORS preflight requests must pass through without auth/redirect
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
-                        // Public auth endpoints
+                        // Public auth & registration endpoints
                         .requestMatchers(HttpMethod.POST, "/v1/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/v1/auth/oauth2/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/v1/admin/partners/register", "/v1/partners/register").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/v1/media/upload").permitAll()
 
                         // Public content endpoints (read-only gym/class/plan discovery)
                         .requestMatchers(HttpMethod.GET, "/v1/gyms/**").permitAll()

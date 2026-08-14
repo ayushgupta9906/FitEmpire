@@ -1,6 +1,17 @@
 import axios from 'axios';
 
-let rawPartnerBase = (import.meta.env.VITE_API_URL || 'http://3.109.213.45/api').trim();
+let rawPartnerBase = (import.meta.env.VITE_API_URL || '').trim();
+
+if (!rawPartnerBase) {
+  if (typeof window !== 'undefined' && window.location.protocol === 'https:') {
+    rawPartnerBase = '/api';
+  } else {
+    rawPartnerBase = 'http://localhost:8080/api';
+  }
+} else if (typeof window !== 'undefined' && window.location.protocol === 'https:' && rawPartnerBase.startsWith('http://')) {
+  rawPartnerBase = '/api';
+}
+
 if (rawPartnerBase.endsWith('/')) rawPartnerBase = rawPartnerBase.slice(0, -1);
 if (!rawPartnerBase.endsWith('/v1')) rawPartnerBase += '/v1';
 

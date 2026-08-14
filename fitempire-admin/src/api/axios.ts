@@ -1,8 +1,20 @@
 import axios, { AxiosError } from 'axios';
 import type { AxiosInstance, AxiosResponse } from 'axios';
 
-// Normalize base URL so trailing /v1 or / does not produce /v1/v1 duplicates
-let rawBase = (import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_URL || 'http://3.109.213.45/api').trim();
+// Support relative /api when hosted on HTTPS (Netlify) to prevent Mixed Content errors
+let rawBase = (import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_URL || '').trim();
+
+if (!rawBase) {
+  if (typeof window !== 'undefined' && window.location.protocol === 'https:') {
+    rawBase = '/api';
+  } else {
+    rawBase = 'http://localhost:8080/api';
+  }
+} else if (typeof window !== 'undefined' && window.location.protocol === 'https:' && rawBase.startsWith('http://')) {
+  // If browser is on HTTPS and configured URL is plain HTTP, use /api proxy to avoid Mixed Content block
+  rawBase = '/api';
+}
+
 if (rawBase.endsWith('/')) rawBase = rawBase.slice(0, -1);
 if (rawBase.endsWith('/v1')) rawBase = rawBase.slice(0, -3);
 

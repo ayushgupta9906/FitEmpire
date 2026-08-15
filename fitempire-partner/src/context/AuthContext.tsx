@@ -45,19 +45,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsLoading(true);
     try {
       const res = await partnerApi.login(email.trim(), password);
+      // Backend returns flat: { accessToken, userId, email, firstName, lastName, role, user:{...} }
       const data = res.data?.data;
       const token = data?.accessToken;
       if (!token) {
-        throw new Error('Authentication failed. No token received.');
+        throw new Error('Authentication failed. No token received from server.');
       }
-      
+
+      // Role is at top-level of data, not nested under user
+      const role: string = data?.role || data?.user?.role || '';
+      if (!['GYM_PARTNER', 'GYM_OWNER', 'SUPER_ADMIN', 'ADMIN'].includes(role)) {
+        throw new Error('Access denied. Only Gym Partners can log into this portal.');
+      }
+
       const userData: PartnerUser = {
-        id: data?.userId,
-        userId: data?.userId,
+        id: data?.userId || data?.user?.id,
+        userId: data?.userId || data?.user?.id,
         email: data?.email || email,
-        firstName: data?.firstName || 'Gym Partner',
-        role: data?.role || 'GYM_PARTNER',
-        gymName: data?.gymName || 'FitEmpire Partner Gym',
+        firstName: data?.firstName || data?.user?.firstName || 'Gym Partner',
+        lastName: data?.lastName || data?.user?.lastName || '',
+        role: role,
+        gymName: data?.gymName || data?.user?.gymName || 'My Gym',
       };
 
       localStorage.setItem('fitempire_partner_token', token);
@@ -65,9 +73,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       setUser(userData);
       setIsAuthenticated(true);
-    } finally {
+    } catch (err) {
       setIsLoading(false);
+      throw err; // re-throw so LoginPage.catch() fires
     }
+    setIsLoading(false);
   };
 
   const logout = () => {

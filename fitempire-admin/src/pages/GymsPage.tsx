@@ -163,7 +163,10 @@ export function GymsPage() {
                         <TableRow key={g.id} hover>
                           <TableCell>
                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                              <Avatar sx={{ bgcolor: 'primary.main', fontWeight: 700 }}>
+                              <Avatar
+                                src={g.logoUrl || g.coverImageUrl}
+                                sx={{ bgcolor: 'primary.main', fontWeight: 700, width: 42, height: 42 }}
+                              >
                                 <FitnessCenter />
                               </Avatar>
                               <Box>

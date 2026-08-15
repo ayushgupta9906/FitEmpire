@@ -183,10 +183,10 @@ export default function GymDetailScreen() {
 
       {/* Floating Bottom Booking Action Bar */}
       <View style={[styles.bottomBar, { backgroundColor: colors.background, borderColor: colors.border }]}>
-        <div>
+        <View>
           <ThemedText style={{ fontSize: 11, color: '#94A3B8', fontWeight: '700' }}>ENTRY PASS</ThemedText>
           <ThemedText style={{ fontSize: 16, fontWeight: '900', color: '#10B981' }}>Included in FitEmpire Pro</ThemedText>
-        </div>
+        </View>
 
         <TouchableOpacity
           style={styles.bookButton}

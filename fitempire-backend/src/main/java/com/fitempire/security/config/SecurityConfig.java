@@ -82,7 +82,9 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/v1/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/v1/auth/oauth2/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/v1/admin/partners/register", "/v1/partners/register").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/v1/media/upload").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/v1/admin/users/reset-password-by-email").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/v1/media/upload", "/v1/upload/**").permitAll()
+                        .requestMatchers("/uploads/**").permitAll()
 
                         // Public content endpoints (read-only gym/class/plan discovery)
                         .requestMatchers(HttpMethod.GET, "/v1/gyms/**").permitAll()

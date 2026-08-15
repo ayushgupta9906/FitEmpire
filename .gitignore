@@ -136,4 +136,6 @@ xapk_extracted/
 apk_extracted/
 .vite/
 **/.vite/
+uploads/
+**/uploads/
 

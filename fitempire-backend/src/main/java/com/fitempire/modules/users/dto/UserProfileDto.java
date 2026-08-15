@@ -1,13 +1,17 @@
 package com.fitempire.modules.users.dto;
 
 import com.fitempire.modules.users.entity.FitnessGoal;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserProfileDto {
     private String bio;
     private FitnessGoal fitnessGoal;

@@ -1,7 +1,9 @@
 package com.fitempire.modules.classes.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -9,6 +11,8 @@ import java.util.UUID;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ClassScheduleDto {
     private UUID id;
     private UUID fitnessClassId;

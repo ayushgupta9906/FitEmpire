@@ -17,6 +17,9 @@ import com.fitempire.modules.payments.repository.PaymentRepository;
 import com.fitempire.modules.payments.entity.Payment;
 import com.fitempire.modules.bookings.repository.BookingRepository;
 import com.fitempire.modules.bookings.entity.Booking;
+import com.fitempire.modules.memberships.entity.MembershipPlan;
+import com.fitempire.modules.memberships.entity.MembershipType;
+import com.fitempire.modules.memberships.repository.MembershipPlanRepository;
 import com.fitempire.modules.memberships.repository.UserMembershipRepository;
 import com.fitempire.modules.users.entity.UserProfile;
 import com.fitempire.modules.users.repository.UserRepository;
@@ -37,6 +40,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -55,6 +59,7 @@ public class AdminService {
     private final BookingRepository bookingRepository;
     private final PaymentRepository paymentRepository;
     private final UserMembershipRepository userMembershipRepository;
+    private final MembershipPlanRepository membershipPlanRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Transactional(readOnly = true)
@@ -397,6 +402,14 @@ public class AdminService {
         gym.setDescription(dto.getDescription());
         gym.setStatus(GymStatus.ACTIVE);
         gym.setFeatured(true);
+        // Media
+        gym.setLogoUrl(dto.getLogoUrl());
+        gym.setCoverImageUrl(dto.getCoverImageUrl());
+        // Gym contact info
+        if (dto.getGymEmail() != null) gym.setEmail(dto.getGymEmail());
+        if (dto.getGymPhone() != null) gym.setPhone(dto.getGymPhone());
+        if (dto.getWebsiteUrl() != null) gym.setWebsiteUrl(dto.getWebsiteUrl());
+        if (dto.getGstNumber() != null) gym.setGstNumber(dto.getGstNumber());
         Gym savedGym = gymRepository.save(gym);
 
         // 4. Create primary GymBranch
@@ -404,13 +417,78 @@ public class AdminService {
         branch.setGym(savedGym);
         branch.setName(dto.getGymName().trim() + " - Main Branch");
         branch.setAddressLine1(dto.getAddressLine1());
+        if (dto.getAddressLine2() != null) branch.setAddressLine2(dto.getAddressLine2());
         branch.setCity(dto.getCity());
         branch.setState(dto.getState());
         branch.setPincode(dto.getPincode());
         branch.setPrimary(true);
         branch.setActive(true);
         branch.setCapacity(100);
-        gymBranchRepository.save(branch);
+        // Location coordinates
+        if (dto.getLatitude() != null) branch.setLatitude(dto.getLatitude());
+        if (dto.getLongitude() != null) branch.setLongitude(dto.getLongitude());
+        // Operating hours
+        if (dto.getOpeningTime() != null && !dto.getOpeningTime().isBlank()) {
+            try { branch.setOpeningTime(LocalTime.parse(dto.getOpeningTime())); } catch (Exception ignored) {}
+        }
+        if (dto.getClosingTime() != null && !dto.getClosingTime().isBlank()) {
+            try { branch.setClosingTime(LocalTime.parse(dto.getClosingTime())); } catch (Exception ignored) {}
+        }
+        // Working days & amenities
+        if (dto.getWorkingDays() != null && !dto.getWorkingDays().isEmpty()) {
+            branch.setWorkingDays(dto.getWorkingDays().toArray(new String[0]));
+        }
+        if (dto.getAmenities() != null && !dto.getAmenities().isEmpty()) {
+            branch.setAmenities(dto.getAmenities().toArray(new String[0]));
+        }
+        // Custom Monthly Pricing & Per-Session Payout
+        if (dto.getGymMonthlyPrice() != null) {
+            branch.setMonthlyMembershipPrice(dto.getGymMonthlyPrice());
+            BigDecimal perSession = dto.getPerSessionRate() != null 
+                    ? dto.getPerSessionRate()
+                    : dto.getGymMonthlyPrice().divide(BigDecimal.valueOf(30), 2, RoundingMode.HALF_UP);
+            branch.setPerSessionRate(perSession);
+        }
+        // Branch contact
+        if (dto.getGymPhone() != null) branch.setPhone(dto.getGymPhone());
+        if (dto.getGymEmail() != null) branch.setEmail(dto.getGymEmail());
+        GymBranch savedBranch = gymBranchRepository.save(branch);
+
+        // 5. Create initial membership plans if provided
+        if (dto.getInitialPlans() != null && !dto.getInitialPlans().isEmpty()) {
+            int sortOrder = 0;
+            for (RegisterPartnerDto.InitialPlanDto planDto : dto.getInitialPlans()) {
+                if (planDto.getName() == null || planDto.getPrice() == null) continue;
+                MembershipPlan plan = new MembershipPlan();
+                plan.setGym(savedGym);
+                plan.setBranch(savedBranch);
+                plan.setName(planDto.getName());
+                plan.setDescription(planDto.getDescription());
+                BigDecimal price = BigDecimal.valueOf(planDto.getPrice());
+                plan.setPrice(price);
+                plan.setGstAmount(BigDecimal.ZERO);
+                plan.setTotalPrice(price);
+                plan.setDurationDays(planDto.getDurationDays());
+                plan.setActive(true);
+                plan.setSortOrder(sortOrder++);
+                // Map plan type
+                try {
+                    if (planDto.getPlanType() != null) {
+                        plan.setType(MembershipType.valueOf(planDto.getPlanType()));
+                    } else if (planDto.getDurationDays() != null) {
+                        if (planDto.getDurationDays() <= 1) plan.setType(MembershipType.DAY_PASS);
+                        else if (planDto.getDurationDays() <= 31) plan.setType(MembershipType.MONTHLY);
+                        else if (planDto.getDurationDays() <= 92) plan.setType(MembershipType.QUARTERLY);
+                        else plan.setType(MembershipType.ANNUAL);
+                    } else {
+                        plan.setType(MembershipType.MONTHLY);
+                    }
+                } catch (Exception e) {
+                    plan.setType(MembershipType.MONTHLY);
+                }
+                membershipPlanRepository.save(plan);
+            }
+        }
 
         log.info("Registered new Gym Partner: {} [{}] with Gym: {} [{}]",
                 savedPartner.getEmail(), savedPartner.getId(), savedGym.getName(), savedGym.getId());
@@ -430,4 +508,27 @@ public class AdminService {
                 .city(dto.getCity())
                 .build();
     }
+
+    @Transactional
+    public void resetUserPassword(UUID userId, String newPassword) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new com.fitempire.common.exception.ResourceNotFoundException("User not found with id: " + userId));
+        user.setPasswordHash(passwordEncoder.encode(newPassword));
+        user.setFailedLoginCount(0);
+        user.setLocked(false);
+        userRepository.save(user);
+        log.info("Admin reset password for user: {} [{}]", user.getEmail(), user.getId());
+    }
+
+    @Transactional
+    public void resetUserPasswordByEmail(String email, String newPassword) {
+        User user = userRepository.findByEmailAndDeletedFalse(email.toLowerCase().trim())
+                .orElseThrow(() -> new com.fitempire.common.exception.ResourceNotFoundException("User not found with email: " + email));
+        user.setPasswordHash(passwordEncoder.encode(newPassword));
+        user.setFailedLoginCount(0);
+        user.setLocked(false);
+        userRepository.save(user);
+        log.info("Admin reset password for user by email: {} [{}]", user.getEmail(), user.getId());
+    }
 }
+

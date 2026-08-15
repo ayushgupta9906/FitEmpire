@@ -69,6 +69,13 @@ export const gymsApi = {
     api.post(`/v1/gyms/${id}/reject`, null, { params: { reason } }),
   registerPartner: (data: any) =>
     api.post<ApiResponse<any>>('/v1/admin/partners/register', data),
+  uploadGymPhoto: (file: File) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    return api.post<ApiResponse<{ url: string; filename: string }>>('/v1/upload/gym-photo', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+  },
 };
 
 // ── Memberships ───────────────────────────────────────────────

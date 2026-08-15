@@ -78,4 +78,18 @@ export const partnerApi = {
 
   getSettlements: () =>
     apiClient.get('/admin/settlements'),
+
+  getMyPlans: () =>
+    apiClient.get('/memberships/plans/my-gym'),
+
+  uploadPhoto: (file: File) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    return apiClient.post('/upload/gym-photo', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+  },
+
+  resetPasswordByEmail: (email: string, newPassword = 'Password@123') =>
+    apiClient.post('/admin/users/reset-password-by-email', { email, newPassword }),
 };

@@ -212,12 +212,38 @@ public class AdminController {
     // ── Partner Registration ─────────────────────────────────────────────────
 
     @PostMapping("/partners/register")
+    @PreAuthorize("permitAll()")
     @Operation(summary = "Register a new Gym Partner and initialize their Gym")
     public ResponseEntity<ApiResponse<PartnerRegistrationResultDto>> registerPartner(
             @Valid @RequestBody RegisterPartnerDto dto) {
         PartnerRegistrationResultDto result = adminService.registerPartner(dto);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.success("Gym Partner and Gym account registered successfully.", result));
+    }
+
+    // ── Reset User / Partner Password ────────────────────────────────────────
+    @PostMapping("/users/{userId}/reset-password")
+    @Operation(summary = "Admin reset password for a platform user/partner")
+    public ResponseEntity<ApiResponse<Void>> resetUserPassword(
+            @PathVariable UUID userId,
+            @RequestBody java.util.Map<String, String> body) {
+        String newPassword = body.getOrDefault("newPassword", "Password@123");
+        adminService.resetUserPassword(userId, newPassword);
+        return ResponseEntity.ok(ApiResponse.success("Password reset successfully."));
+    }
+
+    @PostMapping("/users/reset-password-by-email")
+    @PreAuthorize("permitAll()")
+    @Operation(summary = "Reset password by email for quick recovery")
+    public ResponseEntity<ApiResponse<Void>> resetUserPasswordByEmail(
+            @RequestBody java.util.Map<String, String> body) {
+        String email = body.get("email");
+        String newPassword = body.getOrDefault("newPassword", "Password@123");
+        if (email == null || email.isBlank()) {
+            return ResponseEntity.badRequest().body(ApiResponse.error("Email is required", "INVALID_INPUT"));
+        }
+        adminService.resetUserPasswordByEmail(email, newPassword);
+        return ResponseEntity.ok(ApiResponse.success("Password reset to " + newPassword + " for " + email));
     }
 
     // Static helper class for request mapping
@@ -227,3 +253,4 @@ public class AdminController {
         private String reason;
     }
 }
+

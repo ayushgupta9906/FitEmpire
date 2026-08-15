@@ -1,24 +1,47 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Dumbbell, ShieldCheck, Mail, Lock, ArrowRight, Sparkles, CheckCircle2, AlertCircle } from 'lucide-react';
+import { partnerApi } from '../api';
+import { Dumbbell, ShieldCheck, Mail, Lock, ArrowRight, Sparkles, CheckCircle2, AlertCircle, Eye, EyeOff, RotateCcw } from 'lucide-react';
 
 export const LoginPage: React.FC = () => {
   const navigate = useNavigate();
   const { login, isLoading } = useAuth();
 
-  const [email, setEmail] = useState('partner@fitempire.in');
-  const [password, setPassword] = useState('Partner@123');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [resetSuccess, setResetSuccess] = useState<string | null>(null);
+  const [resetting, setResetting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    setResetSuccess(null);
     try {
       await login(email.trim(), password);
       navigate('/dashboard');
     } catch (err: any) {
       setError(err.response?.data?.message || 'Invalid partner credentials. Please check your email and password.');
+    }
+  };
+
+  const handleResetPassword = async () => {
+    if (!email || !email.includes('@')) {
+      setError('Please enter your partner email address above first.');
+      return;
+    }
+    setResetting(true);
+    setError(null);
+    try {
+      await partnerApi.resetPasswordByEmail(email.trim(), 'Password@123');
+      setPassword('Password@123');
+      setResetSuccess('Password reset to Password@123! You can now click Sign In.');
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'Failed to reset password. Verify email address.');
+    } finally {
+      setResetting(false);
     }
   };
 
@@ -78,7 +101,7 @@ export const LoginPage: React.FC = () => {
         </button>
 
         {/* Logo and Header */}
-        <div style={{ textAlign: 'center', marginBottom: 28 }}>
+        <div style={{ textAlign: 'center', marginBottom: 24 }}>
           <div
             style={{
               width: 58,
@@ -89,17 +112,17 @@ export const LoginPage: React.FC = () => {
               alignItems: 'center',
               justifyContent: 'center',
               boxShadow: '0 8px 24px rgba(79, 70, 229, 0.35)',
-              marginBottom: 14,
+              marginBottom: 12,
             }}
           >
             <div style={{ display: 'inline-flex', transform: 'scaleX(-1)' }}>
               <Dumbbell color="#4F46E5" size={28} />
             </div>
           </div>
-          <h1 style={{ fontSize: '1.65rem', fontWeight: 800, color: '#FFFFFF', marginBottom: 6 }}>
+          <h1 style={{ fontSize: '1.6rem', fontWeight: 800, color: '#FFFFFF', marginBottom: 4 }}>
             FitEmpire Partner App
           </h1>
-          <p style={{ fontSize: '0.85rem', color: '#94A3B8' }}>
+          <p style={{ fontSize: '0.82rem', color: '#94A3B8' }}>
             Gym Desk Management & Pass Verification
           </p>
         </div>
@@ -108,26 +131,73 @@ export const LoginPage: React.FC = () => {
           <div
             style={{
               display: 'flex',
-              alignItems: 'center',
-              gap: 10,
+              flexDirection: 'column',
+              gap: 8,
               padding: '12px 14px',
               borderRadius: 12,
               backgroundColor: 'rgba(239, 68, 68, 0.12)',
               border: '1px solid rgba(239, 68, 68, 0.3)',
               color: '#EF4444',
-              fontSize: '0.85rem',
+              fontSize: '0.82rem',
               fontWeight: 600,
-              marginBottom: 20,
+              marginBottom: 16,
             }}
           >
-            <AlertCircle size={18} />
-            <span>{error}</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <AlertCircle size={16} />
+              <span>{error}</span>
+            </div>
+            {email && (
+              <button
+                type="button"
+                onClick={handleResetPassword}
+                disabled={resetting}
+                style={{
+                  background: 'rgba(239, 68, 68, 0.2)',
+                  border: '1px solid rgba(239, 68, 68, 0.4)',
+                  borderRadius: 8,
+                  padding: '6px 10px',
+                  color: '#FFF',
+                  fontSize: '0.75rem',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: 6,
+                }}
+              >
+                <RotateCcw size={12} />
+                <span>{resetting ? 'Resetting...' : 'Click to Reset Password to "Password@123"'}</span>
+              </button>
+            )}
           </div>
         )}
 
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+        {resetSuccess && (
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 8,
+              padding: '12px 14px',
+              borderRadius: 12,
+              backgroundColor: 'rgba(16, 185, 129, 0.15)',
+              border: '1px solid rgba(16, 185, 129, 0.4)',
+              color: '#10B981',
+              fontSize: '0.82rem',
+              fontWeight: 700,
+              marginBottom: 16,
+            }}
+          >
+            <CheckCircle2 size={16} />
+            <span>{resetSuccess}</span>
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
           <div>
-            <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: '#94A3B8', marginBottom: 6 }}>
+            <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#94A3B8', marginBottom: 6 }}>
               Partner Email
             </label>
             <div
@@ -152,9 +222,9 @@ export const LoginPage: React.FC = () => {
                   background: 'transparent',
                   border: 'none',
                   outline: 'none',
-                  padding: '14px 10px',
+                  padding: '12px 10px',
                   color: '#FFFFFF',
-                  fontSize: '0.9rem',
+                  fontSize: '0.88rem',
                   fontWeight: 600,
                 }}
               />
@@ -162,9 +232,25 @@ export const LoginPage: React.FC = () => {
           </div>
 
           <div>
-            <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: '#94A3B8', marginBottom: 6 }}>
-              Password
-            </label>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+              <label style={{ fontSize: '0.78rem', fontWeight: 700, color: '#94A3B8' }}>
+                Password
+              </label>
+              <button
+                type="button"
+                onClick={handleResetPassword}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: '#38BDF8',
+                  fontSize: '0.72rem',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                }}
+              >
+                Reset Password?
+              </button>
+            </div>
             <div
               style={{
                 display: 'flex',
@@ -177,22 +263,29 @@ export const LoginPage: React.FC = () => {
             >
               <Lock color="#64748B" size={18} />
               <input
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
                 required
                 style={{
-                  width: '100%',
+                  flex: 1,
                   background: 'transparent',
                   border: 'none',
                   outline: 'none',
-                  padding: '14px 10px',
+                  padding: '12px 10px',
                   color: '#FFFFFF',
-                  fontSize: '0.9rem',
+                  fontSize: '0.88rem',
                   fontWeight: 600,
                 }}
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(p => !p)}
+                style={{ background: 'transparent', border: 'none', color: '#64748B', cursor: 'pointer', display: 'flex', padding: 4 }}
+              >
+                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+              </button>
             </div>
           </div>
 
@@ -200,13 +293,13 @@ export const LoginPage: React.FC = () => {
             type="submit"
             disabled={isLoading}
             style={{
-              marginTop: 10,
+              marginTop: 6,
               backgroundColor: '#4F46E5',
               color: '#FFFFFF',
               border: 'none',
               borderRadius: 14,
-              padding: '14px',
-              fontSize: '0.95rem',
+              padding: '13px',
+              fontSize: '0.92rem',
               fontWeight: 800,
               cursor: isLoading ? 'not-allowed' : 'pointer',
               display: 'flex',
@@ -223,7 +316,7 @@ export const LoginPage: React.FC = () => {
         </form>
 
         {/* Demo Fast Fill */}
-        <div style={{ marginTop: 24, textAlign: 'center' }}>
+        <div style={{ marginTop: 18, textAlign: 'center' }}>
           <button
             type="button"
             onClick={handleFillDemo}
@@ -231,9 +324,9 @@ export const LoginPage: React.FC = () => {
               background: 'rgba(255, 255, 255, 0.05)',
               border: '1px dashed rgba(255, 255, 255, 0.15)',
               borderRadius: 12,
-              padding: '8px 16px',
+              padding: '7px 14px',
               color: '#A5B4FC',
-              fontSize: '0.78rem',
+              fontSize: '0.75rem',
               fontWeight: 700,
               cursor: 'pointer',
             }}
@@ -245,3 +338,4 @@ export const LoginPage: React.FC = () => {
     </div>
   );
 };
+

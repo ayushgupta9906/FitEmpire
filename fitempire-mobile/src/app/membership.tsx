@@ -177,72 +177,195 @@ export default function MembershipScreen() {
           </View>
         </View>
 
-        {/* Section: Upgrade Plan */}
+        {/* Section: Choose Your Pass (FitEmpire vs Fitpass Advantages) */}
         <View style={styles.sectionBlock}>
-          <ThemedText style={styles.sectionHeaderLabel}>UPGRADE PLAN</ThemedText>
+          <ThemedText style={styles.sectionHeaderLabel}>CHOOSE YOUR MEMBERSHIP PASS</ThemedText>
 
-          <ThemedText style={styles.goldUpgradeLabel}>UPGRADE TO UNLIMITED ✨</ThemedText>
+          <ThemedText style={styles.goldUpgradeLabel}>ZERO LIMITS • UNLIMITED ACCESS ✨</ThemedText>
           <ThemedText style={styles.upgradeSubtitle}>
-            Unlimited workouts, zero limits! Upgrade now & level up your fitness!
+            Enjoy free membership freeze, buddy passes, and roll-over workouts across 12,000+ centers.
           </ThemedText>
 
-          {/* Comparative Matrix Card */}
-          <View style={[styles.upgradeMatrixCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-            <View style={styles.upgradeComparisonHeader}>
-              <ThemedText style={styles.upgradeComparisonTitle}>
-                Unlimited workouts, zero limits! Upgrade now & level up your fitness!
-              </ThemedText>
-              <ThemedText style={styles.pricingTag}>Starting at ₹1,001/m</ThemedText>
-            </View>
-
-            {/* Comparison Visual Diagram */}
-            <View style={styles.comparisonVisualRow}>
-              {/* Left Box: 3 workouts */}
-              <View style={styles.comparisonBox}>
-                <View style={styles.activityPillsMiniRow}>
-                  <View style={[styles.miniPill, { backgroundColor: '#10B981' }]}>
-                    <ThemedText style={styles.miniPillText}>YOGA</ThemedText>
-                  </View>
-                  <View style={[styles.miniPill, { backgroundColor: '#F59E0B' }]}>
-                    <ThemedText style={styles.miniPillText}>CARDIO</ThemedText>
-                  </View>
-                  <View style={[styles.miniPill, { backgroundColor: '#3B82F6' }]}>
-                    <ThemedText style={styles.miniPillText}>DANCE</ThemedText>
+          {/* Interactive Plan Cards */}
+          <View style={{ gap: 12, marginTop: 12 }}>
+            {[
+              {
+                id: 'fit360',
+                name: 'FitEmpire 360 (Annual All-in-One)',
+                badge: 'FLAGSHIP 360° 👑',
+                badgeBg: '#8B5CF6',
+                duration: '365 Days All-Access',
+                price: '₹7,999',
+                perMonth: '₹666 / mo',
+                vsFitpass: 'BEATS FITPASS 360: Dual sessions + 60D free freeze + 5 Buddy passes',
+                benefits: [
+                  'Full 360° Access to 12,000+ Gyms, Pools, Yoga & MMA Studios',
+                  'FitFeast: Personal Nutritionist Consults & AI Diet Plans',
+                  'FitCoach & ARIA: AI Personal Workout Generator',
+                  'FitEmpire TV: 1,000+ HD Virtual Workout Classes',
+                  'Dual-Session Entry (Gym + Pool/Recovery in 1 day)',
+                  '60 Days Free Pause/Freeze + 5 Free Buddy Passes',
+                ],
+                popular: true,
+              },
+              {
+                id: 'fit180',
+                name: 'FitEmpire 180 (Semi-Annual Pro)',
+                badge: 'BEST VALUE ⚡',
+                badgeBg: '#EC4899',
+                duration: '180 Days Unlimited',
+                price: '₹4,799',
+                perMonth: '₹799 / mo',
+                vsFitpass: 'BEATS FITPASS 180: Unlimited visits per gym (Fitpass limits to only 5/mo)',
+                benefits: [
+                  'UNLIMITED Workouts across all 12,000+ Centers (No 5-session cap!)',
+                  'FitFeast Nutrition Logging & Macro Tracker',
+                  'FitCoach AI Workout Coaching & Rep Counter',
+                  '30 Days Free Pause/Freeze Protection',
+                  '2 Free Buddy Guest Passes Included',
+                ],
+                popular: false,
+              },
+              {
+                id: 'corporate',
+                name: 'FitEmpire Corporate Pass',
+                badge: 'EMPLOYER SUBSIDISED 🏢',
+                badgeBg: '#0284C7',
+                duration: 'Company Sponsored',
+                price: 'Up to 100% Off',
+                perMonth: 'Corporate Rate',
+                vsFitpass: '500+ Top Enterprises Partnered (TCS, Infosys, Google, Wipro)',
+                benefits: [
+                  'Employer Co-Funded or 100% Fully Sponsored',
+                  'Use with official company email or Corporate Code',
+                  'Includes all Gyms, Nutritionists & Team Step Challenges',
+                  'Apply code CORPORATE-COUPONS for instant discount',
+                ],
+                isCorporate: true,
+                popular: false,
+              },
+              {
+                id: 'fit90',
+                name: 'FitEmpire 90 (Quarterly Power)',
+                badge: '3 MONTHS ⭐',
+                badgeBg: '#F59E0B',
+                duration: '90 Days Unlimited',
+                price: '₹2,699',
+                perMonth: '₹899 / mo',
+                vsFitpass: '15 Days Free Pause + 1 Buddy Pass every month',
+                benefits: [
+                  '90 Days Unlimited Single-Scan Daily Access',
+                  '15 Days Free Pause/Freeze Protection',
+                  '1 Free Buddy Pass per month to bring a friend',
+                  'FitFeast Diet Consultation & FitCoach AI',
+                ],
+                popular: false,
+              },
+              {
+                id: 'monthly',
+                name: 'FitEmpire Monthly Pass',
+                badge: 'FLEXIBLE 30D',
+                badgeBg: '#6366F1',
+                duration: '30 Days Access',
+                price: '₹999',
+                perMonth: '₹999 / mo',
+                vsFitpass: 'No lock-in contract + 7 Days Free Freeze',
+                benefits: [
+                  '30 Days All-Access Gym & Fitness Pass',
+                  '7 Days Free Pause/Freeze Protection',
+                  'Full access to weights, cardio, yoga & Zumba classes',
+                ],
+                popular: false,
+              },
+              {
+                id: 'flexi',
+                name: 'Flexi Rollover Pack',
+                badge: 'NO EXPIRY ⏳',
+                badgeBg: '#10B981',
+                duration: '10 Visit Credits',
+                price: '₹1,499',
+                perMonth: '₹149 / session',
+                vsFitpass: 'Credits NEVER expire (Fitpass wastes unused days)',
+                benefits: [
+                  'Credits NEVER expire as long as account is active',
+                  'Roll over unused visits — zero money wasted',
+                  'Use for yourself or bring multiple friends on 1 day',
+                ],
+                popular: false,
+              },
+            ].map((plan) => (
+              <View
+                key={plan.id}
+                style={[
+                  styles.upgradeMatrixCard,
+                  {
+                    backgroundColor: colors.surface,
+                    borderColor: plan.popular ? '#8B5CF6' : plan.isCorporate ? '#0284C7' : colors.border,
+                    borderWidth: plan.popular || plan.isCorporate ? 2 : 1,
+                  },
+                ]}
+              >
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+                  <ThemedText style={{ fontSize: 15, fontWeight: '900', flex: 1, paddingRight: 4 }}>{plan.name}</ThemedText>
+                  <View style={{ backgroundColor: plan.badgeBg, paddingHorizontal: 8, paddingVertical: 3, borderRadius: 8 }}>
+                    <ThemedText style={{ color: '#fff', fontSize: 10, fontWeight: '900' }}>{plan.badge}</ThemedText>
                   </View>
                 </View>
-                <ThemedText style={styles.comparisonBoxTitle}>
-                  <ThemedText style={{ color: '#EF4444', fontWeight: '900' }}>03 </ThemedText>
-                  workout per week
-                </ThemedText>
-              </View>
 
-              {/* Swap Arrows */}
-              <View style={styles.swapArrowsContainer}>
-                <ThemedText style={{ fontSize: 20 }}>🔁</ThemedText>
-              </View>
+                <View style={{ flexDirection: 'row', alignItems: 'baseline', gap: 6, marginBottom: 6 }}>
+                  <ThemedText style={{ fontSize: 22, fontWeight: '900', color: plan.isCorporate ? '#0284C7' : '#EF4444' }}>{plan.price}</ThemedText>
+                  <ThemedText style={{ fontSize: 12, color: '#94A3B8', fontWeight: '700' }}>({plan.perMonth})</ThemedText>
+                </View>
 
-              {/* Right Box: Unlimited matrix */}
-              <View style={[styles.comparisonBox, styles.comparisonBoxUnlimited]}>
-                <ThemedText style={styles.unlimitedHeaderLabel}>Unlimited workout</ThemedText>
-                <ThemedText style={styles.unlimitedSubLabel}>per week</ThemedText>
-                <View style={styles.miniMatrixGrid}>
-                  {['ZUMBA', 'DANCE', 'YOGA', 'AEROBIC', 'MMA', 'BOXING', 'SPORTS', 'SWIM'].map((item) => (
-                    <View key={item} style={styles.matrixTile}>
-                      <ThemedText style={styles.matrixTileText}>{item}</ThemedText>
+                {/* Countering Fitpass Edge Callout */}
+                <View style={{ backgroundColor: 'rgba(16, 185, 129, 0.1)', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 6, marginBottom: 10 }}>
+                  <ThemedText style={{ color: '#10B981', fontSize: 11, fontWeight: '800' }}>
+                    ⚡ {plan.vsFitpass}
+                  </ThemedText>
+                </View>
+
+                <View style={{ gap: 5, marginBottom: 14 }}>
+                  {plan.benefits.map((b, idx) => (
+                    <View key={idx} style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 6 }}>
+                      <Check size={13} color="#10B981" style={{ marginTop: 2 }} />
+                      <ThemedText style={{ fontSize: 12, color: colors.text, opacity: 0.85, flex: 1 }}>{b}</ThemedText>
                     </View>
                   ))}
                 </View>
-              </View>
-            </View>
 
-            {/* Gold CTA Button */}
-            <TouchableOpacity
-              style={styles.goldUpgradeButton}
-              activeOpacity={0.85}
-              onPress={handleUpgrade}
-            >
-              <ThemedText style={styles.goldUpgradeButtonText}>Upgrade To Premium</ThemedText>
-            </TouchableOpacity>
+                <TouchableOpacity
+                  style={[
+                    styles.goldUpgradeButton,
+                    plan.popular ? { backgroundColor: '#8B5CF6' } : plan.isCorporate ? { backgroundColor: '#0284C7' } : { backgroundColor: '#4F46E5' },
+                  ]}
+                  activeOpacity={0.85}
+                  onPress={() => {
+                    if (plan.isCorporate) {
+                      router.push('/corporate' as any);
+                    } else {
+                      Alert.alert(
+                        `Activate ${plan.name}`,
+                        `Pay ${plan.price} for ${plan.duration}. Includes instant all-gym access & free freeze protection.`,
+                        [
+                          { text: 'Cancel', style: 'cancel' },
+                          {
+                            text: 'Proceed to Pay',
+                            onPress: () => {
+                              setIsUpgraded(true);
+                              Alert.alert('Success 🎉', `Your ${plan.name} is now active!`);
+                            },
+                          },
+                        ]
+                      );
+                    }
+                  }}
+                >
+                  <ThemedText style={styles.goldUpgradeButtonText}>
+                    {plan.isCorporate ? 'Verify Corporate Benefits →' : plan.popular ? 'Activate FitEmpire 360 All-In-One' : `Get ${plan.name}`}
+                  </ThemedText>
+                </TouchableOpacity>
+              </View>
+            ))}
           </View>
         </View>
 

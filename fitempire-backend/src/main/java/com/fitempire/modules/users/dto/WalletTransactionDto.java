@@ -2,8 +2,10 @@ package com.fitempire.modules.users.dto;
 
 import com.fitempire.modules.users.entity.TransactionType;
 import com.fitempire.modules.users.entity.WalletTxnType;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -11,6 +13,8 @@ import java.util.UUID;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class WalletTransactionDto {
     private UUID id;
     private UUID walletId;

@@ -107,6 +107,19 @@ spring:
     default-property-inclusion: non_null
     time-zone: Asia/Kolkata
 
+  # ── File Upload ───────────────────────────────────────────
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 15MB
+      file-size-threshold: 2KB
+
+  # ── Static Resources (serve uploaded files) ───────────────
+  web:
+    resources:
+      static-locations: classpath:/static/,file:uploads/
+
   # ── Async ─────────────────────────────────────────────────
   task:
     execution:
@@ -120,14 +133,7 @@ spring:
         size: 4
       thread-name-prefix: fitempire-sched-
 
-  # ── Servlet ───────────────────────────────────────────────
-  servlet:
-    multipart:
-      enabled: true
-      max-file-size: 10MB
-      max-request-size: 50MB
-
-# ── Server ────────────────────────────────────────────────
+  # ── Server ────────────────────────────────────────────────
 server:
   port: ${APP_PORT:8080}
   compression:

@@ -65,11 +65,20 @@ public class GymBranch extends BaseEntity {
     @Column(name = "capacity")
     private int capacity = 50;
 
+
     @Column(name = "opening_time")
     private LocalTime openingTime;
 
     @Column(name = "closing_time")
     private LocalTime closingTime;
+
+    /** Gym owner's own monthly membership price (e.g. ₹2000/month) */
+    @Column(name = "monthly_membership_price", precision = 12, scale = 2)
+    private java.math.BigDecimal monthlyMembershipPrice;
+
+    /** Auto-calculated: monthlyMembershipPrice / 30 — used for per-visit settlement */
+    @Column(name = "per_session_rate", precision = 10, scale = 2)
+    private java.math.BigDecimal perSessionRate;
 
     @Column(name = "amenities", columnDefinition = "text[]")
     @JdbcTypeCode(SqlTypes.ARRAY)

@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
-import { DollarSign, ArrowUpRight, CheckCircle2, Clock, Building, ShieldCheck } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { DollarSign, ArrowUpRight, CheckCircle2, Clock, Building, ShieldCheck, RefreshCw } from 'lucide-react';
+import { partnerApi } from '../api';
 
 export const SettlementsPage: React.FC = () => {
   const [payoutSuccess, setPayoutSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [stats, setStats] = useState({
     availableBalance: 33780,
     grossEarnings: 184200,
@@ -10,11 +12,42 @@ export const SettlementsPage: React.FC = () => {
     bankAccount: 'HDFC Bank •••••• 4892',
   });
 
-  const [payoutHistory] = useState([
+  const [payoutHistory, setPayoutHistory] = useState([
     { id: 'SET-9912', date: '01 Aug 2026', amount: 48000, checkIns: 240, status: 'PAID' },
     { id: 'SET-9844', date: '15 Jul 2026', amount: 44000, checkIns: 220, status: 'PAID' },
     { id: 'SET-9701', date: '01 Jul 2026', amount: 40000, checkIns: 200, status: 'PAID' },
   ]);
+
+  useEffect(() => {
+    const loadSettlements = async () => {
+      setLoading(true);
+      try {
+        const res = await partnerApi.getSettlements();
+        const data = res.data?.data;
+        if (Array.isArray(data) && data.length > 0) {
+          const list = data.map((s: any) => ({
+            id: s.id?.substring(0, 8) || 'SET-LIVE',
+            date: s.settlementDate ? new Date(s.settlementDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : 'Recent',
+            amount: Number(s.netPayable || s.totalAmount || 0),
+            checkIns: Math.round(Number(s.totalAmount || 2400) / 80),
+            status: s.status || 'PAID',
+          }));
+          setPayoutHistory(list);
+          const totalPaid = list.reduce((acc: number, curr: any) => acc + curr.amount, 0);
+          setStats((prev) => ({
+            ...prev,
+            paidOut: totalPaid,
+            grossEarnings: totalPaid + prev.availableBalance,
+          }));
+        }
+      } catch (e) {
+        console.warn('Using default settlements ledger:', e);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadSettlements();
+  }, []);
 
   const handleRequestPayout = () => {
     setPayoutSuccess(true);

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Outlet, NavLink, useNavigate, useLocation } from 'react-router-dom';
+import { Outlet, NavLink, useNavigate, useLocation, Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import {
   LayoutDashboard,
@@ -28,7 +28,7 @@ export interface CheckInEventData {
 }
 
 export const PartnerLayout: React.FC = () => {
-  const { user, logout } = useAuth();
+  const { user, logout, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -36,6 +36,10 @@ export const PartnerLayout: React.FC = () => {
   const [activeCheckInAlert, setActiveCheckInAlert] = useState<CheckInEventData | null>(null);
   const [unreadVisitsCount, setUnreadVisitsCount] = useState<number>(3);
 
+  // Auth guard — redirect to login if not authenticated
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
   useEffect(() => {
     const updateTime = () => {
       const now = new Date();

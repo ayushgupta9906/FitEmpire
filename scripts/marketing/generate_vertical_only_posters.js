@@ -50,7 +50,7 @@ const vertical4x5Svg = `
   <g transform="translate(540, 68)">
     <rect x="-165" y="0" width="330" height="36" rx="18" fill="rgba(108, 99, 255, 0.22)" stroke="rgba(124, 115, 255, 0.55)" stroke-width="1.2" />
     <circle cx="-135" cy="18" r="5" fill="#FCD34D" />
-    <text x="-115" y="23" font-family="'Segoe UI', Roboto, -apple-system, sans-serif" font-size="12.5" font-weight="900" letter-spacing="2.5" fill="#FFFFFF">
+    <text x="-115" y="23" font-family="'Segoe UI', Roboto, sans-serif" font-size="12.5" font-weight="900" letter-spacing="2.5" fill="#FFFFFF">
       THE FITEMPIRE ADVANTAGE
     </text>
 
@@ -97,24 +97,24 @@ const vertical4x5Svg = `
   <!-- 2. Vertical Feature Differentiator Cards (6 Stacked Cards) -->
   <g transform="translate(68, 325)">
     
-    <!-- 1. Dual Daily Sessions -->
+    <!-- 1. 100% Truly Unlimited Access -->
     <g transform="translate(0, 0)">
       <rect x="0" y="0" width="944" height="110" rx="22" fill="url(#vCardGrad)" stroke="rgba(255,255,255,0.12)" stroke-width="1.2" />
       <rect x="18" y="18" width="74" height="74" rx="18" fill="rgba(56, 189, 248, 0.18)" stroke="rgba(56, 189, 248, 0.4)" stroke-width="1.2" />
       <text x="55" y="64" text-anchor="middle" font-family="'Segoe UI', Roboto, sans-serif" font-size="32">⚡</text>
-      <text x="110" y="44" font-family="'Segoe UI', Roboto, sans-serif" font-size="20" font-weight="800" fill="#FFFFFF">Dual Daily Workout Sessions</text>
-      <text x="110" y="70" font-family="'Segoe UI', Roboto, sans-serif" font-size="13.5" font-weight="500" fill="#94A3B8">Lift weights in the morning + attend evening swimming or yoga on the exact same day.</text>
-      <text x="110" y="94" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="800" fill="#38BDF8">👑 FitEmpire: 2 Daily Sessions Included &#160;•&#160; <tspan fill="#F87171">❌ Others: Capped at 1/day (or 3/week on standard plans)</tspan></text>
+      <text x="110" y="44" font-family="'Segoe UI', Roboto, sans-serif" font-size="20" font-weight="800" fill="#FFFFFF">100% Truly Unlimited Access</text>
+      <text x="110" y="70" font-family="'Segoe UI', Roboto, sans-serif" font-size="13.5" font-weight="500" fill="#94A3B8">No partial plan tiers. Complete unrestricted freedom across all partner fitness centers.</text>
+      <text x="110" y="94" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="800" fill="#38BDF8">👑 FitEmpire: 100% Truly Unlimited &#160;•&#160; <tspan fill="#F87171">❌ Others: Fragmented 180 &amp; 360 Partial Plans</tspan></text>
     </g>
 
-    <!-- 2. Unrestricted Multi-Gym Access -->
+    <!-- 2. 10,000+ Multi-Gym Freedom -->
     <g transform="translate(0, 125)">
       <rect x="0" y="0" width="944" height="110" rx="22" fill="url(#vCardGrad)" stroke="rgba(255,255,255,0.12)" stroke-width="1.2" />
-      <rect x="18" y="18" width="74" height="74" rx="18" fill="rgba(16, 185, 129, 0.18)" stroke="rgba(16, 185, 129, 0.4)" stroke-width="1.2" />
+      <rect x="18" y="18" width="74" height="74" rx="18" fill="rgba(168, 85, 247, 0.18)" stroke="rgba(168, 85, 247, 0.4)" stroke-width="1.2" />
       <text x="55" y="64" text-anchor="middle" font-family="'Segoe UI', Roboto, sans-serif" font-size="32">🏋️</text>
       <text x="110" y="44" font-family="'Segoe UI', Roboto, sans-serif" font-size="20" font-weight="800" fill="#FFFFFF">10,000+ Multi-Gym Freedom</text>
       <text x="110" y="70" font-family="'Segoe UI', Roboto, sans-serif" font-size="13.5" font-weight="500" fill="#94A3B8">Work out at premier gyms, yoga studios, MMA, CrossFit &amp; aquatic arenas nationwide.</text>
-      <text x="110" y="94" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="800" fill="#34D399">👑 FitEmpire: Complete Multi-Center Access &#160;•&#160; <tspan fill="#94A3B8">Seamless contactless turnstile entry</tspan></text>
+      <text x="110" y="94" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="800" fill="#C084FC">👑 FitEmpire: Complete Multi-Center Access &#160;•&#160; <tspan fill="#94A3B8">Seamless contactless turnstile entry</tspan></text>
     </g>
 
     <!-- 3. Free Freeze & Rollovers -->
@@ -130,11 +130,11 @@ const vertical4x5Svg = `
     <!-- 4. FitCoach AI Engine -->
     <g transform="translate(0, 375)">
       <rect x="0" y="0" width="944" height="110" rx="22" fill="url(#vCardGrad)" stroke="rgba(255,255,255,0.12)" stroke-width="1.2" />
-      <rect x="18" y="18" width="74" height="74" rx="18" fill="rgba(168, 85, 247, 0.18)" stroke="rgba(168, 85, 247, 0.4)" stroke-width="1.2" />
+      <rect x="18" y="18" width="74" height="74" rx="18" fill="rgba(16, 185, 129, 0.18)" stroke="rgba(16, 185, 129, 0.4)" stroke-width="1.2" />
       <text x="55" y="64" text-anchor="middle" font-family="'Segoe UI', Roboto, sans-serif" font-size="32">🤖</text>
       <text x="110" y="44" font-family="'Segoe UI', Roboto, sans-serif" font-size="20" font-weight="800" fill="#FFFFFF">FitCoach AI Adaptive Workout Engine</text>
       <text x="110" y="70" font-family="'Segoe UI', Roboto, sans-serif" font-size="13.5" font-weight="500" fill="#94A3B8">Dynamic real-time workout generator adjusts reps, weight &amp; splits to available gym gear.</text>
-      <text x="110" y="94" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="800" fill="#C084FC">👑 FitEmpire: Live Dynamic Overload AI &#160;•&#160; <tspan fill="#F87171">❌ Others: Static Generic PDF Templates</tspan></text>
+      <text x="110" y="94" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="800" fill="#34D399">👑 FitEmpire: Live Dynamic Overload AI &#160;•&#160; <tspan fill="#F87171">❌ Others: Static Generic PDF Templates</tspan></text>
     </g>
 
     <!-- 5. FitFeast Indian Macro Nutrition -->
@@ -268,19 +268,19 @@ const vertical9x16Svg = `
       <rect x="0" y="0" width="944" height="135" rx="24" fill="url(#sCardGrad)" stroke="rgba(255,255,255,0.12)" stroke-width="1.2" />
       <rect x="22" y="24" width="86" height="86" rx="20" fill="rgba(56, 189, 248, 0.18)" stroke="rgba(56, 189, 248, 0.4)" stroke-width="1.2" />
       <text x="65" y="76" text-anchor="middle" font-family="'Segoe UI', Roboto, sans-serif" font-size="38">⚡</text>
-      <text x="126" y="52" font-family="'Segoe UI', Roboto, sans-serif" font-size="22" font-weight="800" fill="#FFFFFF">Dual Daily Workout Sessions</text>
-      <text x="126" y="82" font-family="'Segoe UI', Roboto, sans-serif" font-size="14.5" font-weight="500" fill="#94A3B8">Lift weights in the morning + attend swimming or yoga on the exact same day.</text>
-      <text x="126" y="112" font-family="'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="800" fill="#38BDF8">👑 FitEmpire: 2 Daily Sessions Included &#160;•&#160; <tspan fill="#F87171">❌ Others: Capped at 1/day (or 3/week on standard plans)</tspan></text>
+      <text x="126" y="52" font-family="'Segoe UI', Roboto, sans-serif" font-size="22" font-weight="800" fill="#FFFFFF">100% Truly Unlimited Access</text>
+      <text x="126" y="82" font-family="'Segoe UI', Roboto, sans-serif" font-size="14.5" font-weight="500" fill="#94A3B8">No partial plan tiers. Complete unrestricted freedom across all partner fitness centers.</text>
+      <text x="126" y="112" font-family="'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="800" fill="#38BDF8">👑 FitEmpire: 100% Truly Unlimited &#160;•&#160; <tspan fill="#F87171">❌ Others: Fragmented 180 &amp; 360 Partial Plans</tspan></text>
     </g>
 
     <!-- 2 -->
     <g transform="translate(0, 155)">
       <rect x="0" y="0" width="944" height="135" rx="24" fill="url(#sCardGrad)" stroke="rgba(255,255,255,0.12)" stroke-width="1.2" />
-      <rect x="22" y="24" width="86" height="86" rx="20" fill="rgba(16, 185, 129, 0.18)" stroke="rgba(16, 185, 129, 0.4)" stroke-width="1.2" />
+      <rect x="22" y="24" width="86" height="86" rx="20" fill="rgba(168, 85, 247, 0.18)" stroke="rgba(168, 85, 247, 0.4)" stroke-width="1.2" />
       <text x="65" y="76" text-anchor="middle" font-family="'Segoe UI', Roboto, sans-serif" font-size="38">🏋️</text>
       <text x="126" y="52" font-family="'Segoe UI', Roboto, sans-serif" font-size="22" font-weight="800" fill="#FFFFFF">10,000+ Multi-Gym Network</text>
       <text x="126" y="82" font-family="'Segoe UI', Roboto, sans-serif" font-size="14.5" font-weight="500" fill="#94A3B8">Work out at premier gyms, yoga studios, MMA, CrossFit &amp; aquatic arenas nationwide.</text>
-      <text x="126" y="112" font-family="'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="800" fill="#34D399">👑 FitEmpire: Complete Multi-Center Access &#160;•&#160; <tspan fill="#94A3B8">Seamless contactless turnstile entry</tspan></text>
+      <text x="126" y="112" font-family="'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="800" fill="#C084FC">👑 FitEmpire: Complete Multi-Center Access &#160;•&#160; <tspan fill="#94A3B8">Seamless contactless turnstile entry</tspan></text>
     </g>
 
     <!-- 3 -->
@@ -296,11 +296,11 @@ const vertical9x16Svg = `
     <!-- 4 -->
     <g transform="translate(0, 465)">
       <rect x="0" y="0" width="944" height="135" rx="24" fill="url(#sCardGrad)" stroke="rgba(255,255,255,0.12)" stroke-width="1.2" />
-      <rect x="22" y="24" width="86" height="86" rx="20" fill="rgba(168, 85, 247, 0.18)" stroke="rgba(168, 85, 247, 0.4)" stroke-width="1.2" />
+      <rect x="22" y="24" width="86" height="86" rx="20" fill="rgba(16, 185, 129, 0.18)" stroke="rgba(16, 185, 129, 0.4)" stroke-width="1.2" />
       <text x="65" y="76" text-anchor="middle" font-family="'Segoe UI', Roboto, sans-serif" font-size="38">🤖</text>
       <text x="126" y="52" font-family="'Segoe UI', Roboto, sans-serif" font-size="22" font-weight="800" fill="#FFFFFF">FitCoach AI Adaptive Workout Engine</text>
       <text x="126" y="82" font-family="'Segoe UI', Roboto, sans-serif" font-size="14.5" font-weight="500" fill="#94A3B8">Dynamic real-time workout generator adjusts reps, weight &amp; splits to available gym gear.</text>
-      <text x="126" y="112" font-family="'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="800" fill="#C084FC">👑 FitEmpire: Live Dynamic Overload AI &#160;•&#160; <tspan fill="#F87171">❌ Others: Static Generic PDF Templates</tspan></text>
+      <text x="126" y="112" font-family="'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="800" fill="#34D399">👑 FitEmpire: Live Dynamic Overload AI &#160;•&#160; <tspan fill="#F87171">❌ Others: Static Generic PDF Templates</tspan></text>
     </g>
 
     <!-- 5 -->
@@ -344,19 +344,21 @@ const vertical9x16Svg = `
 `;
 
 async function generate() {
-  console.log('Rendering Pure Vertical Rectangle Posters with exact tiering copy...');
+  console.log('Rendering Pure Vertical Rectangle Posters with Truly Unlimited copy...');
 
   const vertical4x5Buffer = await sharp(Buffer.from(vertical4x5Svg)).png().toBuffer();
   const vertical9x16Buffer = await sharp(Buffer.from(vertical9x16Svg)).png().toBuffer();
 
   const destinations = [
     // 4:5 Vertical Feed Poster (1080 x 1350)
+    { file: `${REPO_ROOT}/assets/marketing/fitempire-vertical-advantage.png`, data: vertical4x5Buffer },
     { file: `${REPO_ROOT}/fitempire-admin/public/fitempire-vertical-advantage.png`, data: vertical4x5Buffer },
     { file: `${REPO_ROOT}/fitempire-partner/public/fitempire-vertical-advantage.png`, data: vertical4x5Buffer },
     { file: `${REPO_ROOT}/fitempire-mobile/assets/images/fitempire-vertical-advantage.png`, data: vertical4x5Buffer },
     { file: `${REPO_ROOT}/fitempire-backend/src/main/resources/static/fitempire-vertical-advantage.png`, data: vertical4x5Buffer },
 
     // 9:16 Full Story / Mobile Poster (1080 x 1920)
+    { file: `${REPO_ROOT}/assets/marketing/fitempire-vertical-story.png`, data: vertical9x16Buffer },
     { file: `${REPO_ROOT}/fitempire-admin/public/fitempire-vertical-story.png`, data: vertical9x16Buffer },
     { file: `${REPO_ROOT}/fitempire-partner/public/fitempire-vertical-story.png`, data: vertical9x16Buffer },
     { file: `${REPO_ROOT}/fitempire-mobile/assets/images/fitempire-vertical-story.png`, data: vertical9x16Buffer },

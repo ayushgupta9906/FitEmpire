@@ -196,11 +196,11 @@ springdoc:
       Supports gym discovery, membership management, class booking, QR check-ins, payments, rewards, and AI recommendations.
     contact:
       name: FitEmpire Engineering
-      email: engineering@fitempire.in
-      url: https://fitempire.in
+      email: engineering@fitempire.tech
+      url: https://fitempire.tech
     license:
       name: Proprietary
-      url: https://fitempire.in/terms
+      url: https://fitempire.tech/terms
   show-actuator: false
 
 # ── Application Properties ────────────────────────────────
@@ -215,7 +215,7 @@ app:
     refresh-token-expiry-ms: ${JWT_REFRESH_TOKEN_EXPIRY_MS:604800000}
 
   admin:
-    default-email: ${ADMIN_DEFAULT_EMAIL:admin@fitempire.in}
+    default-email: ${ADMIN_DEFAULT_EMAIL:admin@fitempire.tech}
     default-password: ${ADMIN_DEFAULT_PASSWORD:Admin@FitEmpire2024!}
 
   oauth2:
@@ -259,7 +259,7 @@ app:
     secret-access-key: ${AWS_SECRET_ACCESS_KEY:}
     region: ${AWS_REGION:ap-south-1}
     s3-bucket: ${AWS_S3_BUCKET:fitempire-media}
-    cdn-url: ${AWS_CDN_URL:https://cdn.fitempire.in}
+    cdn-url: ${AWS_CDN_URL:https://cdn.fitempire.tech}
 
   firebase:
     project-id: ${FIREBASE_PROJECT_ID:fitempire}
@@ -279,7 +279,7 @@ app:
     api-key: ${GOOGLE_MAPS_API_KEY:}
 
   email:
-    from: ${SMTP_FROM:noreply@fitempire.in}
+    from: ${SMTP_FROM:noreply@fitempire.tech}
     from-name: ${SMTP_FROM_NAME:FitEmpire}
 
   rewards:

@@ -46,7 +46,7 @@ export const LoginPage: React.FC = () => {
   };
 
   const handleFillDemo = () => {
-    setEmail('partner@fitempire.in');
+    setEmail('partner@fitempire.tech');
     setPassword('Partner@123');
   };
 
@@ -215,7 +215,7 @@ export const LoginPage: React.FC = () => {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="partner@fitempire.in"
+                placeholder="partner@fitempire.tech"
                 required
                 style={{
                   width: '100%',

@@ -14,7 +14,7 @@ const FALLBACK_GYM = {
   totalReviews: 482,
   description: 'Bangalore’s highest rated MMA arena, Olympic free weights zone, cardio deck, sauna steam bath, and certified coaches.',
   phone: '+91 98800 72520',
-  websiteUrl: 'https://fitempire.in',
+  websiteUrl: 'https://fitempire.tech',
   coverImageUrl: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&q=80&w=800',
 };
 

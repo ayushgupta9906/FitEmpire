@@ -26,7 +26,7 @@ const savedToken = localStorage.getItem('fitempire_access_token');
 
 const initialAuthState: AuthState = {
   isAuthenticated: !!savedToken,
-  user: parsedUser || (savedToken ? { id: 'admin-1', email: 'admin@fitempire.in', firstName: 'Admin', role: 'SUPER_ADMIN' } : null),
+  user: parsedUser || (savedToken ? { id: 'admin-1', email: 'admin@fitempire.tech', firstName: 'Admin', role: 'SUPER_ADMIN' } : null),
   accessToken: savedToken,
 };
 

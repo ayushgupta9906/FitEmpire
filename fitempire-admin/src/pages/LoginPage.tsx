@@ -23,7 +23,7 @@ export function LoginPage() {
   const [loading, setLoading] = useState(false);
   const { register, handleSubmit, formState: { errors }, setValue } = useForm<LoginForm>({
     defaultValues: {
-      email: 'admin@fitempire.in',
+      email: 'admin@fitempire.tech',
       password: 'AdminPassword@123',
     },
   });

@@ -116,17 +116,17 @@ const portraitComparisonSvg = `
   <!-- 3. 6 Key Differentiator Comparison Rows -->
   <g transform="translate(68, 385)">
     
-    <!-- Row 1: Session Limits (1/day or 3/week vs 2/day) -->
+    <!-- Row 1: True Unlimited vs Partial Fragmented Plans -->
     <g transform="translate(0, 0)">
       <rect x="0" y="0" width="460" height="110" rx="18" fill="url(#oldPassGrad)" stroke="rgba(255,255,255,0.06)" stroke-width="1" />
-      <text x="24" y="36" font-family="'Segoe UI', Roboto, sans-serif" font-size="16" font-weight="800" fill="#FDA4AF">Capped: 1/Day or 3/Week</text>
-      <text x="24" y="62" font-family="'Segoe UI', Roboto, sans-serif" font-size="12.5" font-weight="500" fill="#94A3B8">Top tier capped at 1 session/day • Standard passes capped to 3/week.</text>
-      <text x="24" y="88" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="700" fill="#F43F5E">⛔ Cannot do evening yoga, swim or recovery</text>
+      <text x="24" y="36" font-family="'Segoe UI', Roboto, sans-serif" font-size="16" font-weight="800" fill="#FDA4AF">Fragmented &amp; Partial Plans</text>
+      <text x="24" y="62" font-family="'Segoe UI', Roboto, sans-serif" font-size="12.5" font-weight="500" fill="#94A3B8">Split into restrictive tiers (180 capped at 3/week, 360 capped at 1/day).</text>
+      <text x="24" y="88" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="700" fill="#F43F5E">⛔ Confusing restrictions &amp; visit caps</text>
 
       <rect x="484" y="0" width="460" height="110" rx="18" fill="url(#fitEmpireGrad)" stroke="rgba(16, 185, 129, 0.3)" stroke-width="1.2" />
-      <text x="508" y="36" font-family="'Segoe UI', Roboto, sans-serif" font-size="16" font-weight="800" fill="#34D399">2 Sessions Every Single Day</text>
-      <text x="508" y="62" font-family="'Segoe UI', Roboto, sans-serif" font-size="12.5" font-weight="500" fill="#E2E8F0">Lift weights in the morning + attend swimming or yoga in the evening.</text>
-      <text x="508" y="88" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="800" fill="#6EE7B7">✓ 2 daily check-ins included on all active plans</text>
+      <text x="508" y="36" font-family="'Segoe UI', Roboto, sans-serif" font-size="16" font-weight="800" fill="#34D399">100% Truly Unlimited Access</text>
+      <text x="508" y="62" font-family="'Segoe UI', Roboto, sans-serif" font-size="12.5" font-weight="500" fill="#E2E8F0">No partial plan tiers. Complete unrestricted freedom across all partner centers.</text>
+      <text x="508" y="88" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="800" fill="#6EE7B7">✓ Truly unlimited access on every membership</text>
     </g>
 
     <!-- Row 2: Facility & Multi-Gym Access -->
@@ -305,15 +305,15 @@ const landscapeComparisonSvg = `
       👑 The FitEmpire Standard
     </text>
 
-    <!-- Comparison Item 1: Sessions per day -->
+    <!-- Comparison Item 1: True Unlimited vs Fragmented Plans -->
     <g transform="translate(0, 56)">
       <rect x="0" y="0" width="840" height="88" rx="16" fill="url(#oldPassGrad)" stroke="rgba(255,255,255,0.06)" stroke-width="1" />
-      <text x="24" y="34" font-family="'Segoe UI', Roboto, sans-serif" font-size="16" font-weight="800" fill="#FDA4AF">Capped: 1/Day or 3/Week</text>
-      <text x="24" y="58" font-family="'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="500" fill="#94A3B8">Top tier capped at 1 session/day • Standard plans capped at 3 sessions/week</text>
+      <text x="24" y="34" font-family="'Segoe UI', Roboto, sans-serif" font-size="16" font-weight="800" fill="#FDA4AF">Fragmented &amp; Partial Plans</text>
+      <text x="24" y="58" font-family="'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="500" fill="#94A3B8">Split into restrictive tiers (180 capped at 3/week, 360 capped at 1/day)</text>
 
       <rect x="880" y="0" width="840" height="88" rx="16" fill="url(#fitEmpireGrad)" stroke="rgba(16, 185, 129, 0.3)" stroke-width="1.2" />
-      <text x="904" y="34" font-family="'Segoe UI', Roboto, sans-serif" font-size="16" font-weight="800" fill="#34D399">2 Sessions Every Single Day</text>
-      <text x="904" y="58" font-family="'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="500" fill="#E2E8F0">Lift weights in morning + attend swim or yoga in evening • 2 check-ins daily</text>
+      <text x="904" y="34" font-family="'Segoe UI', Roboto, sans-serif" font-size="16" font-weight="800" fill="#34D399">100% Truly Unlimited Access</text>
+      <text x="904" y="58" font-family="'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="500" fill="#E2E8F0">No partial plan tiers. Complete unrestricted freedom across all partner centers</text>
     </g>
 
     <!-- Comparison Item 2: Multi-Gym Access -->
@@ -375,23 +375,24 @@ const landscapeComparisonSvg = `
 `;
 
 async function generate() {
-  console.log('Rendering 2-Column Comparison Posters with exact refined copy...');
+  console.log('Rendering Truly Unlimited 2-Column Comparison Posters...');
 
   const portraitBuffer = await sharp(Buffer.from(portraitComparisonSvg)).png().toBuffer();
   const landscapeBuffer = await sharp(Buffer.from(landscapeComparisonSvg)).png().toBuffer();
 
   const destinations = [
-    // Portrait 4:5 Comparison Poster (1080 x 1350)
-    { file: `${REPO_ROOT}/fitempire-admin/public/fitempire-difference-portrait.png`, data: portraitBuffer },
-    { file: `${REPO_ROOT}/fitempire-partner/public/fitempire-difference-portrait.png`, data: portraitBuffer },
-    { file: `${REPO_ROOT}/fitempire-mobile/assets/images/fitempire-difference-portrait.png`, data: portraitBuffer },
-    { file: `${REPO_ROOT}/fitempire-backend/src/main/resources/static/fitempire-difference-portrait.png`, data: portraitBuffer },
+    // Root marketing asset directory
+    { file: `${REPO_ROOT}/assets/marketing/fitempire-difference-portrait.png`, data: portraitBuffer },
+    { file: `${REPO_ROOT}/assets/marketing/fitempire-difference-landscape.png`, data: landscapeBuffer },
 
-    // Landscape 16:9 Comparison Poster (1920 x 1080)
-    { file: `${REPO_ROOT}/fitempire-difference-landscape.png`, data: landscapeBuffer },
+    // App & Service public folders
+    { file: `${REPO_ROOT}/fitempire-admin/public/fitempire-difference-portrait.png`, data: portraitBuffer },
     { file: `${REPO_ROOT}/fitempire-admin/public/fitempire-difference-landscape.png`, data: landscapeBuffer },
+    { file: `${REPO_ROOT}/fitempire-partner/public/fitempire-difference-portrait.png`, data: portraitBuffer },
     { file: `${REPO_ROOT}/fitempire-partner/public/fitempire-difference-landscape.png`, data: landscapeBuffer },
+    { file: `${REPO_ROOT}/fitempire-mobile/assets/images/fitempire-difference-portrait.png`, data: portraitBuffer },
     { file: `${REPO_ROOT}/fitempire-mobile/assets/images/fitempire-difference-landscape.png`, data: landscapeBuffer },
+    { file: `${REPO_ROOT}/fitempire-backend/src/main/resources/static/fitempire-difference-portrait.png`, data: portraitBuffer },
     { file: `${REPO_ROOT}/fitempire-backend/src/main/resources/static/fitempire-difference-landscape.png`, data: landscapeBuffer },
   ];
 
@@ -402,7 +403,7 @@ async function generate() {
     console.log('Saved:', item.file);
   }
 
-  console.log('2-Column comparison posters updated successfully!');
+  console.log('Truly Unlimited 2-Column comparison posters updated successfully!');
 }
 
 generate().catch(err => {

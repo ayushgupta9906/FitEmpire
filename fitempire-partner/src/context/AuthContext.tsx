@@ -14,7 +14,7 @@ export interface PartnerUser {
 const DEFAULT_PARTNER: PartnerUser = {
   id: '407d1eea-9d15-43d9-acc6-e3042be437f7',
   userId: '407d1eea-9d15-43d9-acc6-e3042be437f7',
-  email: 'partner@fitempire.in',
+  email: 'partner@fitempire.tech',
   firstName: 'FitEmpire Partner',
   role: 'GYM_PARTNER',
   gymName: 'FitEmpire Flagship • Koramangala',

@@ -93,74 +93,77 @@ public class DatabaseSeeder implements CommandLineRunner {
     }
 
     private void seedAdminUser() {
-        String email = "admin@fitempire.in";
-        User admin = userRepository.findByEmailAndDeletedFalse(email).orElse(null);
-        if (admin == null) {
-            log.info("Admin user not found. Seeding admin user: {}", email);
-            admin = new User();
-            admin.setEmail(email);
-            admin.setFirstName("Admin");
-            admin.setLastName("FitEmpire");
-            admin.setDisplayName("FitEmpire Admin");
-            admin.setRole(UserRole.SUPER_ADMIN);
-            admin.setActive(true);
-            admin.setEmailVerified(true);
-            admin.setPhoneVerified(true);
-            admin.setProfileComplete(true);
+        for (String email : List.of("admin@fitempire.tech", "admin@fitempire.in")) {
+            User admin = userRepository.findByEmailAndDeletedFalse(email).orElse(null);
+            if (admin == null) {
+                log.info("Admin user not found. Seeding admin user: {}", email);
+                admin = new User();
+                admin.setEmail(email);
+                admin.setFirstName("Admin");
+                admin.setLastName("FitEmpire");
+                admin.setDisplayName("FitEmpire Admin");
+                admin.setRole(UserRole.SUPER_ADMIN);
+                admin.setActive(true);
+                admin.setEmailVerified(true);
+                admin.setPhoneVerified(true);
+                admin.setProfileComplete(true);
+            }
+            admin.setPasswordHash(passwordEncoder.encode("AdminPassword@123"));
+            userRepository.save(admin);
+            log.info("Admin user ready with BCrypt credentials [{} / AdminPassword@123]", email);
         }
-        admin.setPasswordHash(passwordEncoder.encode("AdminPassword@123"));
-        userRepository.save(admin);
-        log.info("Admin user ready with BCrypt credentials [admin@fitempire.in / AdminPassword@123]");
     }
 
     private void seedPartnerUser() {
-        String partnerEmail = "partner@fitempire.in";
-        User partner = userRepository.findByEmailAndDeletedFalse(partnerEmail).orElse(null);
-        if (partner == null) {
-            log.info("Partner user not found. Seeding partner user: {}", partnerEmail);
-            partner = new User();
-            partner.setEmail(partnerEmail);
-            partner.setFirstName("Gym");
-            partner.setLastName("Partner");
-            partner.setDisplayName("FitEmpire Flagship Partner");
-            partner.setRole(UserRole.GYM_PARTNER);
-            partner.setPhone("+919876543210");
-            partner.setActive(true);
-            partner.setEmailVerified(true);
-            partner.setPhoneVerified(true);
-            partner.setProfileComplete(true);
+        for (String partnerEmail : List.of("partner@fitempire.tech", "partner@fitempire.in")) {
+            User partner = userRepository.findByEmailAndDeletedFalse(partnerEmail).orElse(null);
+            if (partner == null) {
+                log.info("Partner user not found. Seeding partner user: {}", partnerEmail);
+                partner = new User();
+                partner.setEmail(partnerEmail);
+                partner.setFirstName("Gym");
+                partner.setLastName("Partner");
+                partner.setDisplayName("FitEmpire Flagship Partner");
+                partner.setRole(UserRole.GYM_PARTNER);
+                partner.setPhone("+919876543210");
+                partner.setActive(true);
+                partner.setEmailVerified(true);
+                partner.setPhoneVerified(true);
+                partner.setProfileComplete(true);
+            }
+            partner.setPasswordHash(passwordEncoder.encode("Partner@123"));
+            userRepository.save(partner);
+            log.info("Partner user seeded successfully [{} / Partner@123]", partnerEmail);
         }
-        partner.setPasswordHash(passwordEncoder.encode("Partner@123"));
-        userRepository.save(partner);
-        log.info("Partner user seeded successfully [partner@fitempire.in / Partner@123]");
     }
 
     private void seedCustomerUser() {
-        String userEmail = "testuser@fitempire.in";
-        User customer = userRepository.findByEmailAndDeletedFalse(userEmail).orElse(null);
-        if (customer == null) {
-            log.info("Customer user not found. Seeding member: {}", userEmail);
-            customer = new User();
-            customer.setEmail(userEmail);
-            customer.setFirstName("Rahul");
-            customer.setLastName("Sharma");
-            customer.setDisplayName("Rahul Sharma");
-            customer.setRole(UserRole.CUSTOMER);
-            customer.setPhone("+919876543210");
-            customer.setActive(true);
-            customer.setEmailVerified(true);
-            customer.setPhoneVerified(true);
-            customer.setProfileComplete(true);
-        }
-        customer.setPasswordHash(passwordEncoder.encode("Password@123"));
-        User savedCustomer = userRepository.save(customer);
+        for (String userEmail : List.of("testuser@fitempire.tech", "testuser@fitempire.in")) {
+            User customer = userRepository.findByEmailAndDeletedFalse(userEmail).orElse(null);
+            if (customer == null) {
+                log.info("Customer user not found. Seeding member: {}", userEmail);
+                customer = new User();
+                customer.setEmail(userEmail);
+                customer.setFirstName("Rahul");
+                customer.setLastName("Sharma");
+                customer.setDisplayName("Rahul Sharma");
+                customer.setRole(UserRole.CUSTOMER);
+                customer.setPhone("+919876543210");
+                customer.setActive(true);
+                customer.setEmailVerified(true);
+                customer.setPhoneVerified(true);
+                customer.setProfileComplete(true);
+            }
+            customer.setPasswordHash(passwordEncoder.encode("Password@123"));
+            User savedCustomer = userRepository.save(customer);
 
-        if (userProfileRepository.findByUserId(savedCustomer.getId()).isEmpty()) {
-            UserProfile profile = new UserProfile();
-            profile.setUser(savedCustomer);
-            userProfileRepository.save(profile);
+            if (userProfileRepository.findByUserId(savedCustomer.getId()).isEmpty()) {
+                UserProfile profile = new UserProfile();
+                profile.setUser(savedCustomer);
+                userProfileRepository.save(profile);
+            }
+            log.info("Customer user seeded successfully [{} / Password@123]", userEmail);
         }
-        log.info("Customer user seeded successfully [testuser@fitempire.in / Password@123]");
     }
 
     private void seedGyms() {

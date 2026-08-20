@@ -28,7 +28,7 @@ export default function ReferScreen() {
   };
 
   const handleShare = () => {
-    Alert.alert('Share Link 🚀', 'Join FitEmpire and get ₹500 discount on your first pass! Use code EMPIRE-RAHUL500 at https://fitempire.in');
+    Alert.alert('Share Link 🚀', 'Join FitEmpire and get ₹500 discount on your first pass! Use code EMPIRE-RAHUL500 at https://fitempire.tech');
   };
 
   return (

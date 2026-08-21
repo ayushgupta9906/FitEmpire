@@ -1,5 +1,5 @@
 @echo off
-title FitEmpire Full-Stack Starter
+title FitEmpire Full-Stack Ecosystem Starter
 setlocal enabledelayedexpansion
 
 :: Set workspace root path dynamically
@@ -20,7 +20,7 @@ if exist "%ROOT_DIR%\.env" (
     )
     echo Environment variables loaded successfully.
 ) else (
-    echo [WARNING] .env file not found! Using default environment properties.
+    echo [INFO] Using default cloud database & Hugging Face production endpoints.
 )
 echo.
 
@@ -44,33 +44,35 @@ echo Ports check complete. All specified ports are free.
 echo.
 
 echo ===================================================
-echo         FitEmpire - Starting Services
+echo         FitEmpire - Starting All Services
 echo ===================================================
 echo.
 
 echo [1/4] Starting Spring Boot Backend (Port 8080)...
-start "FitEmpire Backend [Port 8080]" cmd /k "cd /d "%ROOT_DIR%\fitempire-backend" && mvn spring-boot:run"
+start "FitEmpire Backend [Port 8080]" cmd /k "cd /d "%ROOT_DIR%\fitempire-backend" && (mvn.cmd spring-boot:run || mvn spring-boot:run)"
 
 echo [2/4] Starting Super Admin Dashboard (Port 3000)...
-start "FitEmpire Admin [Port 3000]" cmd /k "cd /d "%ROOT_DIR%\fitempire-admin" && npm run dev"
+start "FitEmpire Admin [Port 3000]" cmd /k "cd /d "%ROOT_DIR%\fitempire-admin" && npm.cmd run dev"
 
 echo [3/4] Starting Gym Partner Portal (Port 3001)...
-start "FitEmpire Partner [Port 3001]" cmd /k "cd /d "%ROOT_DIR%\fitempire-partner" && npm run dev"
+start "FitEmpire Partner [Port 3001]" cmd /k "cd /d "%ROOT_DIR%\fitempire-partner" && npm.cmd run dev"
 
-echo [4/4] Starting Mobile App / Expo (Port 8081)...
-start "FitEmpire Mobile [Expo Web :8081]" cmd /k "cd /d "%ROOT_DIR%\fitempire-mobile" && npx expo start --web --port 8081"
+echo [4/4] Starting Mobile App / Expo Web (Port 8081)...
+start "FitEmpire Mobile [Expo Web :8081]" cmd /k "cd /d "%ROOT_DIR%\fitempire-mobile" && npx.cmd expo start --web --port 8081"
 
 echo.
 echo ===================================================
 echo   All 4 FitEmpire Services Started Successfully!
 echo ===================================================
 echo.
-echo  - Spring Boot Backend : http://localhost:8080/api
+echo  - Spring Boot Backend : http://localhost:8080/api (or Cloud: https://ayush150152-fitempire-api.hf.space)
 echo  - Super Admin Console : http://localhost:3000
 echo  - Gym Partner Desk    : http://localhost:3001
 echo  - Member Mobile Web   : http://localhost:8081
 echo.
-echo Launching FitEmpire Showcase Console...
-start "" "%ROOT_DIR%\fitempire-showcase\index.html"
+if exist "%ROOT_DIR%\fitempire-showcase\index.html" (
+    echo Launching FitEmpire Showcase Landing Console...
+    start "" "%ROOT_DIR%\fitempire-showcase\index.html"
+)
 echo.
 pause

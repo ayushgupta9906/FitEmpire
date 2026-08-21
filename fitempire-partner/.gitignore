@@ -25,7 +25,7 @@ Thumbs.db
 *.sln
 *.sw?
 
-# Uploads & temporary image cache
+# Uploads & image caches
 uploads/
 **/uploads/
 .tempmediaStorage/

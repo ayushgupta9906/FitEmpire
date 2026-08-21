@@ -26,9 +26,10 @@ npm-debug.*
 yarn-debug.*
 yarn-error.*
 
-# macOS
+# macOS & OS
 .DS_Store
 *.pem
+Thumbs.db
 
 # local env files
 .env*.local
@@ -41,3 +42,9 @@ example
 # generated native folders
 /ios
 /android
+
+# Image & uploads cache
+uploads/
+**/uploads/
+.tempmediaStorage/
+temp_images/

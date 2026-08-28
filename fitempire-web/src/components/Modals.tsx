@@ -36,10 +36,81 @@ interface PartnerModalProps {
   onClose: () => void;
 }
 
+interface AdminModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
 interface CorporateModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
+
+// 0. SUPER ADMIN CONSOLE MODAL
+export const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose }) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="modal-overlay-bg">
+      <div className="modal-box-card executive-card">
+        <button className="modal-dismiss-btn" onClick={onClose}><X size={18} /></button>
+
+        <div className="modal-header-centered">
+          <div className="badge-pill-purple">
+            <ShieldCheck size={13} className="text-purple" />
+            <span>ENTERPRISE GOVERNANCE</span>
+          </div>
+          <h3 className="modal-heading">Super Admin Console</h3>
+          <p className="modal-subheading">
+            Platform governance, gym onboarding verification, and weekly financial settlement releases.
+          </p>
+        </div>
+
+        <div className="admin-quick-stats-box" style={{ background: '#F8FAFC', border: '1px solid #E2E8F0', borderRadius: '12px', padding: '18px', marginBottom: '20px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+            <div style={{ background: '#FFFFFF', padding: '12px', borderRadius: '8px', border: '1px solid #E2E8F0' }}>
+              <div style={{ fontSize: '11px', color: '#64748B', fontWeight: '700' }}>DEFAULT ADMIN LOGIN</div>
+              <div style={{ fontSize: '13px', color: '#0F172A', fontWeight: '800', marginTop: '2px' }}>admin@fitempire.in</div>
+            </div>
+            <div style={{ background: '#FFFFFF', padding: '12px', borderRadius: '8px', border: '1px solid #E2E8F0' }}>
+              <div style={{ fontSize: '11px', color: '#64748B', fontWeight: '700' }}>INITIAL PASSWORD</div>
+              <div style={{ fontSize: '13px', color: '#7C3AED', fontWeight: '800', marginTop: '2px' }}>Admin@FitEmpire2024!</div>
+            </div>
+          </div>
+        </div>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '24px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12.5px', color: '#334155' }}>
+            <CheckCircle2 size={15} color="#059669" />
+            <span>Review & approve new gym partner applications & KYC</span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12.5px', color: '#334155' }}>
+            <CheckCircle2 size={15} color="#059669" />
+            <span>Manage 12,000+ fitness centres, user wallets & pass subscriptions</span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12.5px', color: '#059669' }}>
+            <CheckCircle2 size={15} color="#059669" />
+            <span>Automated Razorpay Route payouts with single-click release</span>
+          </div>
+        </div>
+
+        <a 
+          href="http://localhost:3000" 
+          target="_blank" 
+          rel="noreferrer" 
+          className="btn-purple-primary w-full"
+          style={{ padding: '12px', fontSize: '14px' }}
+        >
+          <ShieldCheck size={16} />
+          <span>Launch Super Admin Dashboard (Port 3000)</span>
+          <ArrowRight size={14} />
+        </a>
+      </div>
+
+      <style>{modalStyles}</style>
+    </div>
+  );
+};
 
 // 1. APP DOWNLOAD / EXPO GO MODAL
 export const AppDownloadModal: React.FC<AppModalProps> = ({ isOpen, onClose }) => {

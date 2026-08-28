@@ -155,10 +155,9 @@ public class SecurityConfig {
                 "http://localhost:8081",
                 "http://localhost:8082",
                 "http://localhost:19006",
-                "https://fitempire.netlify.app",
-                "https://fitempire.vercel.app",
-                "https://firmempireapp.netlify.app",
-                "https://fitempirepartner.netlify.app"
+                "https://fitempire.tech",
+                "https://fitempiremobile.vercel.app",
+                "https://fitempirepartner.vercel.app"
         ));
 
         // Also add any configured origins from env vars

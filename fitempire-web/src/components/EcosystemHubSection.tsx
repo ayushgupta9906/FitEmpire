@@ -32,7 +32,7 @@ const APPS = [
     badge: 'MEMBER PASS',
     badgeClass: 'purple',
     actionText: 'Open Member App',
-    actionUrl: 'https://firmempireapp.netlify.app',
+    actionUrl: 'https://fitempiremobile.vercel.app',
     isModal: false,
     stats: ['12,000+ Gyms', '60s Dynamic QR', 'ARIA AI Coach', '1-Tap Freeze']
   },
@@ -47,7 +47,7 @@ const APPS = [
     badge: 'PARTNER GATEWAY',
     badgeClass: 'indigo',
     actionText: 'Open Partner Portal',
-    actionUrl: 'https://fitempirepartner.netlify.app',
+    actionUrl: 'https://fitempirepartner.vercel.app',
     isModal: false,
     stats: ['0.2s Turnstile Scan', 'Weekly Bank Payout', '100% Tax GST Invoicing', 'Zero Lock-in']
   },
@@ -62,7 +62,7 @@ const APPS = [
     badge: 'ADMIN CONSOLE',
     badgeClass: 'dark',
     actionText: 'Launch Admin Console',
-    actionUrl: 'https://fitempireadmin.netlify.app',
+    actionUrl: 'https://fitempire.tech/?view=admin',
     isModal: false,
     stats: ['Gym Approvals', 'Settlement Payouts', 'User Management', 'Real-time BI']
   },

@@ -261,7 +261,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           </button>
 
           <a 
-            href="https://fitempirepartner.netlify.app" 
+            href="https://fitempirepartner.vercel.app"
             target="_blank" 
             rel="noreferrer" 
             className="btn-nav-ghost"
@@ -271,7 +271,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           </a>
 
           <a 
-            href="https://firmempireapp.netlify.app"
+            href="https://fitempiremobile.vercel.app"
             target="_blank"
             rel="noreferrer"
             className="btn-purple-primary btn-nav-cta"
@@ -309,7 +309,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               </button>
 
               <a 
-                href="https://firmempireapp.netlify.app" 
+                href="https://fitempiremobile.vercel.app"
                 target="_blank" 
                 rel="noreferrer" 
                 className="btn-purple-primary w-full"

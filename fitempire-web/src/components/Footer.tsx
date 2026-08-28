@@ -78,13 +78,13 @@ export const Footer: React.FC<FooterProps> = ({ onOpenAppModal, onOpenPartnerMod
           {/* Partners Col */}
           <div className="f-column">
             <h4 className="f-heading">Ecosystem Portals</h4>
-            <a href="https://firmempireapp.netlify.app" target="_blank" rel="noreferrer">
+            <a href="https://fitempiremobile.vercel.app" target="_blank" rel="noreferrer">
               Member Pass App
             </a>
-            <a href="https://fitempirepartner.netlify.app" target="_blank" rel="noreferrer">
+            <a href="https://fitempirepartner.vercel.app" target="_blank" rel="noreferrer">
               Partner Reception Portal
             </a>
-            <a href="https://fitempireadmin.netlify.app" target="_blank" rel="noreferrer">
+            <a href="https://fitempire.tech/?view=admin" target="_blank" rel="noreferrer">
               Super Admin Console
             </a>
             <button className="f-purple-link-btn" onClick={onOpenPartnerModal}>

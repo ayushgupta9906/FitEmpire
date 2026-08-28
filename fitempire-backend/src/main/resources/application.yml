@@ -229,7 +229,7 @@ app:
       private-key: ${APPLE_PRIVATE_KEY:}
 
   cors:
-    allowed-origins: ${APP_FRONTEND_URL:http://localhost:3001},${APP_ADMIN_URL:http://localhost:3000},http://localhost:3001,http://localhost:3000,http://localhost:19006,https://fitempire.netlify.app,https://fitempirepartner.netlify.app,https://firmempireapp.netlify.app,https://fitempire-admin-2026.surge.sh,http://fitempire-admin-2026.surge.sh
+    allowed-origins: ${APP_FRONTEND_URL:http://localhost:3001},${APP_ADMIN_URL:http://localhost:3000},http://localhost:3001,http://localhost:3000,http://localhost:19006,https://fitempire.tech,https://fitempirepartner.vercel.app,https://fitempiremobile.vercel.app
     allowed-methods: GET,POST,PUT,PATCH,DELETE,OPTIONS
     allowed-headers: "*"
     allow-credentials: true

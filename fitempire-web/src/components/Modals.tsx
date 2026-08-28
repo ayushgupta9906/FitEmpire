@@ -95,7 +95,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose }) => {
         </div>
 
         <a 
-          href="https://fitempireadmin.netlify.app" 
+          href="https://fitempire.tech/?view=admin"
           target="_blank" 
           rel="noreferrer" 
           className="btn-purple-primary w-full"
@@ -144,7 +144,7 @@ export const AppDownloadModal: React.FC<AppModalProps> = ({ isOpen, onClose }) =
               <div className="qr-box-caption">Scan in Expo Go</div>
             </div>
 
-            <a href="https://firmempireapp.netlify.app" target="_blank" rel="noreferrer" className="btn-purple-primary w-full">
+            <a href="https://fitempiremobile.vercel.app" target="_blank" rel="noreferrer" className="btn-purple-primary w-full">
               <span>Open Member Web App</span>
               <ArrowRight size={14} />
             </a>
@@ -161,7 +161,7 @@ export const AppDownloadModal: React.FC<AppModalProps> = ({ isOpen, onClose }) =
               <div className="qr-box-caption">Gym Manager Gate</div>
             </div>
 
-            <a href="https://fitempirepartner.netlify.app" target="_blank" rel="noreferrer" className="btn-purple-secondary w-full">
+            <a href="https://fitempirepartner.vercel.app" target="_blank" rel="noreferrer" className="btn-purple-secondary w-full">
               <span>Open Partner Portal</span>
               <ArrowRight size={14} />
             </a>

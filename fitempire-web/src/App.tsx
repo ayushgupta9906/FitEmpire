@@ -11,6 +11,7 @@ import { PartnerSection } from './components/PartnerSection';
 import { Testimonials } from './components/Testimonials';
 import { FAQ } from './components/FAQ';
 import { Footer } from './components/Footer';
+import { AdminApp } from './admin/AdminApp';
 import { AdminDashboard } from './components/AdminDashboard';
 import { 
   AppDownloadModal, 
@@ -77,9 +78,9 @@ export default function App() {
     setCheckoutModalOpen(true);
   };
 
-  // If Admin View is active, render the full Super Admin Dashboard
+  // If Admin View is active, render the full Super Admin Dashboard (from fitempire-admin)
   if (isAdminView) {
-    return <AdminDashboard onBackToWebsite={closeAdminView} />;
+    return <AdminApp onBackToWebsite={closeAdminView} />;
   }
 
   return (

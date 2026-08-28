@@ -1,6 +1,6 @@
 [build]
   publish = "dist"
-  command = "npm run build"
+  command = "npx expo export -p web"
 
 [[redirects]]
   from = "/*"

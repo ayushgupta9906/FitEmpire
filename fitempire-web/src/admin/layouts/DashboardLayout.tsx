@@ -315,7 +315,7 @@ export function DashboardLayout() {
               <Tooltip title="Open FitEmpire Member App">
                 <Box
                   component="a"
-                  href="https://firmempireapp.netlify.app"
+                  href="https://fitempiremobile.vercel.app"
                   target="_blank"
                   rel="noopener noreferrer"
                   sx={{
@@ -342,7 +342,7 @@ export function DashboardLayout() {
               <Tooltip title="Open FitEmpire Gym Partner App">
                 <Box
                   component="a"
-                  href="https://fitempirepartner.netlify.app"
+                  href="https://fitempirepartner.vercel.app"
                   target="_blank"
                   rel="noopener noreferrer"
                   sx={{

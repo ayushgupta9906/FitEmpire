@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Navbar } from './components/Navbar';
 import { HeroSection } from './components/HeroSection';
 import { EcosystemHubSection } from './components/EcosystemHubSection';
@@ -11,6 +11,7 @@ import { PartnerSection } from './components/PartnerSection';
 import { Testimonials } from './components/Testimonials';
 import { FAQ } from './components/FAQ';
 import { Footer } from './components/Footer';
+import { AdminDashboard } from './components/AdminDashboard';
 import { 
   AppDownloadModal, 
   BookingModal, 
@@ -21,6 +22,17 @@ import {
 } from './components/Modals';
 
 export default function App() {
+  // Check if admin route is requested via URL (?view=admin or /admin or #admin)
+  const [isAdminView, setIsAdminView] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const search = window.location.search;
+      const hash = window.location.hash;
+      const pathname = window.location.pathname;
+      return search.includes('view=admin') || hash === '#admin' || pathname === '/admin';
+    }
+    return false;
+  });
+
   // Modal states
   const [appModalOpen, setAppModalOpen] = useState(false);
   const [bookingModalOpen, setBookingModalOpen] = useState(false);
@@ -30,6 +42,26 @@ export default function App() {
   const [partnerModalOpen, setPartnerModalOpen] = useState(false);
   const [corporateModalOpen, setCorporateModalOpen] = useState(false);
   const [adminModalOpen, setAdminModalOpen] = useState(false);
+
+  useEffect(() => {
+    const handlePopState = () => {
+      const search = window.location.search;
+      const hash = window.location.hash;
+      setIsAdminView(search.includes('view=admin') || hash === '#admin');
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  const openAdminView = () => {
+    setIsAdminView(true);
+    window.history.pushState(null, '', '?view=admin');
+  };
+
+  const closeAdminView = () => {
+    setIsAdminView(false);
+    window.history.pushState(null, '', '/');
+  };
 
   const handleSearchSubmit = (query: string, category: string) => {
     console.log('Search submit:', query, category);
@@ -45,6 +77,11 @@ export default function App() {
     setCheckoutModalOpen(true);
   };
 
+  // If Admin View is active, render the full Super Admin Dashboard
+  if (isAdminView) {
+    return <AdminDashboard onBackToWebsite={closeAdminView} />;
+  }
+
   return (
     <div className="app-layout">
       {/* Navigation */}
@@ -52,7 +89,7 @@ export default function App() {
         onOpenAppModal={() => setAppModalOpen(true)}
         onOpenPartnerModal={() => setPartnerModalOpen(true)}
         onOpenCorporateModal={() => setCorporateModalOpen(true)}
-        onOpenAdminModal={() => setAdminModalOpen(true)}
+        onOpenAdminModal={openAdminView}
       />
 
       {/* Main Content Sections */}
@@ -70,7 +107,7 @@ export default function App() {
         <EcosystemHubSection 
           onOpenAppModal={() => setAppModalOpen(true)}
           onOpenPartnerModal={() => setPartnerModalOpen(true)}
-          onOpenAdminModal={() => setAdminModalOpen(true)}
+          onOpenAdminModal={openAdminView}
         />
 
         <AppShowcase 

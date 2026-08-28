@@ -228,16 +228,14 @@ export const Navbar: React.FC<NavbarProps> = ({
 
         {/* Right CTA Area */}
         <div className="nav-right-actions">
-          <a 
-            href="https://fitempireadmin.netlify.app"
-            target="_blank" 
-            rel="noreferrer"
+          <button 
+            onClick={onOpenAdminModal}
             className="btn-partner-ghost"
             title="Super Admin Dashboard"
           >
             <ShieldCheck size={14} />
-            <span>Admin</span>
-          </a>
+            <span>Admin Console</span>
+          </button>
 
           <a 
             href="https://fitempirepartner.netlify.app" 

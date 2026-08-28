@@ -18,7 +18,28 @@ export const Footer: React.FC<FooterProps> = ({ onOpenAppModal, onOpenPartnerMod
           <div className="f-column brand-info">
             <div className="f-brand-logo">
               <div className="f-icon-box">
-                <Zap size={18} color="#FFF" fill="#FFF" />
+                <svg 
+                  xmlns="http://www.w3.org/2000/svg" 
+                  width="19" 
+                  height="19" 
+                  viewBox="0 0 24 24" 
+                  fill="none" 
+                  stroke="#FFFFFF"
+                  strokeWidth="2.3" 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round" 
+                  style={{ transform: 'scaleX(-1)', transformOrigin: 'center' }}
+                >
+                  <path d="M6.5 6.5 17.5 17.5" />
+                  <path d="m21 21-1-1" />
+                  <path d="m3 3 1 1" />
+                  <path d="m18 22 4-4" />
+                  <path d="m2 6 4-4" />
+                  <path d="m3 10 7-7" />
+                  <path d="m14 21 7-7" />
+                  <path d="M6.5 12.5 12.5 6.5" />
+                  <path d="m11.5 17.5 6-6" />
+                </svg>
               </div>
               <span className="f-brand-title">Fit<span className="text-purple-gradient">Empire</span></span>
             </div>

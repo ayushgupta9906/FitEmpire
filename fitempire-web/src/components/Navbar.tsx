@@ -230,11 +230,12 @@ export const Navbar: React.FC<NavbarProps> = ({
         <div className="nav-right-actions">
           <button 
             onClick={onOpenAdminModal}
-            className="btn-partner-ghost"
-            title="Super Admin Dashboard"
+            className="btn-partner-ghost admin-highlight-btn"
+            title="Super Admin Governance Console"
           >
-            <ShieldCheck size={14} />
-            <span>Admin Console</span>
+            <ShieldCheck size={15} className="text-purple" />
+            <span>Admin Panel</span>
+            <span className="admin-mini-badge">ENTERPRISE</span>
           </button>
 
           <a 
@@ -479,6 +480,29 @@ export const Navbar: React.FC<NavbarProps> = ({
         .city-item-btn:hover {
           background: var(--purple-light);
           color: var(--purple-primary);
+        }
+        .btn-partner-ghost:hover {
+          background: var(--purple-light);
+          color: var(--purple-primary);
+          border-color: var(--purple-border);
+        }
+        .admin-highlight-btn {
+          background: #F1F5F9;
+          border-color: #E2E8F0;
+        }
+        .admin-highlight-btn:hover {
+          background: #0F172A;
+          color: #FFFFFF;
+          border-color: #0F172A;
+        }
+        .admin-mini-badge {
+          font-size: 8.5px;
+          font-weight: 800;
+          background: var(--purple-gradient);
+          color: #FFFFFF;
+          padding: 1px 5px;
+          border-radius: 4px;
+          letter-spacing: 0.4px;
         }
         .city-item-btn.selected {
           background: var(--purple-light);

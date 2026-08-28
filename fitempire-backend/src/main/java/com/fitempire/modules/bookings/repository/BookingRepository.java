@@ -2,6 +2,8 @@ package com.fitempire.modules.bookings.repository;
 
 import com.fitempire.modules.bookings.entity.Booking;
 import com.fitempire.modules.bookings.entity.BookingStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -21,6 +23,9 @@ public interface BookingRepository extends JpaRepository<Booking, UUID> {
 
     List<Booking> findByGymIdOrderByCreatedAtDesc(UUID gymId);
 
+    Page<Booking> findByUserIdOrderByCreatedAtDesc(UUID userId, Pageable pageable);
+
     @Query("SELECT COUNT(b) FROM Booking b WHERE DATE(b.createdAt) = :date")
     long countAllByDate(@Param("date") java.time.LocalDate date);
 }
+

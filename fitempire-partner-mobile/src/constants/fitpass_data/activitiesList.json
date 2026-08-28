@@ -1,0 +1,634 @@
+{
+  "activities": [
+    {
+      "activity_id": 7,
+      "activity_name": "Gym Workouts",
+      "activity_font": "e93f",
+      "activity_image": "https://cdn.fitimg.in/workout-activity-gym-workouts-5D36642E.png",
+      "activity_color": [
+        {
+          "color": "#E75A5D",
+          "opacity": 0.5,
+          "position": 0
+        },
+        {
+          "color": "#E75A5D",
+          "opacity": 1,
+          "position": 100
+        }
+      ],
+      "rating_question": [
+        {
+          "answer": "Equipment,Infrastructure,Trainer Misbehaves,Location,Trainer is not Good",
+          "star": 1,
+          "question_text": "What need to be improved?"
+        },
+        {
+          "answer": "Equipment,Infrastructure,Trainer Misbehaves,Location,Trainer is not Good",
+          "star": 2,
+          "question_text": "What need to be improved?"
+        },
+        {
+          "answer": "Equipment,Infrastructure,Trainer Misbehaves,Location,Trainer is not Good",
+          "star": 3,
+          "question_text": "What need to be improved?"
+        },
+        {
+          "answer": "Infrastructure,Trainer,Ambiance,Location,Equipment",
+          "star": 4,
+          "question_text": "Please Share your Good Experience, What do you like?"
+        },
+        {
+          "answer": "Infrastructure,Trainer,Ambiance,Location,Equipment",
+          "star": 5,
+          "question_text": "Please Share your Good Experience, What do you like?"
+        }
+      ]
+    },
+    {
+      "activity_id": 1,
+      "activity_name": "Abs",
+      "activity_font": "e939",
+      "activity_image": "https://cdn.fitimg.in/workout-activity-abs-95F8AECC.png",
+      "activity_color": [
+        {
+          "color": "#FF9B03",
+          "opacity": 0.5,
+          "position": 0
+        },
+        {
+          "color": "#FF9B03",
+          "opacity": 1,
+          "position": 100
+        }
+      ],
+      "rating_question": [
+        {
+          "answer": "Equipment,Infrastructure,Trainer Misbehaves,Location,Trainer is not Good",
+          "star": 1,
+          "question_text": "What need to be improved?"
+        },
+        {
+          "answer": "Equipment,Infrastructure,Trainer Misbehaves,Location,Trainer is not Good",
+          "star": 2,
+          "question_text": "What need to be improved?"
+        },
+        {
+          "answer": "Equipment,Infrastructure,Trainer Misbehaves,Location,Trainer is not Good",
+          "star": 3,
+          "question_text": "What need to be improved?"
+        },
+        {
+          "answer": "Infrastructure,Trainer,Ambiance,Location,Equipment",
+          "star": 4,
+          "question_text": "Please Share your Good Experience, What do you like?"
+        },
+        {
+          "answer": "Infrastructure,Trainer,Ambiance,Location,Equipment",
+          "star": 5,
+          "question_text": "Please Share your Good Experience, What do you like?"
+        }
+      ]
+    },
+    {
+      "activity_id": 2,
+      "activity_name": "Cardio",
+      "activity_font": "e93a",
+      "activity_image": "https://cdn.fitimg.in/workout-activity-aerobics-and-cardio-32AE4C24.png",
+      "activity_color": [
+        {
+          "color": "#F16C21",
+          "opacity": 0.5,
+          "position": 0
+        },
+        {
+          "color": "#F16C21",
+          "opacity": 1,
+          "position": 100
+        }
+      ],
+      "rating_question": [
+        {
+          "answer": "Equipment,Infrastructure,Trainer Misbehaves,Location,Trainer is not Good",
+          "star": 1,
+          "question_text": "What need to be improved?"
+        },
+        {
+          "answer": "Equipment,Infrastructure,Trainer Misbehaves,Location,Trainer is not Good",
+          "star": 2,
+          "question_text": "What need to be improved?"
+        },
+        {
+          "answer": "Equipment,Infrastructure,Trainer Misbehaves,Location,Trainer is not Good",
+          "star": 3,
+          "question_text": "What need to be improved?"
+        },
+        {
+          "answer": "Infrastructure,Trainer,Ambiance,Location,Equipment",
+          "star": 4,
+          "question_text": "Please Share your Good Experience, What do you like?"
+        },
+        {
+          "answer": "Infrastructure,Trainer,Ambiance,Location,Equipment",
+          "star": 5,
+          "question_text": "Please Share your Good Experience, What do you like?"
+        }
+      ]
+    },
+    {
+      "activity_id": 3,
+      "activity_name": "Body Tone",
+      "activity_font": "e93b",
+      "activity_image": "https://cdn.fitimg.in/workout-activity-body-tone-and-conditioning-8F11012A.png",
+      "activity_color": [
+        {
+          "color": "#64064A",
+          "opacity": 0.5,
+          "position": 0
+        },
+        {
+          "color": "#64064A",
+          "opacity": 1,
+          "position": 100
+        }
+      ],
+      "rating_question": [
+        {
+          "answer": "Equipment,Infrastructure,Trainer Misbehaves,Location,Trainer is not Good",
+          "star": 1,
+          "question_text": "What need to be improved?"
+        },
+        {
+          "answer": "Equipment,Infrastructure,Trainer Misbehaves,Location,Trainer is not Good",
+          "star": 2,
+          "question_text": "What need to be improved?"
+        },
+        {
+          "answer": "Equipment,Infrastructure,Trainer Misbehaves,Location,Trainer is not Good",
+          "star": 3,
+          "question_text": "What need to be improved?"
+        },
+        {
+          "answer": "Infrastructure,Trainer,Ambiance,Location,Equipment",
+          "star": 4,
+          "question_text": "Please Share your Good Experience, What do you like?"
+        },
+        {
+          "answer": "Infrastructure,Trainer,Ambiance,Location,Equipment",
+          "star": 5,
+          "question_text": "Please Share your Good Experience, What do you like?"
+        }
+      ]
+    },
+    {
+      "activity_id": 4,
+      "activity_name": "Combat",
+      "activity_font": "e93c",
+      "activity_image": "https://cdn.fitimg.in/workout-activity-combat-C871050F.png",
+      "activity_color": [
+        {
+          "color": "#C0CA33",
+          "opacity": 0.5,
+          "position": 0
+        },
+        {
+          "color": "#C0CA33",
+          "opacity": 1,
+          "position": 100
+        }
+      ],
+      "rating_question": [
+        {
+          "answer": "Equipment,Infrastructure,Trainer Misbehaves,Location,Trainer is not Good",
+          "star": 1,
+          "question_text": "What need to be improved?"
+        },
+        {
+          "answer": "Equipment,Infrastructure,Trainer Misbehaves,Location,Trainer is not Good",
+          "star": 2,
+          "question_text": "What need to be improved?"
+        },
+        {
+          "answer": "Equipment,Infrastructure,Trainer Misbehaves,Location,Trainer is not Good",
+          "star": 3,
+          "question_text": "What need to be improved?"
+        },
+        {
+          "answer": "Infrastructure,Trainer,Ambiance,Location,Equipment",
+          "star": 4,
+          "question_text": "Please Share your Good Experience, What do you like?"
+        },
+        {
+          "answer": "Infrastructure,Trainer,Ambiance,Location,Equipment",
+          "star": 5,
+          "question_text": "Please Share your Good Experience, What do you like?"
+        }
+      ]
+    },
+    {
+      "activity_id": 5,
+      "activity_name": "Core",
+      "activity_font": "e93d",
+      "activity_image": "https://cdn.fitimg.in/workout-activity-core-500CD7D5.png",
+      "activity_color": [
+        {
+          "color": "#00ACC1",
+          "opacity": 0.5,
+          "position": 0
+        },
+        {
+          "color": "#00ACC1",
+          "opacity": 1,
+          "position": 100
+        }
+      ],
+      "rating_question": [
+        {
+          "answer": "Equipment,Infrastructure,Trainer Misbehaves,Location,Trainer is not Good",
+          "star": 1,
+          "question_text": "What need to be improved?"
+        },
+        {
+          "answer": "Equipment,Infrastructure,Trainer Misbehaves,Location,Trainer is not Good",
+          "star": 2,
+          "question_text": "What need to be improved?"
+        },
+        {
+          "answer": "Equipment,Infrastructure,Trainer Misbehaves,Location,Trainer is not Good",
+          "star": 3,
+          "question_text": "What need to be improved?"
+        },
+        {
+          "answer": "Infrastructure,Trainer,Ambiance,Location,Equipment",
+          "star": 4,
+          "question_text": "Please Share your Good Experience, What do you like?"
+        },
+        {
+          "answer": "Infrastructure,Trainer,Ambiance,Location,Equipment",
+          "star": 5,
+          "question_text": "Please Share your Good Experience, What do you like?"
+        }
+      ]
+    },
+    {
+      "activity_id": 6,
+      "activity_name": "Dance",
+      "activity_font": "e93e",
+      "activity_image": "https://cdn.fitimg.in/workout-activity-dance-A7301EDA.png",
+      "activity_color": [
+        {
+          "color": "#E91E63",
+          "opacity": 0.5,
+          "position": 0
+        },
+        {
+          "color": "#E91E63",
+          "opacity": 1,
+          "position": 100
+        }
+      ],
+      "rating_question": [
+        {
+          "answer": "Equipment,Infrastructure,Trainer Misbehaves,Location,Trainer is not Good",
+          "star": 1,
+          "question_text": "What need to be improved?"
+        },
+        {
+          "answer": "Equipment,Infrastructure,Trainer Misbehaves,Location,Trainer is not Good",
+          "star": 2,
+          "question_text": "What need to be improved?"
+        },
+        {
+          "answer": "Equipment,Infrastructure,Trainer Misbehaves,Location,Trainer is not Good",
+          "star": 3,
+          "question_text": "What need to be improved?"
+        },
+        {
+          "answer": "Infrastructure,Trainer,Ambiance,Location,Equipment",
+          "star": 4,
+          "question_text": "Please Share your Good Experience, What do you like?"
+        },
+        {
+          "answer": "Infrastructure,Trainer,Ambiance,Location,Equipment",
+          "star": 5,
+          "question_text": "Please Share your Good Experience, What do you like?"
+        }
+      ]
+    },
+    {
+      "activity_id": 8,
+      "activity_name": "HIIT",
+      "activity_font": "e940",
+      "activity_image": "https://cdn.fitimg.in/workout-activity-hiit-B400AB26.png",
+      "activity_color": [
+        {
+          "color": "#66BFFF",
+          "opacity": 0.5,
+          "position": 0
+        },
+        {
+          "color": "#66BFFF",
+          "opacity": 1,
+          "position": 100
+        }
+      ],
+      "rating_question": [
+        {
+          "answer": "Equipment,Infrastructure,Trainer Misbehaves,Location,Trainer is not Good",
+          "star": 1,
+          "question_text": "What need to be improved?"
+        },
+        {
+          "answer": "Equipment,Infrastructure,Trainer Misbehaves,Location,Trainer is not Good",
+          "star": 2,
+          "question_text": "What need to be improved?"
+        },
+        {
+          "answer": "Equipment,Infrastructure,Trainer Misbehaves,Location,Trainer is not Good",
+          "star": 3,
+          "question_text": "What need to be improved?"
+        },
+        {
+          "answer": "Infrastructure,Trainer,Ambiance,Location,Equipment",
+          "star": 4,
+          "question_text": "Please Share your Good Experience, What do you like?"
+        },
+        {
+          "answer": "Infrastructure,Trainer,Ambiance,Location,Equipment",
+          "star": 5,
+          "question_text": "Please Share your Good Experience, What do you like?"
+        }
+      ]
+    },
+    {
+      "activity_id": 9,
+      "activity_name": "MMA",
+      "activity_font": "e941",
+      "activity_image": "https://cdn.fitimg.in/workout-activity-mma-44552DB5.png",
+      "activity_color": [
+        {
+          "color": "#C6A700",
+          "opacity": 0.5,
+          "position": 0
+        },
+        {
+          "color": "#C6A700",
+          "opacity": 1,
+          "position": 100
+        }
+      ],
+      "rating_question": [
+        {
+          "answer": "Equipment,Infrastructure,Trainer Misbehaves,Location,Trainer is not Good",
+          "star": 1,
+          "question_text": "What need to be improved?"
+        },
+        {
+          "answer": "Equipment,Infrastructure,Trainer Misbehaves,Location,Trainer is not Good",
+          "star": 2,
+          "question_text": "What need to be improved?"
+        },
+        {
+          "answer": "Equipment,Infrastructure,Trainer Misbehaves,Location,Trainer is not Good",
+          "star": 3,
+          "question_text": "What need to be improved?"
+        },
+        {
+          "answer": "Infrastructure,Trainer,Ambiance,Location,Equipment",
+          "star": 4,
+          "question_text": "Please Share your Good Experience, What do you like?"
+        },
+        {
+          "answer": "Infrastructure,Trainer,Ambiance,Location,Equipment",
+          "star": 5,
+          "question_text": "Please Share your Good Experience, What do you like?"
+        }
+      ]
+    },
+    {
+      "activity_id": 10,
+      "activity_name": "Pilates",
+      "activity_font": "e942",
+      "activity_image": "https://cdn.fitimg.in/workout-activity-pilates-91D400F7.png",
+      "activity_color": [
+        {
+          "color": "#C2185B",
+          "opacity": 0.5,
+          "position": 0
+        },
+        {
+          "color": "#C2185B",
+          "opacity": 1,
+          "position": 100
+        }
+      ],
+      "rating_question": [
+        {
+          "answer": "Equipment,Infrastructure,Trainer Misbehaves,Location,Trainer is not Good",
+          "star": 1,
+          "question_text": "What need to be improved?"
+        },
+        {
+          "answer": "Equipment,Infrastructure,Trainer Misbehaves,Location,Trainer is not Good",
+          "star": 2,
+          "question_text": "What need to be improved?"
+        },
+        {
+          "answer": "Equipment,Infrastructure,Trainer Misbehaves,Location,Trainer is not Good",
+          "star": 3,
+          "question_text": "What need to be improved?"
+        },
+        {
+          "answer": "Infrastructure,Trainer,Ambiance,Location,Equipment",
+          "star": 4,
+          "question_text": "Please Share your Good Experience, What do you like?"
+        },
+        {
+          "answer": "Infrastructure,Trainer,Ambiance,Location,Equipment",
+          "star": 5,
+          "question_text": "Please Share your Good Experience, What do you like?"
+        }
+      ]
+    },
+    {
+      "activity_id": 11,
+      "activity_name": "Spin And RPM",
+      "activity_font": "e943",
+      "activity_image": "https://cdn.fitimg.in/workout-activity-spin-and-rpm-00D2109D.png",
+      "activity_color": [
+        {
+          "color": "#8E24AA",
+          "opacity": 0.5,
+          "position": 0
+        },
+        {
+          "color": "#8E24AA",
+          "opacity": 1,
+          "position": 100
+        }
+      ],
+      "rating_question": [
+        {
+          "answer": "Equipment,Infrastructure,Trainer Misbehaves,Location,Trainer is not Good",
+          "star": 1,
+          "question_text": "What need to be improved?"
+        },
+        {
+          "answer": "Equipment,Infrastructure,Trainer Misbehaves,Location,Trainer is not Good",
+          "star": 2,
+          "question_text": "What need to be improved?"
+        },
+        {
+          "answer": "Equipment,Infrastructure,Trainer Misbehaves,Location,Trainer is not Good",
+          "star": 3,
+          "question_text": "What need to be improved?"
+        },
+        {
+          "answer": "Infrastructure,Trainer,Ambiance,Location,Equipment",
+          "star": 4,
+          "question_text": "Please Share your Good Experience, What do you like?"
+        },
+        {
+          "answer": "Infrastructure,Trainer,Ambiance,Location,Equipment",
+          "star": 5,
+          "question_text": "Please Share your Good Experience, What do you like?"
+        }
+      ]
+    },
+    {
+      "activity_id": 13,
+      "activity_name": "Swimming",
+      "activity_font": "e945",
+      "activity_image": "https://cdn.fitimg.in/workout-activity-swimming-B965E52D.png",
+      "activity_color": [
+        {
+          "color": "#C753C3",
+          "opacity": 0.5,
+          "position": 0
+        },
+        {
+          "color": "#C753C3",
+          "opacity": 1,
+          "position": 100
+        }
+      ],
+      "rating_question": [
+        {
+          "answer": "Equipment,Infrastructure,Trainer Misbehaves,Location,Trainer is not Good",
+          "star": 1,
+          "question_text": "What need to be improved?"
+        },
+        {
+          "answer": "Equipment,Infrastructure,Trainer Misbehaves,Location,Trainer is not Good",
+          "star": 2,
+          "question_text": "What need to be improved?"
+        },
+        {
+          "answer": "Equipment,Infrastructure,Trainer Misbehaves,Location,Trainer is not Good",
+          "star": 3,
+          "question_text": "What need to be improved?"
+        },
+        {
+          "answer": "Infrastructure,Trainer,Ambiance,Location,Equipment",
+          "star": 4,
+          "question_text": "Please Share your Good Experience, What do you like?"
+        },
+        {
+          "answer": "Infrastructure,Trainer,Ambiance,Location,Equipment",
+          "star": 5,
+          "question_text": "Please Share your Good Experience, What do you like?"
+        }
+      ]
+    },
+    {
+      "activity_id": 14,
+      "activity_name": "Yoga",
+      "activity_font": "e946",
+      "activity_image": "https://cdn.fitimg.in/workout-activity-yoga-4CAB94B0.png",
+      "activity_color": [
+        {
+          "color": "#6A0572",
+          "opacity": 0.5,
+          "position": 0
+        },
+        {
+          "color": "#6A0572",
+          "opacity": 1,
+          "position": 100
+        }
+      ],
+      "rating_question": [
+        {
+          "answer": "Equipment,Infrastructure,Trainer Misbehaves,Location,Trainer is not Good",
+          "star": 1,
+          "question_text": "What need to be improved?"
+        },
+        {
+          "answer": "Equipment,Infrastructure,Trainer Misbehaves,Location,Trainer is not Good",
+          "star": 2,
+          "question_text": "What need to be improved?"
+        },
+        {
+          "answer": "Equipment,Infrastructure,Trainer Misbehaves,Location,Trainer is not Good",
+          "star": 3,
+          "question_text": "What need to be improved?"
+        },
+        {
+          "answer": "Infrastructure,Trainer,Ambiance,Location,Equipment",
+          "star": 4,
+          "question_text": "Please Share your Good Experience, What do you like?"
+        },
+        {
+          "answer": "Infrastructure,Trainer,Ambiance,Location,Equipment",
+          "star": 5,
+          "question_text": "Please Share your Good Experience, What do you like?"
+        }
+      ]
+    },
+    {
+      "activity_id": 15,
+      "activity_name": "Zumba",
+      "activity_font": "e947",
+      "activity_image": "https://cdn.fitimg.in/workout-activity-zumba-5B141A39.png",
+      "activity_color": [
+        {
+          "color": "#FEAD02",
+          "opacity": 0.5,
+          "position": 0
+        },
+        {
+          "color": "#FEAD02",
+          "opacity": 1,
+          "position": 100
+        }
+      ],
+      "rating_question": [
+        {
+          "answer": "Equipment,Infrastructure,Trainer Misbehaves,Location,Trainer is not Good",
+          "star": 1,
+          "question_text": "What need to be improved?"
+        },
+        {
+          "answer": "Equipment,Infrastructure,Trainer Misbehaves,Location,Trainer is not Good",
+          "star": 2,
+          "question_text": "What need to be improved?"
+        },
+        {
+          "answer": "Equipment,Infrastructure,Trainer Misbehaves,Location,Trainer is not Good",
+          "star": 3,
+          "question_text": "What need to be improved?"
+        },
+        {
+          "answer": "Infrastructure,Trainer,Ambiance,Location,Equipment",
+          "star": 4,
+          "question_text": "Please Share your Good Experience, What do you like?"
+        },
+        {
+          "answer": "Infrastructure,Trainer,Ambiance,Location,Equipment",
+          "star": 5,
+          "question_text": "Please Share your Good Experience, What do you like?"
+        }
+      ]
+    }
+  ]
+}

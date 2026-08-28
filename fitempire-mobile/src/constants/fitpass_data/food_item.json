@@ -1,0 +1,2765 @@
+{
+    "code": 200,
+    "data": [
+        {
+            "item_name": "Cauliflower",
+            "nf_calories": "132.25",
+            "image_name": "https://nix-tag-images.s3.amazonaws.com/315_thumb.jpg",
+            "serving_qty": "1",
+            "serving_unit": "medium head",
+            "serving_weight_grams": "575",
+            "nf_sugars": "11.96",
+            "nf_saturated_fat": "0.4",
+            "nf_cholesterol": "",
+            "nf_sodium": "86.25",
+            "nf_total_carbohydrate": "23.63",
+            "nf_dietary_fiber": "13.23",
+            "nf_protein": "10.58",
+            "nf_potassium": "816.5",
+            "alt_measures": [
+                {
+                    "serving_weight": 54,
+                    "measure": "flowerets",
+                    "seq": 2,
+                    "qty": 3
+                },
+                {
+                    "serving_weight": 62,
+                    "measure": "cup (1\" pieces)",
+                    "seq": 1,
+                    "qty": 0.5
+                },
+                {
+                    "serving_weight": 575,
+                    "measure": "medium head",
+                    "seq": 80,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 840,
+                    "measure": "large head",
+                    "seq": 81,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 265,
+                    "measure": "small head",
+                    "seq": 82,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 100,
+                    "measure": "g",
+                    "seq": null,
+                    "qty": 100
+                },
+                {
+                    "serving_weight": 28.3495,
+                    "measure": "wt. oz",
+                    "seq": null,
+                    "qty": 1
+                }
+            ]
+        },
+        {
+            "item_name": "Cabbage",
+            "nf_calories": "17.25",
+            "image_name": "https://nix-tag-images.s3.amazonaws.com/447_thumb.jpg",
+            "serving_qty": "0.5",
+            "serving_unit": "cup, shredded",
+            "serving_weight_grams": "75",
+            "nf_sugars": "2.09",
+            "nf_saturated_fat": "",
+            "nf_cholesterol": "",
+            "nf_sodium": "6",
+            "nf_total_carbohydrate": "4.13",
+            "nf_dietary_fiber": "1.43",
+            "nf_protein": "0.95",
+            "nf_potassium": "147",
+            "alt_measures": [
+                {
+                    "serving_weight": 75,
+                    "measure": "cup, shredded",
+                    "seq": 1,
+                    "qty": 0.5
+                },
+                {
+                    "serving_weight": 1262,
+                    "measure": "head",
+                    "seq": 2,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 100,
+                    "measure": "g",
+                    "seq": null,
+                    "qty": 100
+                },
+                {
+                    "serving_weight": 28.3495,
+                    "measure": "wt. oz",
+                    "seq": null,
+                    "qty": 1
+                }
+            ]
+        },
+        {
+            "item_name": "Spinach",
+            "nf_calories": "41.4",
+            "image_name": "https://nix-tag-images.s3.amazonaws.com/263_thumb.jpg",
+            "serving_qty": "1",
+            "serving_unit": "cup",
+            "serving_weight_grams": "180",
+            "nf_sugars": "0.77",
+            "nf_saturated_fat": "0.08",
+            "nf_cholesterol": "",
+            "nf_sodium": "126",
+            "nf_total_carbohydrate": "6.75",
+            "nf_dietary_fiber": "4.32",
+            "nf_protein": "5.35",
+            "nf_potassium": "838.8",
+            "alt_measures": [
+                {
+                    "serving_weight": 180,
+                    "measure": "cup",
+                    "seq": 1,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 100,
+                    "measure": "g",
+                    "seq": null,
+                    "qty": 100
+                },
+                {
+                    "serving_weight": 28.3495,
+                    "measure": "wt. oz",
+                    "seq": null,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 3.75,
+                    "measure": "tsp",
+                    "seq": 101,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 11.25,
+                    "measure": "tbsp",
+                    "seq": 102,
+                    "qty": 1
+                }
+            ]
+        },
+        {
+            "item_name": "capsicum",
+            "nf_calories": "18",
+            "image_name": "https://nix-tag-images.s3.amazonaws.com/596_thumb.jpg",
+            "serving_qty": "1",
+            "serving_unit": "pepper",
+            "serving_weight_grams": "45",
+            "nf_sugars": "2.3",
+            "nf_saturated_fat": "0.01",
+            "nf_cholesterol": "",
+            "nf_sodium": "3.15",
+            "nf_total_carbohydrate": "4.26",
+            "nf_dietary_fiber": "0.68",
+            "nf_protein": "0.9",
+            "nf_potassium": "153",
+            "alt_measures": [
+                {
+                    "serving_weight": 75,
+                    "measure": "cup, chopped or diced",
+                    "seq": 2,
+                    "qty": 0.5
+                },
+                {
+                    "serving_weight": 45,
+                    "measure": "pepper",
+                    "seq": 1,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 100,
+                    "measure": "g",
+                    "seq": null,
+                    "qty": 100
+                },
+                {
+                    "serving_weight": 28.3495,
+                    "measure": "wt. oz",
+                    "seq": null,
+                    "qty": 1
+                }
+            ]
+        },
+        {
+            "item_name": "Beans",
+            "nf_calories": "238.76",
+            "image_name": "https://nix-tag-images.s3.amazonaws.com/229_thumb.jpg",
+            "serving_qty": "1",
+            "serving_unit": "cup",
+            "serving_weight_grams": "254",
+            "nf_sugars": "20.22",
+            "nf_saturated_fat": "0.18",
+            "nf_cholesterol": "",
+            "nf_sodium": "871.22",
+            "nf_total_carbohydrate": "53.7",
+            "nf_dietary_fiber": "10.41",
+            "nf_protein": "12.07",
+            "nf_potassium": "568.96",
+            "alt_measures": [
+                {
+                    "serving_weight": 254,
+                    "measure": "cup",
+                    "seq": 1,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 100,
+                    "measure": "g",
+                    "seq": null,
+                    "qty": 100
+                },
+                {
+                    "serving_weight": 28.3495,
+                    "measure": "wt. oz",
+                    "seq": null,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 5.29,
+                    "measure": "tsp",
+                    "seq": 101,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 15.88,
+                    "measure": "tbsp",
+                    "seq": 102,
+                    "qty": 1
+                }
+            ]
+        },
+        {
+            "item_name": "Mushroom",
+            "nf_calories": "3.36",
+            "image_name": "https://nix-tag-images.s3.amazonaws.com/148_thumb.jpg",
+            "serving_qty": "1",
+            "serving_unit": "mushroom",
+            "serving_weight_grams": "12",
+            "nf_sugars": "0.28",
+            "nf_saturated_fat": "0.01",
+            "nf_cholesterol": "",
+            "nf_sodium": "0.24",
+            "nf_total_carbohydrate": "0.63",
+            "nf_dietary_fiber": "0.26",
+            "nf_protein": "0.26",
+            "nf_potassium": "42.72",
+            "alt_measures": [
+                {
+                    "serving_weight": 12,
+                    "measure": "mushroom",
+                    "seq": 3,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 9.8,
+                    "measure": "tbsp",
+                    "seq": 2,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 100,
+                    "measure": "g",
+                    "seq": null,
+                    "qty": 100
+                },
+                {
+                    "serving_weight": 28.3495,
+                    "measure": "wt. oz",
+                    "seq": null,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 156.8,
+                    "measure": "cup",
+                    "seq": 100,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 3.27,
+                    "measure": "tsp",
+                    "seq": 101,
+                    "qty": 1
+                }
+            ]
+        },
+        {
+            "item_name": "ladyfinger",
+            "nf_calories": "39.93",
+            "image_name": "https://nix-tag-images.s3.amazonaws.com/2150_thumb.jpg",
+            "serving_qty": "1",
+            "serving_unit": "ladyfinger",
+            "serving_weight_grams": "11",
+            "nf_sugars": "",
+            "nf_saturated_fat": "0.33",
+            "nf_cholesterol": "24.31",
+            "nf_sodium": "16.17",
+            "nf_total_carbohydrate": "6.57",
+            "nf_dietary_fiber": "0.11",
+            "nf_protein": "1.17",
+            "nf_potassium": "12.43",
+            "alt_measures": [
+                {
+                    "serving_weight": 11,
+                    "measure": "ladyfinger",
+                    "seq": 4,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 24,
+                    "measure": "breakfast treat (approx 4\" x 2\" x 7/8\")",
+                    "seq": 3,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 13,
+                    "measure": "anisette sponge (4\" x 1-1/8\" x 7/8\")",
+                    "seq": 2,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 28.35,
+                    "measure": "oz",
+                    "seq": 1,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 100,
+                    "measure": "g",
+                    "seq": null,
+                    "qty": 100
+                }
+            ]
+        },
+        {
+            "item_name": "saag",
+            "nf_calories": "195.86",
+            "image_name": "https://d2eawub7utcl6.cloudfront.net/images/nix-apple-grey.png",
+            "serving_qty": "1",
+            "serving_unit": "cup",
+            "serving_weight_grams": "185",
+            "nf_sugars": "1.61",
+            "nf_saturated_fat": "10.2",
+            "nf_cholesterol": "42.12",
+            "nf_sodium": "613.29",
+            "nf_total_carbohydrate": "9.65",
+            "nf_dietary_fiber": "5.16",
+            "nf_protein": "5.23",
+            "nf_potassium": "838.69",
+            "alt_measures": [
+                {
+                    "serving_weight": 185,
+                    "measure": "cup",
+                    "seq": 2,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 100,
+                    "measure": "g",
+                    "seq": null,
+                    "qty": 100
+                },
+                {
+                    "serving_weight": 28.3495,
+                    "measure": "wt. oz",
+                    "seq": null,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 3.85,
+                    "measure": "tsp",
+                    "seq": 101,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 11.56,
+                    "measure": "tbsp",
+                    "seq": 102,
+                    "qty": 1
+                }
+            ]
+        },
+        {
+            "item_name": "Eggplant",
+            "nf_calories": "198.1",
+            "image_name": "https://nix-tag-images.s3.amazonaws.com/540_thumb.jpg",
+            "serving_qty": "1",
+            "serving_unit": "medium eggplant",
+            "serving_weight_grams": "566",
+            "nf_sugars": "18.11",
+            "nf_saturated_fat": "0.25",
+            "nf_cholesterol": "",
+            "nf_sodium": "5.66",
+            "nf_total_carbohydrate": "49.41",
+            "nf_dietary_fiber": "14.15",
+            "nf_protein": "4.7",
+            "nf_potassium": "696.18",
+            "alt_measures": [
+                {
+                    "serving_weight": 99,
+                    "measure": "cup (1\" cubes)",
+                    "seq": 1,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 566,
+                    "measure": "medium eggplant",
+                    "seq": 80,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 682,
+                    "measure": "large eggplant",
+                    "seq": 81,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 432,
+                    "measure": "small eggplant",
+                    "seq": 82,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 55,
+                    "measure": "slice",
+                    "seq": 83,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 100,
+                    "measure": "g",
+                    "seq": null,
+                    "qty": 100
+                },
+                {
+                    "serving_weight": 28.3495,
+                    "measure": "wt. oz",
+                    "seq": null,
+                    "qty": 1
+                }
+            ]
+        },
+        {
+            "item_name": "Carrot",
+            "nf_calories": "16.1",
+            "image_name": "https://nix-tag-images.s3.amazonaws.com/452_thumb.jpg",
+            "serving_qty": "1",
+            "serving_unit": "carrot",
+            "serving_weight_grams": "46",
+            "nf_sugars": "1.59",
+            "nf_saturated_fat": "0.01",
+            "nf_cholesterol": "",
+            "nf_sodium": "26.68",
+            "nf_total_carbohydrate": "3.78",
+            "nf_dietary_fiber": "1.38",
+            "nf_protein": "0.35",
+            "nf_potassium": "108.1",
+            "alt_measures": [
+                {
+                    "serving_weight": 46,
+                    "measure": "carrot",
+                    "seq": 3,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 78,
+                    "measure": "cup slices",
+                    "seq": 2,
+                    "qty": 0.5
+                },
+                {
+                    "serving_weight": 9.7,
+                    "measure": "tbsp",
+                    "seq": 1,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 100,
+                    "measure": "g",
+                    "seq": null,
+                    "qty": 100
+                },
+                {
+                    "serving_weight": 28.3495,
+                    "measure": "wt. oz",
+                    "seq": null,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 155.2,
+                    "measure": "cup",
+                    "seq": 100,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 3.23,
+                    "measure": "tsp",
+                    "seq": 101,
+                    "qty": 1
+                }
+            ]
+        },
+        {
+            "item_name": "Jackfruit",
+            "nf_calories": "156.75",
+            "image_name": "https://nix-tag-images.s3.amazonaws.com/4702_thumb.jpg",
+            "serving_qty": "1",
+            "serving_unit": "cup, sliced",
+            "serving_weight_grams": "165",
+            "nf_sugars": "31.48",
+            "nf_saturated_fat": "0.32",
+            "nf_cholesterol": "",
+            "nf_sodium": "3.3",
+            "nf_total_carbohydrate": "38.36",
+            "nf_dietary_fiber": "2.48",
+            "nf_protein": "2.84",
+            "nf_potassium": "739.2",
+            "alt_measures": [
+                {
+                    "serving_weight": 151,
+                    "measure": "cup 1\" pieces",
+                    "seq": 2,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 165,
+                    "measure": "cup, sliced",
+                    "seq": 1,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 100,
+                    "measure": "g",
+                    "seq": null,
+                    "qty": 100
+                },
+                {
+                    "serving_weight": 28.3495,
+                    "measure": "wt. oz",
+                    "seq": null,
+                    "qty": 1
+                }
+            ]
+        },
+        {
+            "item_name": "Turnip",
+            "nf_calories": "26.4",
+            "image_name": "https://nix-tag-images.s3.amazonaws.com/3356_thumb.jpg",
+            "serving_qty": "1",
+            "serving_unit": "turnip",
+            "serving_weight_grams": "120",
+            "nf_sugars": "3.59",
+            "nf_saturated_fat": "0.01",
+            "nf_cholesterol": "",
+            "nf_sodium": "19.2",
+            "nf_total_carbohydrate": "6.07",
+            "nf_dietary_fiber": "2.4",
+            "nf_protein": "0.85",
+            "nf_potassium": "212.4",
+            "alt_measures": [
+                {
+                    "serving_weight": 230,
+                    "measure": "cup, mashed",
+                    "seq": 2,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 156,
+                    "measure": "cup, cubes",
+                    "seq": 1,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 120,
+                    "measure": "turnip",
+                    "seq": 80,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 100,
+                    "measure": "g",
+                    "seq": null,
+                    "qty": 100
+                },
+                {
+                    "serving_weight": 28.3495,
+                    "measure": "wt. oz",
+                    "seq": null,
+                    "qty": 1
+                }
+            ]
+        },
+        {
+            "item_name": "Yam",
+            "nf_calories": "157.76",
+            "image_name": "https://nix-tag-images.s3.amazonaws.com/4484_thumb.jpg",
+            "serving_qty": "1",
+            "serving_unit": "cup, cubes",
+            "serving_weight_grams": "136",
+            "nf_sugars": "0.67",
+            "nf_saturated_fat": "0.04",
+            "nf_cholesterol": "",
+            "nf_sodium": "10.88",
+            "nf_total_carbohydrate": "37.37",
+            "nf_dietary_fiber": "5.3",
+            "nf_protein": "2.03",
+            "nf_potassium": "911.2",
+            "alt_measures": [
+                {
+                    "serving_weight": 68,
+                    "measure": "cup, cubes",
+                    "seq": 2,
+                    "qty": 0.5
+                },
+                {
+                    "serving_weight": 136,
+                    "measure": "cup, cubes",
+                    "seq": 1,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 100,
+                    "measure": "g",
+                    "seq": null,
+                    "qty": 100
+                },
+                {
+                    "serving_weight": 28.3495,
+                    "measure": "wt. oz",
+                    "seq": null,
+                    "qty": 1
+                }
+            ]
+        },
+        {
+            "item_name": "sweet potato",
+            "nf_calories": "102.6",
+            "image_name": "https://nix-tag-images.s3.amazonaws.com/208_thumb.jpg",
+            "serving_qty": "1",
+            "serving_unit": "medium (2\" dia, 5\" long, raw)",
+            "serving_weight_grams": "114",
+            "nf_sugars": "7.39",
+            "nf_saturated_fat": "0.06",
+            "nf_cholesterol": "",
+            "nf_sodium": "41.04",
+            "nf_total_carbohydrate": "23.61",
+            "nf_dietary_fiber": "3.76",
+            "nf_protein": "2.29",
+            "nf_potassium": "541.5",
+            "alt_measures": [
+                {
+                    "serving_weight": 60,
+                    "measure": "small",
+                    "seq": 4,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 114,
+                    "measure": "medium (2\" dia, 5\" long, raw)",
+                    "seq": 3,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 180,
+                    "measure": "large",
+                    "seq": 2,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 200,
+                    "measure": "cup",
+                    "seq": 1,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 100,
+                    "measure": "g",
+                    "seq": null,
+                    "qty": 100
+                },
+                {
+                    "serving_weight": 28.3495,
+                    "measure": "wt. oz",
+                    "seq": null,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 4.17,
+                    "measure": "tsp",
+                    "seq": 101,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 12.5,
+                    "measure": "tbsp",
+                    "seq": 102,
+                    "qty": 1
+                }
+            ]
+        },
+        {
+            "item_name": "kohlrabi",
+            "nf_calories": "36.45",
+            "image_name": "https://nix-tag-images.s3.amazonaws.com/4333_thumb.jpg",
+            "serving_qty": "1",
+            "serving_unit": "cup",
+            "serving_weight_grams": "135",
+            "nf_sugars": "3.51",
+            "nf_saturated_fat": "0.02",
+            "nf_cholesterol": "",
+            "nf_sodium": "27",
+            "nf_total_carbohydrate": "8.37",
+            "nf_dietary_fiber": "4.86",
+            "nf_protein": "2.3",
+            "nf_potassium": "472.5",
+            "alt_measures": [
+                {
+                    "serving_weight": 16,
+                    "measure": "slice",
+                    "seq": 2,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 135,
+                    "measure": "cup",
+                    "seq": 1,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 100,
+                    "measure": "g",
+                    "seq": null,
+                    "qty": 100
+                },
+                {
+                    "serving_weight": 28.3495,
+                    "measure": "wt. oz",
+                    "seq": null,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 2.81,
+                    "measure": "tsp",
+                    "seq": 101,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 8.44,
+                    "measure": "tbsp",
+                    "seq": 102,
+                    "qty": 1
+                }
+            ]
+        },
+        {
+            "item_name": "Pumpkin",
+            "nf_calories": "49",
+            "image_name": "https://d2eawub7utcl6.cloudfront.net/images/nix-apple-grey.png",
+            "serving_qty": "1",
+            "serving_unit": "cup, mashed",
+            "serving_weight_grams": "245",
+            "nf_sugars": "5.1",
+            "nf_saturated_fat": "0.09",
+            "nf_cholesterol": "",
+            "nf_sodium": "2.45",
+            "nf_total_carbohydrate": "12.01",
+            "nf_dietary_fiber": "2.7",
+            "nf_protein": "1.76",
+            "nf_potassium": "563.5",
+            "alt_measures": [
+                {
+                    "serving_weight": 245,
+                    "measure": "cup, mashed",
+                    "seq": 1,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 245,
+                    "measure": "cup",
+                    "seq": 80,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 100,
+                    "measure": "g",
+                    "seq": null,
+                    "qty": 100
+                },
+                {
+                    "serving_weight": 28.3495,
+                    "measure": "wt. oz",
+                    "seq": null,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 5.1,
+                    "measure": "tsp",
+                    "seq": 101,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 15.31,
+                    "measure": "tbsp",
+                    "seq": 102,
+                    "qty": 1
+                }
+            ]
+        },
+        {
+            "item_name": "lotus",
+            "nf_calories": "39.6",
+            "image_name": "https://d2eawub7utcl6.cloudfront.net/images/nix-apple-grey.png",
+            "serving_qty": "0.5",
+            "serving_unit": "cup",
+            "serving_weight_grams": "60",
+            "nf_sugars": "0.3",
+            "nf_saturated_fat": "0.01",
+            "nf_cholesterol": "",
+            "nf_sodium": "27",
+            "nf_total_carbohydrate": "9.61",
+            "nf_dietary_fiber": "1.86",
+            "nf_protein": "0.95",
+            "nf_potassium": "217.8",
+            "alt_measures": [
+                {
+                    "serving_weight": 89,
+                    "measure": "slices (2-1/2\" dia)",
+                    "seq": 2,
+                    "qty": 10
+                },
+                {
+                    "serving_weight": 60,
+                    "measure": "cup",
+                    "seq": 1,
+                    "qty": 0.5
+                },
+                {
+                    "serving_weight": 100,
+                    "measure": "g",
+                    "seq": null,
+                    "qty": 100
+                },
+                {
+                    "serving_weight": 28.3495,
+                    "measure": "wt. oz",
+                    "seq": null,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 2.5,
+                    "measure": "tsp",
+                    "seq": 101,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 7.5,
+                    "measure": "tbsp",
+                    "seq": 102,
+                    "qty": 1
+                }
+            ]
+        },
+        {
+            "item_name": "Banana",
+            "nf_calories": "105.02",
+            "image_name": "https://nix-tag-images.s3.amazonaws.com/399_thumb.jpg",
+            "serving_qty": "1",
+            "serving_unit": "medium (7\" to 7-7/8\" long)",
+            "serving_weight_grams": "118",
+            "nf_sugars": "14.43",
+            "nf_saturated_fat": "0.13",
+            "nf_cholesterol": "",
+            "nf_sodium": "1.18",
+            "nf_total_carbohydrate": "26.95",
+            "nf_dietary_fiber": "3.07",
+            "nf_protein": "1.29",
+            "nf_potassium": "422.44",
+            "alt_measures": [
+                {
+                    "serving_weight": 126,
+                    "measure": "NLEA serving",
+                    "seq": 8,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 152,
+                    "measure": "extra large (9\" or longer)",
+                    "seq": 7,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 136,
+                    "measure": "large (8\" to 8-7/8\" long)",
+                    "seq": 6,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 118,
+                    "measure": "medium (7\" to 7-7/8\" long)",
+                    "seq": 5,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 101,
+                    "measure": "small (6\" to 6-7/8\" long)",
+                    "seq": 4,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 81,
+                    "measure": "extra small (less than 6\" long)",
+                    "seq": 3,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 150,
+                    "measure": "cup, sliced",
+                    "seq": 2,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 225,
+                    "measure": "cup, mashed",
+                    "seq": 1,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 28.35,
+                    "measure": "oz",
+                    "seq": 80,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 100,
+                    "measure": "g",
+                    "seq": null,
+                    "qty": 100
+                }
+            ]
+        },
+        {
+            "item_name": "Strawberry",
+            "nf_calories": "28.8",
+            "image_name": "https://nix-tag-images.s3.amazonaws.com/831_thumb.jpg",
+            "serving_qty": "5",
+            "serving_unit": "large",
+            "serving_weight_grams": "90",
+            "nf_sugars": "4.4",
+            "nf_saturated_fat": "0.01",
+            "nf_cholesterol": "",
+            "nf_sodium": "0.9",
+            "nf_total_carbohydrate": "6.91",
+            "nf_dietary_fiber": "1.8",
+            "nf_protein": "0.6",
+            "nf_potassium": "137.7",
+            "alt_measures": [
+                {
+                    "serving_weight": 7,
+                    "measure": "small (1\" dia)",
+                    "seq": 9,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 357,
+                    "measure": "pint as purchased, yields",
+                    "seq": 8,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 12,
+                    "measure": "medium (1-1/4\" dia)",
+                    "seq": 7,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 18,
+                    "measure": "large (1-3/8\" dia)",
+                    "seq": 6,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 27,
+                    "measure": "extra large (1-5/8\" dia)",
+                    "seq": 5,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 144,
+                    "measure": "cup, whole",
+                    "seq": 4,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 166,
+                    "measure": "cup, sliced",
+                    "seq": 3,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 232,
+                    "measure": "cup, pureed",
+                    "seq": 2,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 147,
+                    "measure": "NLEA serving",
+                    "seq": 10,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 152,
+                    "measure": "cup, halves",
+                    "seq": 1,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 90,
+                    "measure": "large",
+                    "seq": 80,
+                    "qty": 5
+                },
+                {
+                    "serving_weight": 100,
+                    "measure": "g",
+                    "seq": null,
+                    "qty": 100
+                },
+                {
+                    "serving_weight": 28.3495,
+                    "measure": "wt. oz",
+                    "seq": null,
+                    "qty": 1
+                }
+            ]
+        },
+        {
+            "item_name": "apple",
+            "nf_calories": "94.64",
+            "image_name": "https://nix-tag-images.s3.amazonaws.com/384_thumb.jpg",
+            "serving_qty": "1",
+            "serving_unit": "medium (3\" dia)",
+            "serving_weight_grams": "182",
+            "nf_sugars": "18.91",
+            "nf_saturated_fat": "0.05",
+            "nf_cholesterol": "",
+            "nf_sodium": "1.82",
+            "nf_total_carbohydrate": "25.13",
+            "nf_dietary_fiber": "4.37",
+            "nf_protein": "0.47",
+            "nf_potassium": "194.74",
+            "alt_measures": [
+                {
+                    "serving_weight": 242,
+                    "measure": "NLEA serving",
+                    "seq": 7,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 101,
+                    "measure": "extra small (2-1/2\" dia)",
+                    "seq": 6,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 149,
+                    "measure": "small (2-3/4\" dia)",
+                    "seq": 5,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 182,
+                    "measure": "medium (3\" dia)",
+                    "seq": 4,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 223,
+                    "measure": "large (3-1/4\" dia)",
+                    "seq": 3,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 109,
+                    "measure": "cup slices",
+                    "seq": 2,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 125,
+                    "measure": "cup, quartered or chopped",
+                    "seq": 1,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 28.35,
+                    "measure": "oz",
+                    "seq": 80,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 100,
+                    "measure": "g",
+                    "seq": null,
+                    "qty": 100
+                }
+            ]
+        },
+        {
+            "item_name": "Watermelon",
+            "nf_calories": "85.8",
+            "image_name": "https://nix-tag-images.s3.amazonaws.com/869_thumb.jpg",
+            "serving_qty": "1",
+            "serving_unit": "wedge (approx 1/16 of melon)",
+            "serving_weight_grams": "286",
+            "nf_sugars": "17.73",
+            "nf_saturated_fat": "0.05",
+            "nf_cholesterol": "",
+            "nf_sodium": "2.86",
+            "nf_total_carbohydrate": "21.59",
+            "nf_dietary_fiber": "1.14",
+            "nf_protein": "1.74",
+            "nf_potassium": "320.32",
+            "alt_measures": [
+                {
+                    "serving_weight": 280,
+                    "measure": "NLEA serving",
+                    "seq": 6,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 122,
+                    "measure": "watermelon balls",
+                    "seq": 5,
+                    "qty": 10
+                },
+                {
+                    "serving_weight": 286,
+                    "measure": "wedge (approx 1/16 of melon)",
+                    "seq": 4,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 4518,
+                    "measure": "melon (15\" long x 7-1/2\" dia)",
+                    "seq": 3,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 152,
+                    "measure": "cup, diced",
+                    "seq": 2,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 154,
+                    "measure": "cup, balls",
+                    "seq": 1,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 28.35,
+                    "measure": "oz",
+                    "seq": 80,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 100,
+                    "measure": "g",
+                    "seq": null,
+                    "qty": 100
+                }
+            ]
+        },
+        {
+            "item_name": "Chapati",
+            "nf_calories": "119.6",
+            "image_name": "https://nix-tag-images.s3.amazonaws.com/2215_thumb.jpg",
+            "serving_qty": "1",
+            "serving_unit": "medium",
+            "serving_weight_grams": "40",
+            "nf_sugars": "1.17",
+            "nf_saturated_fat": "1.32",
+            "nf_cholesterol": "",
+            "nf_sodium": "119.2",
+            "nf_total_carbohydrate": "18.45",
+            "nf_dietary_fiber": "3.88",
+            "nf_protein": "3.14",
+            "nf_potassium": "78.4",
+            "alt_measures": [
+                {
+                    "serving_weight": 43,
+                    "measure": "piece",
+                    "seq": 1,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 27,
+                    "measure": "small",
+                    "seq": 80,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 40,
+                    "measure": "medium",
+                    "seq": 81,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 52,
+                    "measure": "large",
+                    "seq": 82,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 100,
+                    "measure": "g",
+                    "seq": null,
+                    "qty": 100
+                },
+                {
+                    "serving_weight": 28.3495,
+                    "measure": "wt. oz",
+                    "seq": null,
+                    "qty": 1
+                }
+            ]
+        },
+        {
+            "item_name": "Paratha",
+            "nf_calories": "257.54",
+            "image_name": "https://d2eawub7utcl6.cloudfront.net/images/nix-apple-grey.png",
+            "serving_qty": "1",
+            "serving_unit": "piece",
+            "serving_weight_grams": "79",
+            "nf_sugars": "3.28",
+            "nf_saturated_fat": "4.6",
+            "nf_cholesterol": "0.79",
+            "nf_sodium": "357.08",
+            "nf_total_carbohydrate": "35.83",
+            "nf_dietary_fiber": "7.58",
+            "nf_protein": "5.02",
+            "nf_potassium": "109.81",
+            "alt_measures": [
+                {
+                    "serving_weight": 79,
+                    "measure": "piece",
+                    "seq": 1,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 100,
+                    "measure": "g",
+                    "seq": null,
+                    "qty": 100
+                },
+                {
+                    "serving_weight": 28.3495,
+                    "measure": "wt. oz",
+                    "seq": null,
+                    "qty": 1
+                }
+            ]
+        },
+        {
+            "item_name": "Rice",
+            "nf_calories": "205.4",
+            "image_name": "https://nix-tag-images.s3.amazonaws.com/784_thumb.jpg",
+            "serving_qty": "1",
+            "serving_unit": "cup",
+            "serving_weight_grams": "158",
+            "nf_sugars": "0.08",
+            "nf_saturated_fat": "0.12",
+            "nf_cholesterol": "",
+            "nf_sodium": "1.58",
+            "nf_total_carbohydrate": "44.51",
+            "nf_dietary_fiber": "0.63",
+            "nf_protein": "4.25",
+            "nf_potassium": "55.3",
+            "alt_measures": [
+                {
+                    "serving_weight": 158,
+                    "measure": "cup",
+                    "seq": 1,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 100,
+                    "measure": "g",
+                    "seq": null,
+                    "qty": 100
+                },
+                {
+                    "serving_weight": 28.3495,
+                    "measure": "wt. oz",
+                    "seq": null,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 3.29,
+                    "measure": "tsp",
+                    "seq": 101,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 9.88,
+                    "measure": "tbsp",
+                    "seq": 102,
+                    "qty": 1
+                }
+            ]
+        },
+        {
+            "item_name": "Breads",
+            "nf_calories": "77.14",
+            "image_name": "https://nix-tag-images.s3.amazonaws.com/8_thumb.jpg",
+            "serving_qty": "1",
+            "serving_unit": "slice",
+            "serving_weight_grams": "29",
+            "nf_sugars": "1.64",
+            "nf_saturated_fat": "0.2",
+            "nf_cholesterol": "",
+            "nf_sodium": "142.1",
+            "nf_total_carbohydrate": "14.33",
+            "nf_dietary_fiber": "0.78",
+            "nf_protein": "2.57",
+            "nf_potassium": "36.54",
+            "alt_measures": [
+                {
+                    "serving_weight": 9,
+                    "measure": "slice thin, crust not eaten",
+                    "seq": 9,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 20,
+                    "measure": "slice, thin",
+                    "seq": 8,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 12,
+                    "measure": "slice crust not eaten",
+                    "seq": 7,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 25,
+                    "measure": "slice",
+                    "seq": 6,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 30,
+                    "measure": "slice, large",
+                    "seq": 5,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 35,
+                    "measure": "cup, cubes",
+                    "seq": 4,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 45,
+                    "measure": "cup, crumbs",
+                    "seq": 3,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 28.35,
+                    "measure": "oz",
+                    "seq": 2,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 15,
+                    "measure": "slice, very thin",
+                    "seq": 10,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 29,
+                    "measure": "slice",
+                    "seq": 1,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 754,
+                    "measure": "whole loaf",
+                    "seq": 80,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 45.52,
+                    "measure": "slice (1.5 oz)",
+                    "seq": 81,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 40,
+                    "measure": "cup",
+                    "seq": 82,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 100,
+                    "measure": "g",
+                    "seq": null,
+                    "qty": 100
+                },
+                {
+                    "serving_weight": 0.83,
+                    "measure": "tsp",
+                    "seq": 101,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 2.5,
+                    "measure": "tbsp",
+                    "seq": 102,
+                    "qty": 1
+                }
+            ]
+        },
+        {
+            "item_name": "roti",
+            "nf_calories": "119.6",
+            "image_name": "https://nix-tag-images.s3.amazonaws.com/8289_thumb.jpg",
+            "serving_qty": "1",
+            "serving_unit": "medium",
+            "serving_weight_grams": "40",
+            "nf_sugars": "1.17",
+            "nf_saturated_fat": "1.32",
+            "nf_cholesterol": "",
+            "nf_sodium": "119.2",
+            "nf_total_carbohydrate": "18.45",
+            "nf_dietary_fiber": "3.88",
+            "nf_protein": "3.14",
+            "nf_potassium": "78.4",
+            "alt_measures": [
+                {
+                    "serving_weight": 43,
+                    "measure": "piece",
+                    "seq": 1,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 27,
+                    "measure": "small",
+                    "seq": 80,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 40,
+                    "measure": "medium",
+                    "seq": 81,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 52,
+                    "measure": "large",
+                    "seq": 82,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 100,
+                    "measure": "g",
+                    "seq": null,
+                    "qty": 100
+                },
+                {
+                    "serving_weight": 28.3495,
+                    "measure": "wt. oz",
+                    "seq": null,
+                    "qty": 1
+                }
+            ]
+        },
+        {
+            "item_name": "Aloo Paratha",
+            "nf_calories": "300.1",
+            "image_name": "https://d2eawub7utcl6.cloudfront.net/images/nix-apple-grey.png",
+            "serving_qty": "1",
+            "serving_unit": "piece",
+            "serving_weight_grams": "130.65",
+            "nf_sugars": "4.24",
+            "nf_saturated_fat": "4.65",
+            "nf_cholesterol": "0.79",
+            "nf_sodium": "369.57",
+            "nf_total_carbohydrate": "45.53",
+            "nf_dietary_fiber": "8.72",
+            "nf_protein": "6.13",
+            "nf_potassium": "315.81",
+            "alt_measures": [
+                {
+                    "serving_weight": 130.65,
+                    "measure": "piece",
+                    "seq": 1,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 100,
+                    "measure": "g",
+                    "seq": null,
+                    "qty": 100
+                },
+                {
+                    "serving_weight": 28.3495,
+                    "measure": "wt. oz",
+                    "seq": null,
+                    "qty": 1
+                }
+            ]
+        },
+        {
+            "item_name": "Paneer Paratha",
+            "nf_calories": "176.11",
+            "image_name": "https://d2eawub7utcl6.cloudfront.net/images/nix-apple-grey.png",
+            "serving_qty": "1",
+            "serving_unit": "piece",
+            "serving_weight_grams": "77.75",
+            "nf_sugars": "1.06",
+            "nf_saturated_fat": "4.1",
+            "nf_cholesterol": "19.94",
+            "nf_sodium": "445.17",
+            "nf_total_carbohydrate": "20.62",
+            "nf_dietary_fiber": "3.03",
+            "nf_protein": "7.7",
+            "nf_potassium": "148.54",
+            "alt_measures": [
+                {
+                    "serving_weight": 77.75,
+                    "measure": "piece",
+                    "seq": 1,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 100,
+                    "measure": "g",
+                    "seq": null,
+                    "qty": 100
+                },
+                {
+                    "serving_weight": 28.3495,
+                    "measure": "wt. oz",
+                    "seq": null,
+                    "qty": 1
+                }
+            ]
+        },
+        {
+            "item_name": "Peas",
+            "nf_calories": "134.4",
+            "image_name": "https://nix-tag-images.s3.amazonaws.com/728_thumb.jpg",
+            "serving_qty": "1",
+            "serving_unit": "cup",
+            "serving_weight_grams": "160",
+            "nf_sugars": "9.49",
+            "nf_saturated_fat": "0.06",
+            "nf_cholesterol": "",
+            "nf_sodium": "4.8",
+            "nf_total_carbohydrate": "25.01",
+            "nf_dietary_fiber": "8.8",
+            "nf_protein": "8.58",
+            "nf_potassium": "433.6",
+            "alt_measures": [
+                {
+                    "serving_weight": 160,
+                    "measure": "cup",
+                    "seq": 1,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 100,
+                    "measure": "g",
+                    "seq": null,
+                    "qty": 100
+                },
+                {
+                    "serving_weight": 28.3495,
+                    "measure": "wt. oz",
+                    "seq": null,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 3.33,
+                    "measure": "tsp",
+                    "seq": 101,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 10,
+                    "measure": "tbsp",
+                    "seq": 102,
+                    "qty": 1
+                }
+            ]
+        },
+        {
+            "item_name": "Onion",
+            "nf_calories": "41.36",
+            "image_name": "https://nix-tag-images.s3.amazonaws.com/717_thumb.jpg",
+            "serving_qty": "1",
+            "serving_unit": "medium",
+            "serving_weight_grams": "94",
+            "nf_sugars": "4.45",
+            "nf_saturated_fat": "0.03",
+            "nf_cholesterol": "",
+            "nf_sodium": "2.82",
+            "nf_total_carbohydrate": "9.54",
+            "nf_dietary_fiber": "1.32",
+            "nf_protein": "1.28",
+            "nf_potassium": "156.04",
+            "alt_measures": [
+                {
+                    "serving_weight": 8,
+                    "measure": "slice, thin",
+                    "seq": 8,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 60,
+                    "measure": "small",
+                    "seq": 7,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 12,
+                    "measure": "slice, medium (1/8\" thick)",
+                    "seq": 6,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 94,
+                    "measure": "medium",
+                    "seq": 5,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 32,
+                    "measure": "slice, large (1/4\" thick)",
+                    "seq": 4,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 128,
+                    "measure": "large",
+                    "seq": 3,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 15,
+                    "measure": "tbsp chopped",
+                    "seq": 2,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 210,
+                    "measure": "cup",
+                    "seq": 1,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 100,
+                    "measure": "g",
+                    "seq": null,
+                    "qty": 100
+                },
+                {
+                    "serving_weight": 28.3495,
+                    "measure": "wt. oz",
+                    "seq": null,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 4.38,
+                    "measure": "tsp",
+                    "seq": 101,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 13.13,
+                    "measure": "tbsp",
+                    "seq": 102,
+                    "qty": 1
+                }
+            ]
+        },
+        {
+            "item_name": "veg",
+            "nf_calories": "59.15",
+            "image_name": "https://nix-tag-images.s3.amazonaws.com/318_thumb.jpg",
+            "serving_qty": "0.5",
+            "serving_unit": "cup",
+            "serving_weight_grams": "91",
+            "nf_sugars": "2.84",
+            "nf_saturated_fat": "0.03",
+            "nf_cholesterol": "",
+            "nf_sodium": "31.85",
+            "nf_total_carbohydrate": "11.91",
+            "nf_dietary_fiber": "4",
+            "nf_protein": "2.6",
+            "nf_potassium": "153.79",
+            "alt_measures": [
+                {
+                    "serving_weight": 91,
+                    "measure": "cup",
+                    "seq": 1,
+                    "qty": 0.5
+                },
+                {
+                    "serving_weight": 100,
+                    "measure": "g",
+                    "seq": null,
+                    "qty": 100
+                },
+                {
+                    "serving_weight": 28.3495,
+                    "measure": "wt. oz",
+                    "seq": null,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 3.79,
+                    "measure": "tsp",
+                    "seq": 101,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 11.38,
+                    "measure": "tbsp",
+                    "seq": 102,
+                    "qty": 1
+                }
+            ]
+        },
+        {
+            "item_name": "Steamed Rice",
+            "nf_calories": "205.4",
+            "image_name": "https://nix-tag-images.s3.amazonaws.com/784_thumb.jpg",
+            "serving_qty": "1",
+            "serving_unit": "cup",
+            "serving_weight_grams": "158",
+            "nf_sugars": "0.08",
+            "nf_saturated_fat": "0.12",
+            "nf_cholesterol": "",
+            "nf_sodium": "1.58",
+            "nf_total_carbohydrate": "44.51",
+            "nf_dietary_fiber": "0.63",
+            "nf_protein": "4.25",
+            "nf_potassium": "55.3",
+            "alt_measures": [
+                {
+                    "serving_weight": 158,
+                    "measure": "cup",
+                    "seq": 1,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 100,
+                    "measure": "g",
+                    "seq": null,
+                    "qty": 100
+                },
+                {
+                    "serving_weight": 28.3495,
+                    "measure": "wt. oz",
+                    "seq": null,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 3.29,
+                    "measure": "tsp",
+                    "seq": 101,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 9.88,
+                    "measure": "tbsp",
+                    "seq": 102,
+                    "qty": 1
+                }
+            ]
+        },
+        {
+            "item_name": "Vegetable Pulao",
+            "nf_calories": "280.64",
+            "image_name": "https://d2eawub7utcl6.cloudfront.net/images/nix-apple-grey.png",
+            "serving_qty": "1",
+            "serving_unit": "cup",
+            "serving_weight_grams": "244.07",
+            "nf_sugars": "1.86",
+            "nf_saturated_fat": "0.4",
+            "nf_cholesterol": "",
+            "nf_sodium": "1014.24",
+            "nf_total_carbohydrate": "53.93",
+            "nf_dietary_fiber": "1.01",
+            "nf_protein": "5.39",
+            "nf_potassium": "203.61",
+            "alt_measures": [
+                {
+                    "serving_weight": 244.07,
+                    "measure": "cup",
+                    "seq": 1,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 100,
+                    "measure": "g",
+                    "seq": null,
+                    "qty": 100
+                },
+                {
+                    "serving_weight": 28.3495,
+                    "measure": "wt. oz",
+                    "seq": null,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 5.08,
+                    "measure": "tsp",
+                    "seq": 101,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 15.25,
+                    "measure": "tbsp",
+                    "seq": 102,
+                    "qty": 1
+                }
+            ]
+        },
+        {
+            "item_name": "Fried Rice",
+            "nf_calories": "238.38",
+            "image_name": "https://nix-tag-images.s3.amazonaws.com/1348_thumb.jpg",
+            "serving_qty": "1",
+            "serving_unit": "cup",
+            "serving_weight_grams": "137",
+            "nf_sugars": "0.77",
+            "nf_saturated_fat": "0.74",
+            "nf_cholesterol": "24.66",
+            "nf_sodium": "530.19",
+            "nf_total_carbohydrate": "44.92",
+            "nf_dietary_fiber": "1.51",
+            "nf_protein": "5.55",
+            "nf_potassium": "104.12",
+            "alt_measures": [
+                {
+                    "serving_weight": 137,
+                    "measure": "cup",
+                    "seq": 1,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 100,
+                    "measure": "g",
+                    "seq": null,
+                    "qty": 100
+                },
+                {
+                    "serving_weight": 28.3495,
+                    "measure": "wt. oz",
+                    "seq": null,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 2.85,
+                    "measure": "tsp",
+                    "seq": 101,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 8.56,
+                    "measure": "tbsp",
+                    "seq": 102,
+                    "qty": 1
+                }
+            ]
+        },
+        {
+            "item_name": "veg biryani",
+            "nf_calories": "198.41",
+            "image_name": "https://d2eawub7utcl6.cloudfront.net/images/nix-apple-grey.png",
+            "serving_qty": "1",
+            "serving_unit": "cup",
+            "serving_weight_grams": "168.81",
+            "nf_sugars": "3.51",
+            "nf_saturated_fat": "0.56",
+            "nf_cholesterol": "",
+            "nf_sodium": "312.31",
+            "nf_total_carbohydrate": "36.82",
+            "nf_dietary_fiber": "1.97",
+            "nf_protein": "4.18",
+            "nf_potassium": "256.77",
+            "alt_measures": [
+                {
+                    "serving_weight": 168.81,
+                    "measure": "cup",
+                    "seq": 1,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 100,
+                    "measure": "g",
+                    "seq": null,
+                    "qty": 100
+                },
+                {
+                    "serving_weight": 28.3495,
+                    "measure": "wt. oz",
+                    "seq": null,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 3.52,
+                    "measure": "tsp",
+                    "seq": 101,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 10.55,
+                    "measure": "tbsp",
+                    "seq": 102,
+                    "qty": 1
+                }
+            ]
+        },
+        {
+            "item_name": "Brown Rice",
+            "nf_calories": "109.2",
+            "image_name": "https://nix-tag-images.s3.amazonaws.com/37_thumb.jpg",
+            "serving_qty": "0.5",
+            "serving_unit": "cup",
+            "serving_weight_grams": "97.5",
+            "nf_sugars": "",
+            "nf_saturated_fat": "0.16",
+            "nf_cholesterol": "",
+            "nf_sodium": "0.98",
+            "nf_total_carbohydrate": "22.92",
+            "nf_dietary_fiber": "1.76",
+            "nf_protein": "2.26",
+            "nf_potassium": "77.03",
+            "alt_measures": [
+                {
+                    "serving_weight": 195,
+                    "measure": "cup",
+                    "seq": 1,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 100,
+                    "measure": "g",
+                    "seq": null,
+                    "qty": 100
+                },
+                {
+                    "serving_weight": 28.3495,
+                    "measure": "wt. oz",
+                    "seq": null,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 4.06,
+                    "measure": "tsp",
+                    "seq": 101,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 12.19,
+                    "measure": "tbsp",
+                    "seq": 102,
+                    "qty": 1
+                }
+            ]
+        },
+        {
+            "item_name": "Vegetable",
+            "nf_calories": "59.15",
+            "image_name": "https://nix-tag-images.s3.amazonaws.com/318_thumb.jpg",
+            "serving_qty": "0.5",
+            "serving_unit": "cup",
+            "serving_weight_grams": "91",
+            "nf_sugars": "2.84",
+            "nf_saturated_fat": "0.03",
+            "nf_cholesterol": "",
+            "nf_sodium": "31.85",
+            "nf_total_carbohydrate": "11.91",
+            "nf_dietary_fiber": "4",
+            "nf_protein": "2.6",
+            "nf_potassium": "153.79",
+            "alt_measures": [
+                {
+                    "serving_weight": 91,
+                    "measure": "cup",
+                    "seq": 1,
+                    "qty": 0.5
+                },
+                {
+                    "serving_weight": 100,
+                    "measure": "g",
+                    "seq": null,
+                    "qty": 100
+                },
+                {
+                    "serving_weight": 28.3495,
+                    "measure": "wt. oz",
+                    "seq": null,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 3.79,
+                    "measure": "tsp",
+                    "seq": 101,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 11.38,
+                    "measure": "tbsp",
+                    "seq": 102,
+                    "qty": 1
+                }
+            ]
+        },
+        {
+            "item_name": "white bread",
+            "nf_calories": "97.89",
+            "image_name": "https://nix-tag-images.s3.amazonaws.com/227_thumb.jpg",
+            "serving_qty": "1",
+            "serving_unit": "slice (1.3 oz)",
+            "serving_weight_grams": "36.8",
+            "nf_sugars": "2.09",
+            "nf_saturated_fat": "0.26",
+            "nf_cholesterol": "",
+            "nf_sodium": "180.32",
+            "nf_total_carbohydrate": "18.19",
+            "nf_dietary_fiber": "0.99",
+            "nf_protein": "3.26",
+            "nf_potassium": "46.37",
+            "alt_measures": [
+                {
+                    "serving_weight": 9,
+                    "measure": "slice thin, crust not eaten",
+                    "seq": 9,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 20,
+                    "measure": "slice, thin",
+                    "seq": 8,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 12,
+                    "measure": "slice crust not eaten",
+                    "seq": 7,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 25,
+                    "measure": "slice",
+                    "seq": 6,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 30,
+                    "measure": "slice, large",
+                    "seq": 5,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 35,
+                    "measure": "cup, cubes",
+                    "seq": 4,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 45,
+                    "measure": "cup, crumbs",
+                    "seq": 3,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 28.35,
+                    "measure": "oz",
+                    "seq": 2,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 15,
+                    "measure": "slice, very thin",
+                    "seq": 10,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 29,
+                    "measure": "slice",
+                    "seq": 1,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 754,
+                    "measure": "whole loaf",
+                    "seq": 80,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 45.52,
+                    "measure": "slice (1.5 oz)",
+                    "seq": 81,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 40,
+                    "measure": "cup",
+                    "seq": 82,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 100,
+                    "measure": "g",
+                    "seq": null,
+                    "qty": 100
+                },
+                {
+                    "serving_weight": 0.83,
+                    "measure": "tsp",
+                    "seq": 101,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 2.5,
+                    "measure": "tbsp",
+                    "seq": 102,
+                    "qty": 1
+                }
+            ]
+        },
+        {
+            "item_name": "Brown Bread",
+            "nf_calories": "77.43",
+            "image_name": "https://nix-tag-images.s3.amazonaws.com/93_thumb.jpg",
+            "serving_qty": "1",
+            "serving_unit": "slice",
+            "serving_weight_grams": "29",
+            "nf_sugars": "1.71",
+            "nf_saturated_fat": "0.23",
+            "nf_cholesterol": "",
+            "nf_sodium": "147.32",
+            "nf_total_carbohydrate": "14.12",
+            "nf_dietary_fiber": "1.16",
+            "nf_protein": "3.11",
+            "nf_potassium": "51.33",
+            "alt_measures": [
+                {
+                    "serving_weight": 29,
+                    "measure": "slice",
+                    "seq": 2,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 28.35,
+                    "measure": "oz",
+                    "seq": 1,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 40,
+                    "measure": "cup",
+                    "seq": 80,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 100,
+                    "measure": "g",
+                    "seq": null,
+                    "qty": 100
+                },
+                {
+                    "serving_weight": 0.83,
+                    "measure": "tsp",
+                    "seq": 101,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 2.5,
+                    "measure": "tbsp",
+                    "seq": 102,
+                    "qty": 1
+                }
+            ]
+        },
+        {
+            "item_name": "Multigrain Bread",
+            "nf_calories": "68.9",
+            "image_name": "https://nix-tag-images.s3.amazonaws.com/2789_thumb.jpg",
+            "serving_qty": "1",
+            "serving_unit": "slice regular",
+            "serving_weight_grams": "26",
+            "nf_sugars": "1.66",
+            "nf_saturated_fat": "0.23",
+            "nf_cholesterol": "",
+            "nf_sodium": "99.06",
+            "nf_total_carbohydrate": "11.27",
+            "nf_dietary_fiber": "1.92",
+            "nf_protein": "3.47",
+            "nf_potassium": "59.8",
+            "alt_measures": [
+                {
+                    "serving_weight": 33.5,
+                    "measure": "slice",
+                    "seq": 80,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 40,
+                    "measure": "cup",
+                    "seq": 81,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 100,
+                    "measure": "g",
+                    "seq": null,
+                    "qty": 100
+                },
+                {
+                    "serving_weight": 28.3495,
+                    "measure": "wt. oz",
+                    "seq": null,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 0.83,
+                    "measure": "tsp",
+                    "seq": 101,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 2.5,
+                    "measure": "tbsp",
+                    "seq": 102,
+                    "qty": 1
+                }
+            ]
+        },
+        {
+            "item_name": "Banana Shake",
+            "nf_calories": "452.03",
+            "image_name": "https://d2eawub7utcl6.cloudfront.net/images/nix-apple-grey.png",
+            "serving_qty": "12",
+            "serving_unit": "fl oz",
+            "serving_weight_grams": "375.6",
+            "nf_sugars": "53.79",
+            "nf_saturated_fat": "8.51",
+            "nf_cholesterol": "55",
+            "nf_sodium": "166.18",
+            "nf_total_carbohydrate": "73.55",
+            "nf_dietary_fiber": "2.83",
+            "nf_protein": "10.22",
+            "nf_potassium": "768.83",
+            "alt_measures": [
+                {
+                    "serving_weight": 26.52,
+                    "measure": "fl oz",
+                    "seq": 1,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 100,
+                    "measure": "g",
+                    "seq": null,
+                    "qty": 100
+                },
+                {
+                    "serving_weight": 212.16,
+                    "measure": "cup",
+                    "seq": 100,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 4.42,
+                    "measure": "tsp",
+                    "seq": 101,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 13.26,
+                    "measure": "tbsp",
+                    "seq": 102,
+                    "qty": 1
+                }
+            ]
+        },
+        {
+            "item_name": "Banana Smoothie",
+            "nf_calories": "175.95",
+            "image_name": "https://nix-tag-images.s3.amazonaws.com/2874_thumb.jpg",
+            "serving_qty": "1",
+            "serving_unit": "cup",
+            "serving_weight_grams": "203.44",
+            "nf_sugars": "22.26",
+            "nf_saturated_fat": "1.28",
+            "nf_cholesterol": "7.84",
+            "nf_sodium": "55",
+            "nf_total_carbohydrate": "37.26",
+            "nf_dietary_fiber": "2.45",
+            "nf_protein": "4.45",
+            "nf_potassium": "511.4",
+            "alt_measures": [
+                {
+                    "serving_weight": 203.44,
+                    "measure": "cup",
+                    "seq": 1,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 100,
+                    "measure": "g",
+                    "seq": null,
+                    "qty": 100
+                },
+                {
+                    "serving_weight": 28.3495,
+                    "measure": "wt. oz",
+                    "seq": null,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 4.24,
+                    "measure": "tsp",
+                    "seq": 101,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 12.71,
+                    "measure": "tbsp",
+                    "seq": 102,
+                    "qty": 1
+                }
+            ]
+        },
+        {
+            "item_name": "Shake",
+            "nf_calories": "540.74",
+            "image_name": "https://nix-tag-images.s3.amazonaws.com/8746_thumb.jpg",
+            "serving_qty": "16",
+            "serving_unit": "fl oz",
+            "serving_weight_grams": "454.4",
+            "nf_sugars": "94.74",
+            "nf_saturated_fat": "7.64",
+            "nf_cholesterol": "49.98",
+            "nf_sodium": "504.38",
+            "nf_total_carbohydrate": "96.11",
+            "nf_dietary_fiber": "1.36",
+            "nf_protein": "13.86",
+            "nf_potassium": "1017.86",
+            "alt_measures": [
+                {
+                    "serving_weight": 300,
+                    "measure": "container (10.6 oz)",
+                    "seq": 2,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 28.4,
+                    "measure": "fl oz",
+                    "seq": 1,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 100,
+                    "measure": "g",
+                    "seq": null,
+                    "qty": 100
+                },
+                {
+                    "serving_weight": 227.2,
+                    "measure": "cup",
+                    "seq": 100,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 4.73,
+                    "measure": "tsp",
+                    "seq": 101,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 14.2,
+                    "measure": "tbsp",
+                    "seq": 102,
+                    "qty": 1
+                }
+            ]
+        },
+        {
+            "item_name": "cooler",
+            "nf_calories": "227.8",
+            "image_name": "https://d2eawub7utcl6.cloudfront.net/images/nix-apple-grey.png",
+            "serving_qty": "11.2",
+            "serving_unit": "fl oz",
+            "serving_weight_grams": "335",
+            "nf_sugars": "32.73",
+            "nf_saturated_fat": "",
+            "nf_cholesterol": "",
+            "nf_sodium": "16.75",
+            "nf_total_carbohydrate": "33.73",
+            "nf_dietary_fiber": "",
+            "nf_protein": "",
+            "nf_potassium": "90.45",
+            "alt_measures": [
+                {
+                    "serving_weight": 335,
+                    "measure": "fl oz",
+                    "seq": 1,
+                    "qty": 11.2
+                },
+                {
+                    "serving_weight": 100,
+                    "measure": "g",
+                    "seq": null,
+                    "qty": 100
+                },
+                {
+                    "serving_weight": 239.29,
+                    "measure": "cup",
+                    "seq": 100,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 4.99,
+                    "measure": "tsp",
+                    "seq": 101,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 14.96,
+                    "measure": "tbsp",
+                    "seq": 102,
+                    "qty": 1
+                }
+            ]
+        },
+        {
+            "item_name": "strawberry smoothie",
+            "nf_calories": "456.16",
+            "image_name": "https://nix-tag-images.s3.amazonaws.com/2836_thumb.jpg",
+            "serving_qty": "20",
+            "serving_unit": "fl oz",
+            "serving_weight_grams": "506",
+            "nf_sugars": "82.91",
+            "nf_saturated_fat": "2.01",
+            "nf_cholesterol": "13.85",
+            "nf_sodium": "218.55",
+            "nf_total_carbohydrate": "85.35",
+            "nf_dietary_fiber": "1.68",
+            "nf_protein": "16.03",
+            "nf_potassium": "859.26",
+            "alt_measures": [
+                {
+                    "serving_weight": 202,
+                    "measure": "cup",
+                    "seq": 2,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 100,
+                    "measure": "g",
+                    "seq": null,
+                    "qty": 100
+                },
+                {
+                    "serving_weight": 28.3495,
+                    "measure": "wt. oz",
+                    "seq": null,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 4.21,
+                    "measure": "tsp",
+                    "seq": 101,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 12.63,
+                    "measure": "tbsp",
+                    "seq": 102,
+                    "qty": 1
+                }
+            ]
+        },
+        {
+            "item_name": "palak",
+            "nf_calories": "41.4",
+            "image_name": "https://nix-tag-images.s3.amazonaws.com/1889_thumb.jpg",
+            "serving_qty": "1",
+            "serving_unit": "cup",
+            "serving_weight_grams": "180",
+            "nf_sugars": "0.77",
+            "nf_saturated_fat": "0.08",
+            "nf_cholesterol": "",
+            "nf_sodium": "550.8",
+            "nf_total_carbohydrate": "6.75",
+            "nf_dietary_fiber": "4.32",
+            "nf_protein": "5.35",
+            "nf_potassium": "838.8",
+            "alt_measures": [
+                {
+                    "serving_weight": 180,
+                    "measure": "cup",
+                    "seq": 1,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 100,
+                    "measure": "g",
+                    "seq": null,
+                    "qty": 100
+                },
+                {
+                    "serving_weight": 28.3495,
+                    "measure": "wt. oz",
+                    "seq": null,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 3.75,
+                    "measure": "tsp",
+                    "seq": 101,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 11.25,
+                    "measure": "tbsp",
+                    "seq": 102,
+                    "qty": 1
+                }
+            ]
+        },
+        {
+            "item_name": "Palak Paneer",
+            "nf_calories": "365.53",
+            "image_name": "https://d2eawub7utcl6.cloudfront.net/images/nix-apple-grey.png",
+            "serving_qty": "1",
+            "serving_unit": "cup",
+            "serving_weight_grams": "200",
+            "nf_sugars": "4.51",
+            "nf_saturated_fat": "11.3",
+            "nf_cholesterol": "56.19",
+            "nf_sodium": "871.41",
+            "nf_total_carbohydrate": "10.01",
+            "nf_dietary_fiber": "2.64",
+            "nf_protein": "15.06",
+            "nf_potassium": "559.02",
+            "alt_measures": [
+                {
+                    "serving_weight": 188.72,
+                    "measure": "serving",
+                    "seq": 1,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 200,
+                    "measure": "cup",
+                    "seq": 2,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 100,
+                    "measure": "g",
+                    "seq": null,
+                    "qty": 100
+                },
+                {
+                    "serving_weight": 28.3495,
+                    "measure": "wt. oz",
+                    "seq": null,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 4.17,
+                    "measure": "tsp",
+                    "seq": 101,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 12.5,
+                    "measure": "tbsp",
+                    "seq": 102,
+                    "qty": 1
+                }
+            ]
+        },
+        {
+            "item_name": "Corn",
+            "nf_calories": "98.88",
+            "image_name": "https://nix-tag-images.s3.amazonaws.com/294_thumb.jpg",
+            "serving_qty": "1",
+            "serving_unit": "ear medium",
+            "serving_weight_grams": "103",
+            "nf_sugars": "4.68",
+            "nf_saturated_fat": "0.2",
+            "nf_cholesterol": "",
+            "nf_sodium": "1.03",
+            "nf_total_carbohydrate": "21.61",
+            "nf_dietary_fiber": "2.47",
+            "nf_protein": "3.51",
+            "nf_potassium": "224.54",
+            "alt_measures": [
+                {
+                    "serving_weight": 8,
+                    "measure": "baby ear",
+                    "seq": 5,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 149,
+                    "measure": "cup cut",
+                    "seq": 4,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 118,
+                    "measure": "ear large (7-3/4\" to 9\" long)",
+                    "seq": 3,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 103,
+                    "measure": "ear medium (6-3/4\" to 7-1/2\" long)",
+                    "seq": 2,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 89,
+                    "measure": "ear small (5-1/2\" to 6-1/2\" long)",
+                    "seq": 1,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 100,
+                    "measure": "g",
+                    "seq": null,
+                    "qty": 100
+                },
+                {
+                    "serving_weight": 28.3495,
+                    "measure": "wt. oz",
+                    "seq": null,
+                    "qty": 1
+                }
+            ]
+        },
+        {
+            "item_name": "paneer capsicum",
+            "nf_calories": "366.48",
+            "image_name": "https://d2eawub7utcl6.cloudfront.net/images/nix-apple-grey.png",
+            "serving_qty": "1",
+            "serving_unit": "cup",
+            "serving_weight_grams": "232.71",
+            "nf_sugars": "6.73",
+            "nf_saturated_fat": "10.03",
+            "nf_cholesterol": "49.29",
+            "nf_sodium": "1417.9",
+            "nf_total_carbohydrate": "17.45",
+            "nf_dietary_fiber": "2.09",
+            "nf_protein": "15.03",
+            "nf_potassium": "322.13",
+            "alt_measures": [
+                {
+                    "serving_weight": 232.71,
+                    "measure": "cup",
+                    "seq": 1,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 100,
+                    "measure": "g",
+                    "seq": null,
+                    "qty": 100
+                },
+                {
+                    "serving_weight": 28.3495,
+                    "measure": "wt. oz",
+                    "seq": null,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 4.85,
+                    "measure": "tsp",
+                    "seq": 101,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 14.54,
+                    "measure": "tbsp",
+                    "seq": 102,
+                    "qty": 1
+                }
+            ]
+        },
+        {
+            "item_name": "Mushroom Gravy",
+            "nf_calories": "29.54",
+            "image_name": "https://d2eawub7utcl6.cloudfront.net/images/nix-apple-grey.png",
+            "serving_qty": "0.25",
+            "serving_unit": "cup",
+            "serving_weight_grams": "59.5",
+            "nf_sugars": "0.66",
+            "nf_saturated_fat": "1.18",
+            "nf_cholesterol": "4.83",
+            "nf_sodium": "103.03",
+            "nf_total_carbohydrate": "2.1",
+            "nf_dietary_fiber": "0.27",
+            "nf_protein": "1.28",
+            "nf_potassium": "137.72",
+            "alt_measures": [
+                {
+                    "serving_weight": 238,
+                    "measure": "cup",
+                    "seq": 2,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 100,
+                    "measure": "g",
+                    "seq": null,
+                    "qty": 100
+                },
+                {
+                    "serving_weight": 28.3495,
+                    "measure": "wt. oz",
+                    "seq": null,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 4.96,
+                    "measure": "tsp",
+                    "seq": 101,
+                    "qty": 1
+                },
+                {
+                    "serving_weight": 14.88,
+                    "measure": "tbsp",
+                    "seq": 102,
+                    "qty": 1
+                }
+            ]
+        }
+    ]
+}

@@ -10,6 +10,7 @@ interface AuthContextType {
   verifyOtp: (phone: string, code: string) => Promise<any>;
   login: (email: string, password: string) => Promise<any>;
   loginAsPartner: (email: string, password: string) => Promise<any>;
+  switchRole: (role: 'CUSTOMER' | 'GYM_PARTNER') => Promise<void>;
   logout: () => Promise<void>;
   refreshProfile: () => Promise<void>;
 }
@@ -140,6 +141,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return login(email, password);
   };
 
+  const switchRole = async (targetRole: 'CUSTOMER' | 'GYM_PARTNER') => {
+    const updatedUser = {
+      ...(user || {}),
+      id: user?.id || (targetRole === 'GYM_PARTNER' ? 'partner-demo-001' : 'member-demo-001'),
+      email: targetRole === 'GYM_PARTNER' ? 'partner@fitempire.tech' : 'testuser@fitempire.tech',
+      firstName: targetRole === 'GYM_PARTNER' ? 'Gym' : 'Rahul',
+      lastName: targetRole === 'GYM_PARTNER' ? 'Partner' : 'Sharma',
+      role: targetRole,
+    };
+    await AsyncStorage.setItem('fitempire_user', JSON.stringify(updatedUser));
+    await AsyncStorage.setItem('fitempire_access_token', 'demo_active_token');
+    setUser(updatedUser);
+    setIsAuthenticated(true);
+  };
+
   const logout = async () => {
     try {
       await apiLogOut();
@@ -163,6 +179,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         verifyOtp,
         login,
         loginAsPartner,
+        switchRole,
         logout,
         refreshProfile: fetchUserProfile,
       }}

@@ -1,0 +1,98 @@
+[
+  {
+    "challenge_title": "Steps",
+    "challenge_description": "Steps challenge",
+    "challenge_permission_title": "Allow  access to steps data",
+    "challenge_permission_description": "To create a steps challenge, FITPASS needs access to your phone’s steps data.",
+    "challenge_master_id": 1,
+    "challenge_icon": "e99b",
+    "challenge_color": "#DC4144",
+    "challenge_image": "run",
+    "is_health_permission_required": true,
+    "units": [{"value": 3, "label": "Steps"}]
+  },
+  {
+    "challenge_title": "Running+Walking",
+    "challenge_description": "Running+Walking challenge",
+    "challenge_permission_title": "Allow  access to distance data",
+    "challenge_permission_description": "To create a distance challenge, FITPASS needs access to your phone’s distance data.",
+    "challenge_master_id": 2,
+    "challenge_icon": "e999",
+    "challenge_color": "#34BE86",
+    "challenge_image": "run",
+    "is_health_permission_required": true,
+    "units": [{"value": 1, "label": "km"}, {"value": 2, "label": "mi"}]
+  },
+  {
+    "challenge_title": "Exercise",
+    "challenge_description": "Exercise challenge",
+    "challenge_permission_title": "Allow  access to exercise data",
+    "challenge_permission_description": "To create a exercise challenge, FITPASS needs access to your phone’s exercise data.",
+    "challenge_master_id": 3,
+    "challenge_icon": "e99a",
+    "challenge_color": "#0D52F2",
+    "challenge_image": "run",
+    "is_health_permission_required": true,
+    "units": [{"value": 4, "label": "Hours"}, {"value": 5, "label": "Minutes"}]
+  },
+  {
+    "challenge_title": "Weight loss",
+    "challenge_description": "Weight loss challenge",
+    "challenge_permission_title": "",
+    "challenge_permission_description": "",
+    "challenge_master_id": 4,
+    "challenge_icon": "e9a4",
+    "challenge_color": "#F16C21",
+    "challenge_image": "weight_loss",
+    "is_health_permission_required": false,
+    "units": [{"value": 6, "label": "Kg"}, {"value": 7, "label": "Lbs"}]
+  },
+  {
+    "challenge_title": "Weight gain",
+    "challenge_description": "Weight gain challenge",
+    "challenge_permission_title": "",
+    "challenge_permission_description": "",
+    "challenge_master_id": 5,
+    "challenge_icon": "e9a3",
+    "challenge_color": "#FF9B03",
+    "challenge_image": "weight_gain",
+    "is_health_permission_required": false,
+    "units": [{"value": 6, "label": "Kg"}, {"value": 7, "label": "Lbs"}]
+  },
+  {
+    "challenge_title": "Gym Workout",
+    "challenge_description": "Gym Workout challenge",
+    "challenge_permission_title": "",
+    "challenge_permission_description": "",
+    "challenge_master_id": 6,
+    "challenge_icon": "e998",
+    "challenge_color": "#DC4144",
+    "challenge_image": "gym_workout",
+    "is_health_permission_required": false,
+    "units": [{"value": 8, "label": "Workout(s)"}]
+  },
+  {
+    "challenge_title": "FITPASS classes",
+    "challenge_description": "FITPASS classes challenge",
+    "challenge_permission_title": "",
+    "challenge_permission_description": "",
+    "challenge_master_id": 7,
+    "challenge_icon": "e997",
+    "challenge_color": "#0D52F2",
+    "challenge_image": "fitpass_classes",
+    "is_health_permission_required": false,
+    "units": [{"value": 9, "label": "Fitpass Classes"}]
+  },
+  {
+    "challenge_title": "Meal logging",
+    "challenge_description": "Meal logging challenge",
+    "challenge_permission_title": "",
+    "challenge_permission_description": "",
+    "challenge_master_id": 8,
+    "challenge_icon": "e95c",
+    "challenge_color": "#109310",
+    "challenge_image": "meal_log",
+    "is_health_permission_required": false,
+    "units": [{"value": 10, "label": "Meal Log(s)"}]
+  }
+]

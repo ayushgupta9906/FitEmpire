@@ -1,0 +1,122 @@
+[
+  {
+    "id": "1",
+    "name": "Gym Workouts",
+    "image": "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=500&auto=format&fit=crop",
+    "color": "#E75A5D",
+    "duration": "60-90 min",
+    "category": "STRENGTH"
+  },
+  {
+    "id": "2",
+    "name": "Badminton",
+    "image": "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=500&auto=format&fit=crop",
+    "color": "#0D9488",
+    "duration": "45-60 min",
+    "category": "SPORTS"
+  },
+  {
+    "id": "3",
+    "name": "Swimming",
+    "image": "https://images.unsplash.com/photo-1530549387789-4c1017266635?w=500&auto=format&fit=crop",
+    "color": "#3B82F6",
+    "duration": "45-60 min",
+    "category": "AQUATICS"
+  },
+  {
+    "id": "4",
+    "name": "MMA & Combat",
+    "image": "https://images.unsplash.com/photo-1599058917212-d750089bc07e?w=500&auto=format&fit=crop",
+    "color": "#DC2626",
+    "duration": "60 min",
+    "category": "MARTIAL_ARTS"
+  },
+  {
+    "id": "5",
+    "name": "Yoga & Meditation",
+    "image": "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=500&auto=format&fit=crop",
+    "color": "#7C3AED",
+    "duration": "45-60 min",
+    "category": "WELLNESS"
+  },
+  {
+    "id": "6",
+    "name": "CrossFit Rig",
+    "image": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=500&auto=format&fit=crop",
+    "color": "#D97706",
+    "duration": "45 min",
+    "category": "STRENGTH"
+  },
+  {
+    "id": "7",
+    "name": "Football Turf",
+    "image": "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=500&auto=format&fit=crop",
+    "color": "#10B981",
+    "duration": "60-90 min",
+    "category": "SPORTS"
+  },
+  {
+    "id": "8",
+    "name": "Boxing & Sparring",
+    "image": "https://images.unsplash.com/photo-1549719386-74dfcbf7dbed?w=500&auto=format&fit=crop",
+    "color": "#EF4444",
+    "duration": "60 min",
+    "category": "MARTIAL_ARTS"
+  },
+  {
+    "id": "9",
+    "name": "Zumba & Dance",
+    "image": "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=500&auto=format&fit=crop",
+    "color": "#DB2777",
+    "duration": "45 min",
+    "category": "CARDIO"
+  },
+  {
+    "id": "10",
+    "name": "Pickleball",
+    "image": "https://images.unsplash.com/photo-1554068865-24cecd4e34b8?w=500&auto=format&fit=crop",
+    "color": "#F59E0B",
+    "duration": "45-60 min",
+    "category": "SPORTS"
+  },
+  {
+    "id": "11",
+    "name": "Table Tennis",
+    "image": "https://images.unsplash.com/photo-1534158914592-062992fbe900?w=500&auto=format&fit=crop",
+    "color": "#06B6D4",
+    "duration": "30-60 min",
+    "category": "SPORTS"
+  },
+  {
+    "id": "12",
+    "name": "Snooker & Pool",
+    "image": "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=500&auto=format&fit=crop",
+    "color": "#8B5CF6",
+    "duration": "60-120 min",
+    "category": "SPORTS"
+  },
+  {
+    "id": "13",
+    "name": "Spinning & RPM",
+    "image": "https://images.unsplash.com/photo-1502680390469-be75c86b636f?w=500&auto=format&fit=crop",
+    "color": "#581C87",
+    "duration": "45 min",
+    "category": "CARDIO"
+  },
+  {
+    "id": "14",
+    "name": "Pilates Reformer",
+    "image": "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=500&auto=format&fit=crop",
+    "color": "#EC4899",
+    "duration": "45-60 min",
+    "category": "WELLNESS"
+  },
+  {
+    "id": "15",
+    "name": "Basketball Court",
+    "image": "https://images.unsplash.com/photo-1546519638-68e109498ffc?w=500&auto=format&fit=crop",
+    "color": "#F97316",
+    "duration": "60 min",
+    "category": "SPORTS"
+  }
+]

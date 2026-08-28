@@ -1,0 +1,56 @@
+{
+  "code": 200,
+  "message": "OnBoarding fetch successfully",
+  "meta": {},
+  "result": [
+    {
+      "category_id": 1,
+      "category_name": "Basic Details",
+      "list": [
+        {
+          "hra_question_id": 1,
+          "image_icon": "raise_fist",
+          "answered": "",
+          "answered_label": "user_goal",
+          "question_type": 2,
+          "edit": 1,
+          "options": [
+            {
+              "label_id": 10,
+              "label": "Chat with Nutritionist",
+              "subTitle": "Ask questions and get expert advice",
+              "bg_color": "#dc4144",
+              "icon_color": "#dc4144",
+              "font_icon": "e97e"
+            },
+            {
+              "label_id": 11,
+              "label": "Schedule a call with \n Nutritionist",
+              "subTitle": "Book a personal consultation",
+              "bg_color": "#109310",
+              "icon_color": "#109310",
+              "font_icon": "e97d"
+            },
+            {
+              "label_id": 12,
+              "label": "Log my meals",
+              "subTitle": "Track your daily nutrition",
+              "bg_color": "#0D52F2",
+              "icon_color": "#0D52F2",
+              "font_icon": "e9c9"
+            }
+          ],
+          "additional_type": 2,
+          "multi_select": 1,
+          "information_text": "",
+          "question_name": {
+            "label": "What would you like to start with?",
+            "string_to_replace": "start",
+            "font_color": "#dc4144"
+          }
+        }
+      ]
+    }
+  ],
+  "status": "OK"
+}

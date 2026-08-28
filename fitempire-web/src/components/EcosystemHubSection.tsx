@@ -32,7 +32,7 @@ const APPS = [
     badge: 'MEMBER PASS',
     badgeClass: 'purple',
     actionText: 'Open Member App',
-    actionUrl: 'http://localhost:8081',
+    actionUrl: 'https://fitempireuser.netlify.app',
     isModal: false,
     stats: ['12,000+ Gyms', '60s Dynamic QR', 'ARIA AI Coach', '1-Tap Freeze']
   },
@@ -47,7 +47,7 @@ const APPS = [
     badge: 'PARTNER GATEWAY',
     badgeClass: 'indigo',
     actionText: 'Open Partner Portal',
-    actionUrl: 'http://localhost:3001',
+    actionUrl: 'https://fitempirepartner.netlify.app',
     isModal: false,
     stats: ['0.2s Turnstile Scan', 'Weekly Bank Payout', '100% Tax GST Invoicing', 'Zero Lock-in']
   },
@@ -62,8 +62,8 @@ const APPS = [
     badge: 'ADMIN CONSOLE',
     badgeClass: 'dark',
     actionText: 'Launch Admin Console',
-    actionUrl: 'http://localhost:3000',
-    isModal: true,
+    actionUrl: 'https://fitempireadmin.netlify.app',
+    isModal: false,
     stats: ['Gym Approvals', 'Settlement Payouts', 'User Management', 'Real-time BI']
   },
   {
@@ -140,34 +140,22 @@ export const EcosystemHubSection: React.FC<EcosystemHubProps> = ({
                 </div>
 
                 <div className="hub-card-footer">
-                  {app.id === 'main-app' ? (
-                    <button className="btn-purple-primary w-full" onClick={onOpenAppModal}>
-                      <Smartphone size={15} />
-                      <span>{app.actionText}</span>
-                      <ArrowRight size={14} />
-                    </button>
-                  ) : app.id === 'partner-app' ? (
-                    <a 
-                      href={app.actionUrl} 
-                      target="_blank" 
-                      rel="noreferrer" 
-                      className="btn-purple-secondary w-full"
-                    >
-                      <Building2 size={15} />
-                      <span>{app.actionText}</span>
-                      <ExternalLink size={13} />
-                    </a>
-                  ) : app.id === 'admin-app' ? (
-                    <button className="btn-outline-dark w-full" onClick={onOpenAdminModal}>
-                      <ShieldCheck size={15} />
-                      <span>{app.actionText}</span>
-                      <ArrowRight size={14} />
-                    </button>
-                  ) : (
+                  {app.id === 'showcase-app' ? (
                     <a href={app.actionUrl} className="btn-purple-primary w-full">
                       <Sparkles size={15} />
                       <span>{app.actionText}</span>
                       <ArrowRight size={14} />
+                    </a>
+                  ) : (
+                    <a 
+                      href={app.actionUrl} 
+                      target="_blank" 
+                      rel="noreferrer" 
+                      className={app.id === 'main-app' ? 'btn-purple-primary w-full' : 'btn-purple-secondary w-full'}
+                    >
+                      <Icon size={15} />
+                      <span>{app.actionText}</span>
+                      <ExternalLink size={13} />
                     </a>
                   )}
                 </div>

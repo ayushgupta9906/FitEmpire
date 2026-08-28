@@ -228,17 +228,19 @@ export const Navbar: React.FC<NavbarProps> = ({
 
         {/* Right CTA Area */}
         <div className="nav-right-actions">
-          <button 
+          <a 
+            href="https://fitempireadmin.netlify.app"
+            target="_blank" 
+            rel="noreferrer"
             className="btn-partner-ghost"
-            onClick={onOpenAdminModal}
             title="Super Admin Dashboard"
           >
             <ShieldCheck size={14} />
             <span>Admin</span>
-          </button>
+          </a>
 
           <a 
-            href="http://localhost:3001" 
+            href="https://fitempirepartner.netlify.app" 
             target="_blank" 
             rel="noreferrer" 
             className="btn-partner-ghost"
@@ -247,13 +249,15 @@ export const Navbar: React.FC<NavbarProps> = ({
             <span>Partner Portal</span>
           </a>
 
-          <button 
+          <a 
+            href="https://fitempireuser.netlify.app"
+            target="_blank"
+            rel="noreferrer"
             className="btn-purple-primary btn-get-pass-nav"
-            onClick={onOpenAppModal}
           >
             <Smartphone size={14} />
-            <span>Get FitEmpire</span>
-          </button>
+            <span>Open User App</span>
+          </a>
 
           <button 
             className="mobile-hamburger-btn"

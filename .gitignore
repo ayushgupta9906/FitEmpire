@@ -6,6 +6,8 @@ yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 node_modules
+node_modules/
+**/node_modules/
 
 # Diagnostic reports
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
@@ -23,8 +25,7 @@ coverage
 
 # Dependencies & caches
 bower_components
-node_modules/
-jspm_packages/
+jspm_packages
 web_modules/
 *.tsbuildinfo
 .npm
@@ -46,6 +47,7 @@ web_modules/
 out/
 .nuxt
 dist/
+**/dist/
 .cache/
 .vuepress/dist
 .serverless/
@@ -96,6 +98,8 @@ Thumbs.db
 *.gz
 xapk_extracted/
 apk_extracted/
+fitpass_extracted/
+expo_qr_code.png
 
 # Image & media uploads, caches and temporary assets
 uploads/

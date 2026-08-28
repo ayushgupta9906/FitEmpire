@@ -13,9 +13,10 @@ public class WalletTopUpRequest {
     @DecimalMin(value = "10.00", message = "Minimum top up amount is ₹10.00")
     private BigDecimal amount;
 
-    @NotNull(message = "Razorpay payment ID is required for verification")
     private String razorpayPaymentId;
 
-    @NotNull(message = "Razorpay signature is required")
     private String razorpaySignature;
+
+    private String paymentMethod; // UPI, CARD, NET_BANKING
 }
+

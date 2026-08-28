@@ -44,30 +44,72 @@ export default function WelcomeScreen() {
               </ThemedText>
             </View>
 
-            {/* Get Started Options */}
+            {/* Dual Apps Selection Section */}
             <View style={styles.buttonContainer}>
+              <ThemedText style={styles.selectAppTitle}>SELECT APPLICATION TO LAUNCH:</ThemedText>
+
+              {/* APP 1: Member App Card */}
               <TouchableOpacity
-                style={styles.getStartedBtn}
-                onPress={() => router.push('/login')}
+                style={styles.appCard}
+                activeOpacity={0.88}
+                onPress={() => router.push('/(tabs)')}
               >
-                <View style={styles.btnContent}>
-                  <ThemedText style={styles.btnText}>Member App Login</ThemedText>
-                  <ArrowRight color="#FFF" size={20} />
-                </View>
+                <LinearGradient
+                  colors={['#4F46E5', '#4338CA']}
+                  style={styles.appCardGradient}
+                >
+                  <View style={styles.appCardTop}>
+                    <View style={styles.appIconBadge}>
+                      <ThemedText style={{ fontSize: 22 }}>📱</ThemedText>
+                    </View>
+                    <View style={{ flex: 1, marginLeft: 12 }}>
+                      <ThemedText style={styles.appCardTitle}>FitEmpire Member App</ThemedText>
+                      <ThemedText style={styles.appCardSub}>
+                        12,000+ Gyms • 60s Dynamic QR Ticket • AI Workout • 1-Tap Freeze
+                      </ThemedText>
+                    </View>
+                  </View>
+                  <View style={styles.launchRow}>
+                    <ThemedText style={styles.launchText}>Open Member App</ThemedText>
+                    <ArrowRight color="#FFF" size={16} />
+                  </View>
+                </LinearGradient>
               </TouchableOpacity>
 
+              {/* APP 2: Partner Scanner App Card */}
               <TouchableOpacity
-                style={styles.partnerBtn}
+                style={styles.appCard}
+                activeOpacity={0.88}
                 onPress={() => router.push('/(partner-tabs)' as any)}
               >
-                <View style={styles.btnContent}>
-                  <ThemedText style={styles.partnerBtnText}>Gym Partner App (Desk & Scanner)</ThemedText>
-                  <ArrowRight color="#38BDF8" size={18} />
-                </View>
+                <LinearGradient
+                  colors={['#0F172A', '#1E293B']}
+                  style={[styles.appCardGradient, { borderColor: '#38BDF8', borderWidth: 1.5 }]}
+                >
+                  <View style={styles.appCardTop}>
+                    <View style={[styles.appIconBadge, { backgroundColor: 'rgba(56, 189, 248, 0.2)' }]}>
+                      <ThemedText style={{ fontSize: 22 }}>🏢</ThemedText>
+                    </View>
+                    <View style={{ flex: 1, marginLeft: 12 }}>
+                      <ThemedText style={[styles.appCardTitle, { color: '#38BDF8' }]}>
+                        FitEmpire Partner App
+                      </ThemedText>
+                      <ThemedText style={styles.appCardSub}>
+                        Camera QR Scanner • Live Attendance Log • Turnstiles • Payouts
+                      </ThemedText>
+                    </View>
+                  </View>
+                  <View style={styles.launchRow}>
+                    <ThemedText style={[styles.launchText, { color: '#38BDF8' }]}>
+                      Open Partner Scanner App
+                    </ThemedText>
+                    <ArrowRight color="#38BDF8" size={16} />
+                  </View>
+                </LinearGradient>
               </TouchableOpacity>
-              
+
               <ThemedText style={styles.memberTag}>
-                All-Access Passes • QR Pass Scanner • AI Coach • Live Check-In
+                ⚡ Real-time synchronization between Member Pass & Partner Scanner
               </ThemedText>
             </View>
 
@@ -91,92 +133,105 @@ const styles = StyleSheet.create({
   overlay: {
     flex: 1,
     justifyContent: 'flex-end',
-    padding: 24,
-    paddingBottom: 48,
+    padding: 20,
+    paddingBottom: 40,
   },
   content: {
     width: '100%',
   },
   header: {
     alignItems: 'center',
-    marginBottom: 48,
+    marginBottom: 24,
   },
   logoBadge: {
-    width: 80,
-    height: 80,
-    borderRadius: 24,
+    width: 68,
+    height: 68,
+    borderRadius: 22,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 24,
+    marginBottom: 14,
     shadowColor: '#6C63FF',
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.45,
-    shadowRadius: 20,
-    elevation: 10,
-  },
-  title: {
-    fontSize: 42,
-    fontWeight: '900',
-    color: '#FFF',
-    marginBottom: 12,
-    letterSpacing: -1,
-  },
-  subtitle: {
-    fontSize: 16,
-    color: 'rgba(255,255,255,0.7)',
-    textAlign: 'center',
-    lineHeight: 24,
-    paddingHorizontal: 20,
-  },
-  buttonContainer: {
-    width: '100%',
-  },
-  getStartedBtn: {
-    backgroundColor: '#4F46E5',
-    paddingVertical: 16,
-    paddingHorizontal: 24,
-    borderRadius: 16,
-    shadowColor: '#4F46E5',
     shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.4,
     shadowRadius: 16,
     elevation: 8,
+  },
+  title: {
+    fontSize: 32,
+    fontWeight: '900',
+    letterSpacing: -0.5,
+    color: '#FFF',
+    marginBottom: 4,
+  },
+  subtitle: {
+    fontSize: 13,
+    color: '#94A3B8',
+    textAlign: 'center',
+    paddingHorizontal: 20,
+  },
+  selectAppTitle: {
+    fontSize: 11,
+    fontWeight: '800',
+    color: '#94A3B8',
+    letterSpacing: 1.2,
     marginBottom: 12,
+    textAlign: 'center',
   },
-  partnerBtn: {
-    backgroundColor: 'rgba(15, 23, 42, 0.85)',
-    borderWidth: 1.5,
-    borderColor: 'rgba(56, 189, 248, 0.4)',
-    paddingVertical: 15,
-    paddingHorizontal: 24,
-    borderRadius: 16,
-    shadowColor: '#38BDF8',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 10,
-    elevation: 4,
+  buttonContainer: {
+    width: '100%',
   },
-  btnContent: {
+  appCard: {
+    width: '100%',
+    marginBottom: 12,
+    borderRadius: 20,
+    overflow: 'hidden',
+  },
+  appCardGradient: {
+    padding: 16,
+    borderRadius: 20,
+  },
+  appCardTop: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginBottom: 12,
+  },
+  appIconBadge: {
+    width: 44,
+    height: 44,
+    borderRadius: 14,
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    alignItems: 'center',
     justifyContent: 'center',
-    gap: 10,
   },
-  btnText: {
-    color: '#FFF',
-    fontSize: 17,
-    fontWeight: '800',
-  },
-  partnerBtnText: {
-    color: '#38BDF8',
+  appCardTitle: {
     fontSize: 16,
+    fontWeight: '900',
+    color: '#FFF',
+  },
+  appCardSub: {
+    fontSize: 11,
+    color: 'rgba(255, 255, 255, 0.75)',
+    marginTop: 2,
+    lineHeight: 15,
+  },
+  launchRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    gap: 6,
+    paddingTop: 8,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(255, 255, 255, 0.1)',
+  },
+  launchText: {
+    fontSize: 12,
     fontWeight: '800',
+    color: '#FFF',
   },
   memberTag: {
-    fontSize: 12,
-    color: 'rgba(255,255,255,0.5)',
+    fontSize: 11,
+    color: '#64748B',
     textAlign: 'center',
-    marginTop: 16,
-    fontWeight: '600',
-  }
+    marginTop: 8,
+  },
 });

@@ -66,4 +66,25 @@ public class MembershipController {
         UUID userId = getUserIdFromPrincipal(userDetails);
         return ResponseEntity.ok(ApiResponse.success(membershipService.getActiveMemberships(userId)));
     }
+
+    @PostMapping("/{id}/freeze")
+    @PreAuthorize("isAuthenticated()")
+    @Operation(summary = "Freeze (pause) a membership — unused days are rolled over")
+    public ResponseEntity<ApiResponse<UserMembershipDto>> freezeMembership(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable UUID id) {
+        UUID userId = getUserIdFromPrincipal(userDetails);
+        return ResponseEntity.ok(ApiResponse.success("Membership paused successfully", membershipService.freezeMembership(id, userId)));
+    }
+
+    @PostMapping("/{id}/unfreeze")
+    @PreAuthorize("isAuthenticated()")
+    @Operation(summary = "Unfreeze (resume) a membership — end date extended by frozen days")
+    public ResponseEntity<ApiResponse<UserMembershipDto>> unfreezeMembership(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable UUID id) {
+        UUID userId = getUserIdFromPrincipal(userDetails);
+        return ResponseEntity.ok(ApiResponse.success("Membership resumed successfully", membershipService.unfreezeMembership(id, userId)));
+    }
 }
+

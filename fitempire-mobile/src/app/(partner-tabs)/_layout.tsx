@@ -34,9 +34,7 @@ export default function PartnerTabLayout() {
           position: 'absolute',
         },
         tabBarBackground: () => (
-          Platform.OS === 'ios' ? (
-            <BlurView tint="dark" intensity={80} style={{ flex: 1 }} />
-          ) : null
+          <BlurView tint="dark" intensity={80} style={{ flex: 1, backgroundColor: partnerTheme.tabBar }} />
         ),
       }}
     >

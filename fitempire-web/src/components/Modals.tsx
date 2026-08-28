@@ -95,14 +95,14 @@ export const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose }) => {
         </div>
 
         <a 
-          href="http://localhost:3000" 
+          href="https://fitempireadmin.netlify.app" 
           target="_blank" 
           rel="noreferrer" 
           className="btn-purple-primary w-full"
           style={{ padding: '12px', fontSize: '14px' }}
         >
           <ShieldCheck size={16} />
-          <span>Launch Super Admin Dashboard (Port 3000)</span>
+          <span>Launch Super Admin Dashboard</span>
           <ArrowRight size={14} />
         </a>
       </div>
@@ -144,7 +144,7 @@ export const AppDownloadModal: React.FC<AppModalProps> = ({ isOpen, onClose }) =
               <div className="qr-box-caption">Scan in Expo Go</div>
             </div>
 
-            <a href="http://localhost:8081" target="_blank" rel="noreferrer" className="btn-purple-primary w-full">
+            <a href="https://fitempireuser.netlify.app" target="_blank" rel="noreferrer" className="btn-purple-primary w-full">
               <span>Open Member Web App</span>
               <ArrowRight size={14} />
             </a>
@@ -161,7 +161,7 @@ export const AppDownloadModal: React.FC<AppModalProps> = ({ isOpen, onClose }) =
               <div className="qr-box-caption">Gym Manager Gate</div>
             </div>
 
-            <a href="http://localhost:3001" target="_blank" rel="noreferrer" className="btn-purple-secondary w-full">
+            <a href="https://fitempirepartner.netlify.app" target="_blank" rel="noreferrer" className="btn-purple-secondary w-full">
               <span>Open Partner Portal</span>
               <ArrowRight size={14} />
             </a>

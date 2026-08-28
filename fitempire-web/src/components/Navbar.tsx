@@ -3,19 +3,17 @@ import {
   Dumbbell, 
   MapPin, 
   ChevronDown, 
-  Smartphone, 
-  Building2, 
   Menu, 
   X, 
+  Smartphone, 
+  Building2, 
+  ShieldCheck, 
+  Sparkles, 
+  Utensils, 
+  Tv, 
   ArrowRight,
-  ShieldCheck,
-  Sparkles,
-  Zap,
-  Activity,
-  Utensils,
-  Tv,
-  Users,
-  Compass
+  ExternalLink,
+  Zap
 } from 'lucide-react';
 
 interface NavbarProps {
@@ -25,7 +23,7 @@ interface NavbarProps {
   onOpenAdminModal: () => void;
 }
 
-export const CITIES = [
+const CITIES = [
   'Bengaluru',
   'Delhi NCR',
   'Mumbai',
@@ -33,32 +31,28 @@ export const CITIES = [
   'Pune',
   'Chennai',
   'Kolkata',
-  'Ahmedabad',
-  'Chandigarh',
-  'Jaipur',
-  'Lucknow',
-  'Indore'
+  'Ahmedabad'
 ];
 
-export const Navbar: React.FC<NavbarProps> = ({ 
-  onOpenAppModal, 
+export const Navbar: React.FC<NavbarProps> = ({
+  onOpenAppModal,
   onOpenPartnerModal,
   onOpenCorporateModal,
-  onOpenAdminModal 
+  onOpenAdminModal
 }) => {
+  const [scrolled, setScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [selectedCity, setSelectedCity] = useState('Bengaluru');
   const [cityDropdownOpen, setCityDropdownOpen] = useState(false);
   const [productsDropdownOpen, setProductsDropdownOpen] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
 
   const cityDropdownRef = useRef<HTMLDivElement>(null);
   const productsDropdownRef = useRef<HTMLDivElement>(null);
 
-  // Scroll effect
+  // Scroll listener for sticky elevation
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
+      setScrolled(window.scrollY > 15);
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
@@ -82,21 +76,42 @@ export const Navbar: React.FC<NavbarProps> = ({
     <header className={`top-navbar-root ${scrolled ? 'is-scrolled' : ''}`}>
       <div className="container nav-layout">
         
-        {/* Brand Logo */}
+        {/* Brand Logo & City Picker */}
         <div className="nav-brand-section">
           <a href="#" className="brand-emblem-wrap">
             <div className="brand-logo-icon">
-              <Zap size={18} color="#FFFFFF" fill="#FFFFFF" />
+              <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                width="20" 
+                height="20" 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                stroke="#FFFFFF"
+                strokeWidth="2.3" 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+                style={{ transform: 'scaleX(-1)', transformOrigin: 'center' }}
+              >
+                <path d="M6.5 6.5 17.5 17.5" />
+                <path d="m21 21-1-1" />
+                <path d="m3 3 1 1" />
+                <path d="m18 22 4-4" />
+                <path d="m2 6 4-4" />
+                <path d="m3 10 7-7" />
+                <path d="m14 21 7-7" />
+                <path d="M6.5 12.5 12.5 6.5" />
+                <path d="m11.5 17.5 6-6" />
+              </svg>
             </div>
             <div className="brand-text-column">
-              <div className="brand-name-text">
+              <span className="brand-name-text">
                 Fit<span className="brand-accent-purple">Empire</span>
-              </div>
-              <span className="brand-tagline">FITNESS ECOSYSTEM</span>
+              </span>
+              <span className="brand-tagline">UNIVERSAL PASS</span>
             </div>
           </a>
 
-          {/* Compact Elegant City Selector */}
+          {/* Elegant City Selector */}
           <div className="nav-city-picker" ref={cityDropdownRef}>
             <button 
               className={`city-select-pill ${cityDropdownOpen ? 'active' : ''}`}
@@ -106,9 +121,9 @@ export const Navbar: React.FC<NavbarProps> = ({
               }}
               aria-label="Select City"
             >
-              <MapPin size={13} className="city-pin" />
+              <MapPin size={12} className="city-pin" />
               <span className="city-current-name">{selectedCity}</span>
-              <ChevronDown size={12} className={`city-arrow ${cityDropdownOpen ? 'rotate' : ''}`} />
+              <ChevronDown size={11} className={`city-arrow ${cityDropdownOpen ? 'rotate' : ''}`} />
             </button>
 
             {cityDropdownOpen && (
@@ -134,10 +149,14 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
         </div>
 
-        {/* Navigation Links with Mega Dropdown for Products */}
+        {/* Center Navigation Links */}
         <nav className="nav-menu-links">
           
-          {/* Products Dropdown */}
+          <a href="#explore-gyms" className="nav-direct-link">
+            Explore Gyms
+          </a>
+
+          {/* Products Mega Dropdown */}
           <div className="nav-dropdown-item" ref={productsDropdownRef}>
             <button 
               className={`nav-link-btn ${productsDropdownOpen ? 'active' : ''}`}
@@ -147,7 +166,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               }}
             >
               <span>Products</span>
-              <ChevronDown size={13} className={`nav-link-chevron ${productsDropdownOpen ? 'rotate' : ''}`} />
+              <ChevronDown size={12} className={`nav-link-chevron ${productsDropdownOpen ? 'rotate' : ''}`} />
             </button>
 
             {productsDropdownOpen && (
@@ -160,7 +179,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     onClick={() => setProductsDropdownOpen(false)}
                   >
                     <div className="mega-icon-box purple">
-                      <Dumbbell size={18} />
+                      <Dumbbell size={16} />
                     </div>
                     <div className="mega-card-text">
                       <span className="mega-card-title">Empire Pass</span>
@@ -174,11 +193,11 @@ export const Navbar: React.FC<NavbarProps> = ({
                     onClick={() => setProductsDropdownOpen(false)}
                   >
                     <div className="mega-icon-box indigo">
-                      <Sparkles size={18} />
+                      <Sparkles size={16} />
                     </div>
                     <div className="mega-card-text">
                       <span className="mega-card-title">ARIA AI Coach</span>
-                      <span className="mega-card-desc">Dynamic personalized workout routines & tracking</span>
+                      <span className="mega-card-desc">Dynamic personalized workout routines & recovery</span>
                     </div>
                   </a>
 
@@ -188,7 +207,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     onClick={() => setProductsDropdownOpen(false)}
                   >
                     <div className="mega-icon-box emerald">
-                      <Utensils size={18} />
+                      <Utensils size={16} />
                     </div>
                     <div className="mega-card-text">
                       <span className="mega-card-title">Empire Feast</span>
@@ -202,7 +221,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     onClick={() => setProductsDropdownOpen(false)}
                   >
                     <div className="mega-icon-box amber">
-                      <Tv size={18} />
+                      <Tv size={16} />
                     </div>
                     <div className="mega-card-text">
                       <span className="mega-card-title">Empire Live TV</span>
@@ -215,55 +234,59 @@ export const Navbar: React.FC<NavbarProps> = ({
             )}
           </div>
 
-          <a href="#ecosystem-apps" className="nav-direct-link">Ecosystem Apps</a>
-          <a href="#explore-gyms" className="nav-direct-link">Explore Gyms</a>
+          <a href="#plans" className="nav-direct-link">
+            Pricing
+          </a>
+
+          <a href="#corporate" className="nav-direct-link" onClick={onOpenCorporateModal}>
+            Corporate
+          </a>
+
           <a href="#apps" className="nav-direct-link">
             <span>App Demo</span>
-            <span className="nav-mini-badge">LIVE QR</span>
+            <span className="nav-live-dot-badge">● LIVE</span>
           </a>
-          <a href="#plans" className="nav-direct-link">Pricing</a>
-          <a href="#corporate" className="nav-direct-link" onClick={onOpenCorporateModal}>Corporate</a>
-          <a href="#partners" className="nav-direct-link" onClick={onOpenPartnerModal}>For Gyms</a>
         </nav>
 
-        {/* Right CTA Area */}
+        {/* Right CTA Actions */}
         <div className="nav-right-actions">
+          
           <button 
             onClick={onOpenAdminModal}
-            className="btn-partner-ghost admin-highlight-btn"
+            className="btn-nav-admin"
             title="Super Admin Governance Console"
           >
-            <ShieldCheck size={15} className="text-purple" />
-            <span>Admin Panel</span>
-            <span className="admin-mini-badge">ENTERPRISE</span>
+            <ShieldCheck size={14} className="text-purple" />
+            <span>Admin</span>
           </button>
 
           <a 
             href="https://fitempirepartner.netlify.app" 
             target="_blank" 
             rel="noreferrer" 
-            className="btn-partner-ghost"
+            className="btn-nav-ghost"
           >
-            <Building2 size={14} />
-            <span>Partner Portal</span>
+            <Building2 size={13} />
+            <span>FitEmpire Partner</span>
           </a>
 
           <a 
             href="https://firmempireapp.netlify.app"
             target="_blank"
             rel="noreferrer"
-            className="btn-purple-primary btn-get-pass-nav"
+            className="btn-purple-primary btn-nav-cta"
           >
             <Smartphone size={14} />
-            <span>Open User App</span>
+            <span>FitEmpire</span>
           </a>
 
+          {/* Mobile Menu Toggle */}
           <button 
             className="mobile-hamburger-btn"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            aria-label="Toggle navigation menu"
+            aria-label="Toggle menu"
           >
-            {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
+            {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
         </div>
 
@@ -271,470 +294,401 @@ export const Navbar: React.FC<NavbarProps> = ({
 
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="mobile-nav-panel">
-          <div className="container mobile-panel-inner">
+        <div className="mobile-nav-drawer">
+          <div className="mobile-drawer-inner">
+            <a href="#explore-gyms" onClick={() => setMobileMenuOpen(false)}>Explore 12,000+ Gyms</a>
+            <a href="#plans" onClick={() => setMobileMenuOpen(false)}>Membership Plans</a>
+            <a href="#apps" onClick={() => setMobileMenuOpen(false)}>Live App Demo</a>
+            <a href="#corporate" onClick={() => { setMobileMenuOpen(false); onOpenCorporateModal(); }}>Corporate Wellness</a>
+            <a href="#partners" onClick={() => { setMobileMenuOpen(false); onOpenPartnerModal(); }}>Partner Your Gym</a>
             
-            <div className="mobile-links-section">
-              <span className="mobile-section-heading">PRODUCTS & ECOSYSTEM</span>
-              <a href="#fitpass-service" className="mobile-nav-item" onClick={() => setMobileMenuOpen(false)}>
-                <Dumbbell size={16} className="text-purple" />
-                <span>Empire Universal Pass</span>
-              </a>
-              <a href="#fitcoach-service" className="mobile-nav-item" onClick={() => setMobileMenuOpen(false)}>
-                <Sparkles size={16} className="text-purple" />
-                <span>ARIA AI Fitness Coach</span>
-              </a>
-              <a href="#fitfeast-service" className="mobile-nav-item" onClick={() => setMobileMenuOpen(false)}>
-                <Utensils size={16} className="text-purple" />
-                <span>Personal Nutritionist (Feast)</span>
-              </a>
-              <a href="#fitpasstv-service" className="mobile-nav-item" onClick={() => setMobileMenuOpen(false)}>
-                <Tv size={16} className="text-purple" />
-                <span>Empire Live TV Classes</span>
-              </a>
-            </div>
+            <div className="mobile-drawer-actions">
+              <button className="btn-nav-admin w-full" onClick={() => { setMobileMenuOpen(false); onOpenAdminModal(); }}>
+                <ShieldCheck size={15} />
+                <span>Super Admin Console</span>
+              </button>
 
-            <div className="mobile-links-section">
-              <span className="mobile-section-heading">EXPLORE & MEMBERSHIP</span>
-              <a href="#explore-gyms" className="mobile-nav-item" onClick={() => setMobileMenuOpen(false)}>
-                <Compass size={16} className="text-purple" />
-                <span>Explore 12,000+ Gyms</span>
-              </a>
-              <a href="#apps" className="mobile-nav-item" onClick={() => setMobileMenuOpen(false)}>
-                <Smartphone size={16} className="text-purple" />
-                <span>Live App Simulator</span>
-              </a>
-              <a href="#plans" className="mobile-nav-item" onClick={() => setMobileMenuOpen(false)}>
-                <Zap size={16} className="text-purple" />
-                <span>Membership Passes & Pricing</span>
-              </a>
-              <a href="#corporate" className="mobile-nav-item" onClick={() => { setMobileMenuOpen(false); onOpenCorporateModal(); }}>
-                <Users size={16} className="text-purple" />
-                <span>Corporate Wellness</span>
-              </a>
-              <a href="#partners" className="mobile-nav-item" onClick={() => { setMobileMenuOpen(false); onOpenPartnerModal(); }}>
-                <Building2 size={16} className="text-purple" />
-                <span>Partner Your Gym (Free)</span>
-              </a>
-            </div>
-
-            <div className="mobile-action-box">
-              <button className="btn-purple-primary w-full" onClick={() => { setMobileMenuOpen(false); onOpenAppModal(); }}>
+              <a 
+                href="https://firmempireapp.netlify.app" 
+                target="_blank" 
+                rel="noreferrer" 
+                className="btn-purple-primary w-full"
+              >
                 <Smartphone size={15} />
                 <span>Open FitEmpire App</span>
-              </button>
+              </a>
             </div>
-
           </div>
         </div>
       )}
 
-      <style>{`
-        .top-navbar-root {
-          position: sticky;
-          top: 0;
-          left: 0;
-          right: 0;
-          background: rgba(255, 255, 255, 0.88);
-          backdrop-filter: blur(18px);
-          -webkit-backdrop-filter: blur(18px);
-          border-bottom: 1px solid rgba(226, 232, 240, 0.8);
-          z-index: 1000;
-          transition: all 0.25s ease-in-out;
-        }
-        .top-navbar-root.is-scrolled {
-          background: rgba(255, 255, 255, 0.96);
-          box-shadow: 0 4px 20px rgba(15, 23, 42, 0.05);
-          border-bottom-color: rgba(226, 232, 240, 1);
-        }
-        .nav-layout {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          height: 68px;
-          gap: 20px;
-        }
-
-        /* Brand section */
-        .nav-brand-section {
-          display: flex;
-          align-items: center;
-          gap: 16px;
-        }
-        .brand-emblem-wrap {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          text-decoration: none;
-        }
-        .brand-logo-icon {
-          width: 34px;
-          height: 34px;
-          background: var(--purple-gradient);
-          border-radius: 9px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
-          flex-shrink: 0;
-        }
-        .brand-text-column {
-          display: flex;
-          flex-direction: column;
-        }
-        .brand-name-text {
-          font-family: var(--font-heading);
-          font-size: 20px;
-          font-weight: 900;
-          letter-spacing: -0.4px;
-          color: #0F172A;
-          line-height: 1;
-        }
-        .brand-accent-purple {
-          background: var(--purple-gradient);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-        }
-        .brand-tagline {
-          font-size: 8.5px;
-          font-weight: 800;
-          letter-spacing: 0.8px;
-          color: #64748B;
-          margin-top: 2px;
-        }
-
-        /* City Selector Pill */
-        .nav-city-picker {
-          position: relative;
-        }
-        .city-select-pill {
-          display: flex;
-          align-items: center;
-          gap: 5px;
-          padding: 5px 11px;
-          background: #F8FAFC;
-          border: 1px solid var(--border-light);
-          border-radius: var(--radius-full);
-          color: #334155;
-          font-size: 12.5px;
-          font-weight: 700;
-          cursor: pointer;
-          transition: all var(--transition-smooth);
-        }
-        .city-select-pill:hover, .city-select-pill.active {
-          background: var(--purple-light);
-          border-color: var(--purple-border);
-          color: var(--purple-primary);
-        }
-        .city-pin {
-          color: var(--purple-primary);
-        }
-        .city-arrow {
-          color: #64748B;
-          transition: transform var(--transition-smooth);
-        }
-        .city-arrow.rotate {
-          transform: rotate(180deg);
-          color: var(--purple-primary);
-        }
-        .city-dropdown-panel {
-          position: absolute;
-          top: calc(100% + 10px);
-          left: 0;
-          width: 280px;
-          background: #FFFFFF;
-          border: 1px solid var(--border-light);
-          border-radius: var(--radius-md);
-          padding: 14px;
-          z-index: 1100;
-          animation: dropFadeIn 0.2s ease-out;
-        }
-        .dropdown-panel-title {
-          font-size: 11px;
-          font-weight: 800;
-          color: #94A3B8;
-          text-transform: uppercase;
-          letter-spacing: 0.5px;
-          margin-bottom: 8px;
-          padding-left: 4px;
-        }
-        .city-buttons-grid {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 4px;
-        }
-        .city-item-btn {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          padding: 6px 10px;
-          background: #F8FAFC;
-          border: 1px solid transparent;
-          border-radius: var(--radius-sm);
-          font-size: 12px;
-          font-weight: 600;
-          color: #334155;
-          cursor: pointer;
-          transition: all var(--transition-smooth);
-        }
-        .city-item-btn:hover {
-          background: var(--purple-light);
-          color: var(--purple-primary);
-        }
-        .btn-partner-ghost:hover {
-          background: var(--purple-light);
-          color: var(--purple-primary);
-          border-color: var(--purple-border);
-        }
-        .admin-highlight-btn {
-          background: #F1F5F9;
-          border-color: #E2E8F0;
-        }
-        .admin-highlight-btn:hover {
-          background: #0F172A;
-          color: #FFFFFF;
-          border-color: #0F172A;
-        }
-        .admin-mini-badge {
-          font-size: 8.5px;
-          font-weight: 800;
-          background: var(--purple-gradient);
-          color: #FFFFFF;
-          padding: 1px 5px;
-          border-radius: 4px;
-          letter-spacing: 0.4px;
-        }
-        .city-item-btn.selected {
-          background: var(--purple-light);
-          color: var(--purple-primary);
-          border-color: var(--purple-border);
-          font-weight: 700;
-        }
-        .active-dot {
-          width: 6px;
-          height: 6px;
-          background: var(--purple-primary);
-          border-radius: 50%;
-        }
-
-        /* Nav Menu Links */
-        .nav-menu-links {
-          display: flex;
-          align-items: center;
-          gap: 20px;
-        }
-        .nav-dropdown-item {
-          position: relative;
-        }
-        .nav-link-btn {
-          display: flex;
-          align-items: center;
-          gap: 4px;
-          background: none;
-          border: none;
-          font-size: 13.5px;
-          font-weight: 700;
-          color: #334155;
-          cursor: pointer;
-          padding: 6px 10px;
-          border-radius: var(--radius-sm);
-          transition: all var(--transition-smooth);
-        }
-        .nav-link-btn:hover, .nav-link-btn.active {
-          color: var(--purple-primary);
-          background: var(--purple-light);
-        }
-        .nav-link-chevron {
-          color: #94A3B8;
-          transition: transform var(--transition-smooth);
-        }
-        .nav-link-chevron.rotate {
-          transform: rotate(180deg);
-          color: var(--purple-primary);
-        }
-        .nav-direct-link {
-          display: flex;
-          align-items: center;
-          gap: 6px;
-          font-size: 13.5px;
-          font-weight: 700;
-          color: #334155;
-          padding: 6px 10px;
-          border-radius: var(--radius-sm);
-          transition: all var(--transition-smooth);
-        }
-        .nav-direct-link:hover {
-          color: var(--purple-primary);
-          background: var(--purple-light);
-        }
-        .nav-mini-badge {
-          background: #DCFCE7;
-          color: #15803D;
-          font-size: 8.5px;
-          font-weight: 800;
-          padding: 1px 5px;
-          border-radius: 4px;
-          letter-spacing: 0.3px;
-        }
-
-        /* Mega Menu for Products */
-        .products-mega-menu {
-          position: absolute;
-          top: calc(100% + 12px);
-          left: -40px;
-          width: 440px;
-          background: #FFFFFF;
-          border: 1px solid var(--border-light);
-          border-radius: var(--radius-lg);
-          padding: 14px;
-          z-index: 1100;
-          animation: dropFadeIn 0.2s ease-out;
-        }
-        @keyframes dropFadeIn {
-          from { opacity: 0; transform: translateY(-6px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        .mega-menu-grid {
-          display: grid;
-          grid-template-columns: 1fr;
-          gap: 6px;
-        }
-        .mega-menu-card {
-          display: flex;
-          align-items: flex-start;
-          gap: 12px;
-          padding: 10px 12px;
-          border-radius: var(--radius-md);
-          background: #FFFFFF;
-          transition: all var(--transition-smooth);
-        }
-        .mega-menu-card:hover {
-          background: #F8FAFC;
-        }
-        .mega-icon-box {
-          width: 36px;
-          height: 36px;
-          border-radius: var(--radius-sm);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          flex-shrink: 0;
-        }
-        .mega-icon-box.purple { background: var(--purple-light); color: var(--purple-primary); }
-        .mega-icon-box.indigo { background: #EEF2FF; color: #4F46E5; }
-        .mega-icon-box.emerald { background: #ECFDF5; color: #059669; }
-        .mega-icon-box.amber { background: #FFFBEB; color: #D97706; }
-        .mega-card-text {
-          display: flex;
-          flex-direction: column;
-        }
-        .mega-card-title {
-          font-size: 13.5px;
-          font-weight: 800;
-          color: #0F172A;
-        }
-        .mega-card-desc {
-          font-size: 11.5px;
-          color: #64748B;
-          line-height: 1.4;
-          margin-top: 1px;
-        }
-
-        /* Right Actions */
-        .nav-right-actions {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-        }
-        .btn-partner-ghost {
-          display: flex;
-          align-items: center;
-          gap: 6px;
-          padding: 7px 14px;
-          background: #F8FAFC;
-          border: 1px solid var(--border-light);
-          border-radius: var(--radius-sm);
-          color: #334155;
-          font-size: 12.5px;
-          font-weight: 700;
-          transition: all var(--transition-smooth);
-        }
-        .btn-partner-ghost:hover {
-          background: var(--purple-light);
-          border-color: var(--purple-border);
-          color: var(--purple-primary);
-        }
-        .btn-get-pass-nav {
-          padding: 8px 16px;
-          font-size: 13px;
-          font-weight: 800;
-          border-radius: var(--radius-sm);
-        }
-        .mobile-hamburger-btn {
-          display: none;
-          background: #F8FAFC;
-          border: 1px solid var(--border-light);
-          padding: 6px;
-          border-radius: var(--radius-sm);
-          cursor: pointer;
-          color: #0F172A;
-        }
-
-        /* Mobile Drawer */
-        .mobile-nav-panel {
-          background: #FFFFFF;
-          border-top: 1px solid var(--border-light);
-          border-bottom: 1px solid var(--border-light);
-          padding: 20px 0;
-          box-shadow: 0 10px 25px rgba(0,0,0,0.06);
-        }
-        .mobile-panel-inner {
-          display: flex;
-          flex-direction: column;
-          gap: 20px;
-        }
-        .mobile-links-section {
-          display: flex;
-          flex-direction: column;
-          gap: 8px;
-        }
-        .mobile-section-heading {
-          font-size: 10.5px;
-          font-weight: 800;
-          letter-spacing: 0.8px;
-          color: #94A3B8;
-          margin-bottom: 4px;
-        }
-        .mobile-nav-item {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          padding: 8px 10px;
-          background: #F8FAFC;
-          border-radius: var(--radius-sm);
-          font-size: 13.5px;
-          font-weight: 700;
-          color: #0F172A;
-        }
-        .mobile-action-box {
-          padding-top: 8px;
-        }
-
-        .shadow-elevation {
-          box-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.12), 0 0 0 1px rgba(0, 0, 0, 0.05);
-        }
-
-        @media (max-width: 1140px) {
-          .nav-menu-links, .btn-partner-ghost {
-            display: none;
-          }
-          .mobile-hamburger-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-          }
-        }
-      `}</style>
+      <style>{navbarStyles}</style>
     </header>
   );
 };
+
+const navbarStyles = `
+  .top-navbar-root {
+    position: sticky;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border-light);
+    transition: all var(--transition-smooth);
+  }
+  .top-navbar-root.is-scrolled {
+    background: rgba(255, 255, 255, 0.98);
+    box-shadow: 0 4px 20px rgba(15, 23, 42, 0.06);
+    border-bottom-color: rgba(226, 232, 240, 0.8);
+  }
+
+  .nav-layout {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    gap: 16px;
+  }
+
+  /* Brand Section */
+  .nav-brand-section {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .brand-emblem-wrap {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    text-decoration: none;
+  }
+  .brand-logo-icon {
+    width: 32px;
+    height: 32px;
+    background: var(--purple-gradient);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 3px 10px rgba(124, 58, 237, 0.35);
+    flex-shrink: 0;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+  }
+  .brand-text-column {
+    display: flex;
+    flex-direction: column;
+  }
+  .brand-name-text {
+    font-family: var(--font-heading);
+    font-size: 19px;
+    font-weight: 900;
+    letter-spacing: -0.4px;
+    color: #0F172A;
+    line-height: 1;
+  }
+  .brand-accent-purple {
+    background: var(--purple-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .brand-tagline {
+    font-size: 8px;
+    font-weight: 800;
+    letter-spacing: 0.8px;
+    color: var(--purple-primary);
+    margin-top: 2px;
+  }
+
+  /* City Selector */
+  .nav-city-picker {
+    position: relative;
+  }
+  .city-select-pill {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    background: #F1F5F9;
+    border: 1px solid #E2E8F0;
+    border-radius: var(--radius-full);
+    color: #334155;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all var(--transition-smooth);
+  }
+  .city-select-pill:hover, .city-select-pill.active {
+    background: var(--purple-light);
+    border-color: var(--purple-border);
+    color: var(--purple-primary);
+  }
+  .city-pin {
+    color: var(--purple-primary);
+  }
+  .city-arrow {
+    color: #64748B;
+    transition: transform var(--transition-smooth);
+  }
+  .city-arrow.rotate {
+    transform: rotate(180deg);
+  }
+  .city-dropdown-panel {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    width: 270px;
+    background: #FFFFFF;
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-md);
+    padding: 12px;
+    z-index: 1100;
+    animation: dropFadeIn 0.15s ease-out;
+  }
+  .dropdown-panel-title {
+    font-size: 10px;
+    font-weight: 800;
+    color: #94A3B8;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+    padding-left: 2px;
+  }
+  .city-buttons-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px;
+  }
+  .city-item-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 8px;
+    background: #F8FAFC;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: #334155;
+    cursor: pointer;
+    transition: all var(--transition-smooth);
+  }
+  .city-item-btn:hover, .city-item-btn.selected {
+    background: var(--purple-light);
+    color: var(--purple-primary);
+    font-weight: 700;
+  }
+  .active-dot {
+    width: 5px;
+    height: 5px;
+    background: var(--purple-primary);
+    border-radius: 50%;
+  }
+
+  /* Center Nav Links */
+  .nav-menu-links {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .nav-dropdown-item {
+    position: relative;
+  }
+  .nav-link-btn, .nav-direct-link {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: none;
+    border: none;
+    font-size: 13px;
+    font-weight: 600;
+    color: #334155;
+    padding: 6px 11px;
+    border-radius: 6px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all var(--transition-smooth);
+  }
+  .nav-link-btn:hover, .nav-link-btn.active, .nav-direct-link:hover {
+    color: var(--purple-primary);
+    background: var(--purple-light);
+  }
+  .nav-link-chevron {
+    color: #94A3B8;
+    transition: transform var(--transition-smooth);
+  }
+  .nav-link-chevron.rotate {
+    transform: rotate(180deg);
+    color: var(--purple-primary);
+  }
+  .nav-live-dot-badge {
+    background: #DCFCE7;
+    color: #059669;
+    font-size: 9px;
+    font-weight: 800;
+    padding: 1px 5px;
+    border-radius: 4px;
+    letter-spacing: 0.3px;
+  }
+
+  /* Mega Menu */
+  .products-mega-menu {
+    position: absolute;
+    top: calc(100% + 10px);
+    left: -40px;
+    width: 380px;
+    background: #FFFFFF;
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-md);
+    padding: 10px;
+    z-index: 1100;
+    animation: dropFadeIn 0.15s ease-out;
+  }
+  @keyframes dropFadeIn {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .mega-menu-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .mega-menu-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 10px;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: background var(--transition-smooth);
+  }
+  .mega-menu-card:hover {
+    background: var(--purple-light);
+  }
+  .mega-icon-box {
+    width: 30px;
+    height: 30px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .mega-icon-box.purple { background: #F3E8FF; color: #7C3AED; }
+  .mega-icon-box.indigo { background: #EEF2FF; color: #4F46E5; }
+  .mega-icon-box.emerald { background: #ECFDF5; color: #059669; }
+  .mega-icon-box.amber { background: #FFFBEB; color: #D97706; }
+  .mega-card-text {
+    display: flex;
+    flex-direction: column;
+  }
+  .mega-card-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #0F172A;
+  }
+  .mega-card-desc {
+    font-size: 11px;
+    color: #64748B;
+  }
+
+  /* Right Actions */
+  .nav-right-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .btn-nav-admin {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 12px;
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 6px;
+    color: #0F172A;
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all var(--transition-smooth);
+  }
+  .btn-nav-admin:hover {
+    background: #0F172A;
+    color: #FFFFFF;
+    border-color: #0F172A;
+  }
+  .btn-nav-ghost {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 11px;
+    background: transparent;
+    border: 1px solid var(--border-light);
+    border-radius: 6px;
+    color: #475569;
+    font-size: 12px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all var(--transition-smooth);
+  }
+  .btn-nav-ghost:hover {
+    background: var(--purple-light);
+    color: var(--purple-primary);
+    border-color: var(--purple-border);
+  }
+  .btn-nav-cta {
+    padding: 6px 14px;
+    font-size: 12.5px;
+    border-radius: 6px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .mobile-hamburger-btn {
+    display: none;
+    background: none;
+    border: none;
+    padding: 6px;
+    color: #0F172A;
+    cursor: pointer;
+  }
+
+  /* Mobile Drawer */
+  .mobile-nav-drawer {
+    display: none;
+    background: #FFFFFF;
+    border-top: 1px solid var(--border-light);
+    padding: 16px 20px 24px;
+  }
+  .mobile-drawer-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .mobile-drawer-inner a {
+    font-size: 14px;
+    font-weight: 700;
+    color: #0F172A;
+    text-decoration: none;
+    padding: 6px 0;
+    border-bottom: 1px solid #F1F5F9;
+  }
+  .mobile-drawer-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  @media (max-width: 990px) {
+    .nav-menu-links { display: none; }
+    .btn-nav-ghost { display: none; }
+    .mobile-hamburger-btn { display: block; }
+    .mobile-nav-drawer { display: block; }
+  }
+`;

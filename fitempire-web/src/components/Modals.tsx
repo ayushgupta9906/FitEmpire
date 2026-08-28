@@ -144,7 +144,7 @@ export const AppDownloadModal: React.FC<AppModalProps> = ({ isOpen, onClose }) =
               <div className="qr-box-caption">Scan in Expo Go</div>
             </div>
 
-            <a href="https://fitempireuser.netlify.app" target="_blank" rel="noreferrer" className="btn-purple-primary w-full">
+            <a href="https://firmempireapp.netlify.app" target="_blank" rel="noreferrer" className="btn-purple-primary w-full">
               <span>Open Member Web App</span>
               <ArrowRight size={14} />
             </a>

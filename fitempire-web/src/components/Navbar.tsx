@@ -250,7 +250,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           </a>
 
           <a 
-            href="https://fitempireuser.netlify.app"
+            href="https://firmempireapp.netlify.app"
             target="_blank"
             rel="noreferrer"
             className="btn-purple-primary btn-get-pass-nav"

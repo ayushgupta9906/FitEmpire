@@ -1,6 +1,9 @@
 package com.fitempire.modules.bookings.service;
 
 import com.fitempire.common.exception.BusinessException;
+import com.fitempire.common.response.PagedResponse;
+import com.fitempire.modules.bookings.dto.BookingDto;
+import com.fitempire.modules.bookings.dto.CreateBookingRequest;
 import com.fitempire.modules.bookings.entity.Booking;
 import com.fitempire.modules.bookings.entity.BookingStatus;
 import com.fitempire.modules.bookings.entity.BookingType;
@@ -10,11 +13,12 @@ import com.fitempire.modules.gyms.entity.GymBranch;
 import com.fitempire.modules.gyms.repository.GymBranchRepository;
 import com.fitempire.modules.gyms.repository.GymRepository;
 import com.fitempire.modules.users.entity.User;
-import com.fitempire.modules.users.entity.UserProfile;
 import com.fitempire.modules.users.repository.UserProfileRepository;
 import com.fitempire.modules.users.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,6 +40,78 @@ public class BookingService {
     private final GymRepository gymRepository;
     private final GymBranchRepository gymBranchRepository;
 
+    // ── Create Booking ───────────────────────────────────────────────────────
+
+    @Transactional
+    public BookingDto createBooking(CreateBookingRequest request, UUID userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new BusinessException("User not found", "USER_NOT_FOUND", org.springframework.http.HttpStatus.NOT_FOUND));
+
+        Gym gym = gymRepository.findById(request.getGymId())
+                .orElseThrow(() -> new BusinessException("Gym not found", "GYM_NOT_FOUND", org.springframework.http.HttpStatus.NOT_FOUND));
+
+        GymBranch branch = gymBranchRepository.findById(request.getBranchId())
+                .orElseThrow(() -> new BusinessException("Branch not found", "BRANCH_NOT_FOUND", org.springframework.http.HttpStatus.NOT_FOUND));
+
+        Booking booking = new Booking();
+        booking.setUser(user);
+        booking.setGym(gym);
+        booking.setBranch(branch);
+        booking.setBookingType(request.getBookingType());
+        booking.setStatus(BookingStatus.CONFIRMED);
+        booking.setBookingDate(request.getBookingDate());
+        booking.setStartTime(request.getStartTime());
+        booking.setEndTime(request.getEndTime());
+        booking.setNotes(request.getNotes());
+        booking.setClassScheduleId(request.getClassScheduleId());
+        booking.setTrainerId(request.getTrainerId());
+        booking.setAmountPaid(BigDecimal.ZERO);
+
+        // Generate initial QR token
+        String token = "EMPIRE-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase() + "-" + Instant.now().toEpochMilli();
+        booking.setQrToken(token);
+        booking.setQrExpiresAt(Instant.now().plus(60, ChronoUnit.SECONDS));
+
+        Booking saved = bookingRepository.save(booking);
+        log.info("Booking created: {} for user: {} at gym: {}", saved.getId(), userId, gym.getName());
+        return toDto(saved);
+    }
+
+    // ── My Bookings ──────────────────────────────────────────────────────────
+
+    @Transactional(readOnly = true)
+    public PagedResponse<BookingDto> getMyBookings(UUID userId, Pageable pageable) {
+        Page<Booking> page = bookingRepository.findByUserIdOrderByCreatedAtDesc(userId, pageable);
+        return PagedResponse.of(page.map(this::toDto));
+    }
+
+    // ── Cancel Booking ───────────────────────────────────────────────────────
+
+    @Transactional
+    public BookingDto cancelBooking(UUID bookingId, UUID userId, String reason) {
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new BusinessException("Booking not found", "BOOKING_NOT_FOUND", org.springframework.http.HttpStatus.NOT_FOUND));
+
+        if (!booking.getUser().getId().equals(userId)) {
+            throw new BusinessException("Unauthorized access to booking", "UNAUTHORIZED_ACCESS", org.springframework.http.HttpStatus.FORBIDDEN);
+        }
+
+        if (booking.getStatus() == BookingStatus.CANCELLED) {
+            throw new BusinessException("Booking is already cancelled", "ALREADY_CANCELLED", org.springframework.http.HttpStatus.BAD_REQUEST);
+        }
+
+        if (booking.getStatus() == BookingStatus.CHECKED_IN || booking.getStatus() == BookingStatus.COMPLETED) {
+            throw new BusinessException("Cannot cancel a checked-in or completed booking", "CANNOT_CANCEL", org.springframework.http.HttpStatus.BAD_REQUEST);
+        }
+
+        booking.cancel(reason != null ? reason : "Cancelled by user");
+        Booking saved = bookingRepository.save(booking);
+        log.info("Booking {} cancelled by user {}", bookingId, userId);
+        return toDto(saved);
+    }
+
+    // ── Generate Dynamic QR ──────────────────────────────────────────────────
+
     @Transactional
     public String generateDynamicQr(UUID bookingId, UUID userId) {
         Booking booking = bookingRepository.findById(bookingId)
@@ -48,10 +124,12 @@ public class BookingService {
         String newToken = "EMPIRE-TOKEN-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase() + "-" + Instant.now().toEpochMilli();
         booking.setQrToken(newToken);
         booking.setQrExpiresAt(Instant.now().plus(60, ChronoUnit.SECONDS));
-        
+
         bookingRepository.save(booking);
         return newToken;
     }
+
+    // ── Verify QR & Check-In ─────────────────────────────────────────────────
 
     @Transactional
     public Map<String, Object> verifyAndCheckIn(String tokenOrCode, UUID partnerGymId) {
@@ -61,12 +139,10 @@ public class BookingService {
         Booking booking = bookingRepository.findByQrToken(cleanToken).orElse(null);
 
         if (booking == null) {
-            // Find default user or test user
             User user = userRepository.findByEmailAndDeletedFalse("testuser@fitempire.in")
                     .orElseGet(() -> userRepository.findAll().stream().filter(User::isActive).findFirst()
                             .orElseThrow(() -> new BusinessException("No active user found", "NO_USER", org.springframework.http.HttpStatus.NOT_FOUND)));
 
-            // Find target gym
             Gym gym = partnerGymId != null ? gymRepository.findById(partnerGymId).orElse(null) : null;
             if (gym == null) {
                 List<Gym> allGyms = gymRepository.findAll();
@@ -79,7 +155,6 @@ public class BookingService {
             List<GymBranch> branches = gymBranchRepository.findByGymIdAndDeletedFalse(gym.getId());
             GymBranch branch = branches.isEmpty() ? null : branches.get(0);
 
-            // Create live checked-in booking record
             booking = new Booking();
             booking.setUser(user);
             booking.setGym(gym);
@@ -98,7 +173,6 @@ public class BookingService {
             booking = bookingRepository.save(booking);
         }
 
-        // Award reward points for check-in
         final Booking finalBooking = booking;
         userProfileRepository.findByUserId(finalBooking.getUser().getId()).ifPresent(profile -> {
             profile.setTotalCheckins(profile.getTotalCheckins() + 1);
@@ -123,6 +197,8 @@ public class BookingService {
         return response;
     }
 
+    // ── Live Attendances ─────────────────────────────────────────────────────
+
     @Transactional(readOnly = true)
     public List<Map<String, Object>> getLiveAttendances(UUID gymId) {
         List<Booking> bookings;
@@ -145,5 +221,27 @@ public class BookingService {
             result.add(map);
         }
         return result;
+    }
+
+    // ── DTO Mapper ───────────────────────────────────────────────────────────
+
+    private BookingDto toDto(Booking b) {
+        return BookingDto.builder()
+                .id(b.getId())
+                .gymId(b.getGym() != null ? b.getGym().getId() : null)
+                .gymName(b.getGym() != null ? b.getGym().getName() : null)
+                .branchId(b.getBranch() != null ? b.getBranch().getId() : null)
+                .branchName(b.getBranch() != null ? b.getBranch().getName() : null)
+                .bookingType(b.getBookingType())
+                .status(b.getStatus())
+                .bookingDate(b.getBookingDate())
+                .startTime(b.getStartTime())
+                .endTime(b.getEndTime())
+                .qrToken(b.getQrToken())
+                .qrExpiresAt(b.getQrExpiresAt())
+                .checkedInAt(b.getCheckedInAt())
+                .checkedOutAt(b.getCheckedOutAt())
+                .createdAt(b.getCreatedAt())
+                .build();
     }
 }

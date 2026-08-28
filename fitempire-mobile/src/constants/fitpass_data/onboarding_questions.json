@@ -1,0 +1,118 @@
+{
+  "code": 200,
+  "message": "OnBoarding fetch successfully",
+  "meta": {},
+  "result": [
+    {
+      "category_id": 1,
+      "category_name": "Basic Details",
+      "list":[
+        {
+          "hra_question_id": 1,
+          "image_icon": "waving_hand",
+          "answered": "",
+          "answered_label": "user_name",
+          "question_type": 5,
+          "edit": 1,
+          "options": null,
+          "additional_type": 2,
+          "multi_select": 1,
+          "event":"NAME",
+          "information_text": "",
+          "question_name": {
+            "label": "What’s your name?",
+            "string_to_replace": "name",
+            "font_color": "#dc4144"
+          },
+          "misc_data": {
+            "inputAreaPlaceHolder": "Your name here",
+            "keyboard_type":"default",
+            "type":"name"
+          }
+        },
+        {
+          "hra_question_id": 2,
+          "image_icon": "e-mail",
+          "answered": "",
+          "answered_label": "user_email",
+          "question_type": 5,
+          "edit": 2,
+          "options": null,
+          "additional_type": null,
+          "multi_select": 1,
+          "information_text": "",
+          "event":"EMAIL",
+          "question_name": {
+            "label": "Enter email address ",
+            "string_to_replace": "email address",
+            "font_color": "#dc4144"
+          },
+          "misc_data": {
+            "inputAreaPlaceHolder": "email@domain",
+            "keyboard_type":"email",
+            "type":"email"
+
+          }
+        },
+        {
+          "hra_question_id": 3,
+          "image_icon": "party_popper",
+          "answered": "",
+          "answered_label": "user_dob",
+          "question_type": 6,
+          "edit": 2,
+          "options": null,
+          "additional_type": 0,
+          "multi_select": 1,
+          "information_text": "We use your age to personalise your workout plans and diet.",
+          "event":"DOB",
+          "question_name": {
+            "label": "When’s your birthday?",
+            "string_to_replace": "birthday",
+            "font_color": "#dc4144"
+          }
+        },
+        {
+          "hra_question_id": 4,
+          "image_icon": "red_hair",
+          "answered": "",
+          "answered_label": "user_gender",
+          "question_type": 10,
+          "edit": 2,
+          "options": null,
+          "additional_type": null,
+          "multi_select": 1,
+          "information_text": "We use your gender to estimate your metabolic rate.",
+          "event":"GENDER",
+          "question_name": {
+            "label": "What’s your gender?",
+            "string_to_replace": "gender",
+            "font_color": "#dc4144"
+          }
+        },
+        {
+          "hra_question_id": 6,
+          "image_icon": "balance_scale",
+          "answered": "",
+          "answered_label": "user_weight",
+          "question_type": 21,
+          "edit": 2,
+          "options": null,
+          "additional_type": null,
+          "multi_select": 1,
+          "information_text": "",
+          "event":"HEIGHT_WEIGHT",
+          "question_name": {
+            "label": "How much do you weigh currently?",
+            "string_to_replace": "weigh",
+            "font_color": "#dc4144"
+          }
+        }
+
+      ]
+    }
+  ],
+  "status": "OK"
+}
+
+

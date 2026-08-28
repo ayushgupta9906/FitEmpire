@@ -1,0 +1,51 @@
+{
+  "code": 200,
+  "message": "OnBoarding fetch successfully",
+  "meta": {},
+  "result": [
+    {
+      "category_id": 1,
+      "category_name": "Basic Details",
+      "list":[
+        {
+          "hra_question_id": 1,
+          "image_icon": "dizzy",
+          "answered": "",
+          "answered_label": "user_goal",
+          "question_type": 2,
+          "edit": 1,
+          "options": [{
+            "label_id": 7,
+            "bg_color": "#109310",
+            "icon_color": "#109310",
+            "font_icon": "e9aa"
+
+          },
+            {
+              "label_id": 8,
+              "bg_color": "#ff9b03",
+              "icon_color": "#ff9b03",
+              "font_icon": "e9a9"
+
+            },
+            {
+              "label_id": 9,
+              "bg_color": "#dc4144",
+              "icon_color": "#dc4144",
+              "font_icon": "e9ab"
+
+            }],
+          "additional_type": 2,
+          "multi_select": 1,
+          "information_text": "",
+          "question_name": {
+            "label": "When would you like to achieve your goal?",
+            "string_to_replace": "goal",
+            "font_color": "#dc4144"
+          }
+        }
+      ]
+    }
+  ],
+  "status": "OK"
+}

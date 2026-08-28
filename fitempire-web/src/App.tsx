@@ -29,7 +29,12 @@ export default function App() {
       const search = window.location.search;
       const hash = window.location.hash;
       const pathname = window.location.pathname;
-      return search.includes('view=admin') || hash === '#admin' || pathname === '/admin';
+      const adminPaths = [
+        '/admin', '/login', '/dashboard', '/users', '/classes', '/gyms',
+        '/memberships', '/payments', '/analytics', '/bookings', 
+        '/notifications', '/settings', '/onboarding', '/verification', '/settlements'
+      ];
+      return search.includes('view=admin') || hash === '#admin' || adminPaths.some(p => pathname.startsWith(p));
     }
     return false;
   });
@@ -48,7 +53,13 @@ export default function App() {
     const handlePopState = () => {
       const search = window.location.search;
       const hash = window.location.hash;
-      setIsAdminView(search.includes('view=admin') || hash === '#admin');
+      const pathname = window.location.pathname;
+      const adminPaths = [
+        '/admin', '/login', '/dashboard', '/users', '/classes', '/gyms',
+        '/memberships', '/payments', '/analytics', '/bookings', 
+        '/notifications', '/settings', '/onboarding', '/verification', '/settlements'
+      ];
+      setIsAdminView(search.includes('view=admin') || hash === '#admin' || adminPaths.some(p => pathname.startsWith(p)));
     };
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);

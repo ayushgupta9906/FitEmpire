@@ -22,6 +22,7 @@ interface NavbarProps {
   onOpenAppModal: () => void;
   onOpenPartnerModal: () => void;
   onOpenCorporateModal: () => void;
+  onOpenAdminModal: () => void;
 }
 
 export const CITIES = [
@@ -42,7 +43,8 @@ export const CITIES = [
 export const Navbar: React.FC<NavbarProps> = ({ 
   onOpenAppModal, 
   onOpenPartnerModal,
-  onOpenCorporateModal 
+  onOpenCorporateModal,
+  onOpenAdminModal 
 }) => {
   const [selectedCity, setSelectedCity] = useState('Bengaluru');
   const [cityDropdownOpen, setCityDropdownOpen] = useState(false);
@@ -213,6 +215,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             )}
           </div>
 
+          <a href="#ecosystem-apps" className="nav-direct-link">Ecosystem Apps</a>
           <a href="#explore-gyms" className="nav-direct-link">Explore Gyms</a>
           <a href="#apps" className="nav-direct-link">
             <span>App Demo</span>
@@ -225,6 +228,15 @@ export const Navbar: React.FC<NavbarProps> = ({
 
         {/* Right CTA Area */}
         <div className="nav-right-actions">
+          <button 
+            className="btn-partner-ghost"
+            onClick={onOpenAdminModal}
+            title="Super Admin Dashboard"
+          >
+            <ShieldCheck size={14} />
+            <span>Admin</span>
+          </button>
+
           <a 
             href="http://localhost:3001" 
             target="_blank" 

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Navbar } from './components/Navbar';
 import { HeroSection } from './components/HeroSection';
+import { EcosystemHubSection } from './components/EcosystemHubSection';
 import { AppShowcase } from './components/AppShowcase';
 import { EcosystemSuite } from './components/EcosystemSuite';
 import { GymExplorer } from './components/GymExplorer';
@@ -15,7 +16,8 @@ import {
   BookingModal, 
   CheckoutModal, 
   PartnerModal, 
-  CorporateModal 
+  CorporateModal,
+  AdminModal 
 } from './components/Modals';
 
 export default function App() {
@@ -27,6 +29,7 @@ export default function App() {
   const [selectedPlan, setSelectedPlan] = useState<any | null>(null);
   const [partnerModalOpen, setPartnerModalOpen] = useState(false);
   const [corporateModalOpen, setCorporateModalOpen] = useState(false);
+  const [adminModalOpen, setAdminModalOpen] = useState(false);
 
   const handleSearchSubmit = (query: string, category: string) => {
     console.log('Search submit:', query, category);
@@ -44,15 +47,12 @@ export default function App() {
 
   return (
     <div className="app-layout">
-      {/* Background Ambience */}
-      <div className="ambient-glow-1"></div>
-      <div className="ambient-glow-2"></div>
-
       {/* Navigation */}
       <Navbar 
         onOpenAppModal={() => setAppModalOpen(true)}
         onOpenPartnerModal={() => setPartnerModalOpen(true)}
         onOpenCorporateModal={() => setCorporateModalOpen(true)}
+        onOpenAdminModal={() => setAdminModalOpen(true)}
       />
 
       {/* Main Content Sections */}
@@ -64,6 +64,13 @@ export default function App() {
             const el = document.getElementById('plans');
             if (el) el.scrollIntoView({ behavior: 'smooth' });
           }}
+        />
+
+        {/* 4 Ecosystem Pillars: Member App, Partner App, Admin Console, Showcase */}
+        <EcosystemHubSection 
+          onOpenAppModal={() => setAppModalOpen(true)}
+          onOpenPartnerModal={() => setPartnerModalOpen(true)}
+          onOpenAdminModal={() => setAdminModalOpen(true)}
         />
 
         <AppShowcase 
@@ -131,6 +138,11 @@ export default function App() {
       <CorporateModal 
         isOpen={corporateModalOpen} 
         onClose={() => setCorporateModalOpen(false)} 
+      />
+
+      <AdminModal 
+        isOpen={adminModalOpen} 
+        onClose={() => setAdminModalOpen(false)} 
       />
     </div>
   );

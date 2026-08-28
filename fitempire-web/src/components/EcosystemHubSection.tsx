@@ -32,7 +32,7 @@ const APPS = [
     badge: 'MEMBER PASS',
     badgeClass: 'purple',
     actionText: 'Open Member App',
-    actionUrl: 'https://fitempireuser.netlify.app',
+    actionUrl: 'https://firmempireapp.netlify.app',
     isModal: false,
     stats: ['12,000+ Gyms', '60s Dynamic QR', 'ARIA AI Coach', '1-Tap Freeze']
   },

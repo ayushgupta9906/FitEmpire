@@ -146,6 +146,12 @@ export const EcosystemHubSection: React.FC<EcosystemHubProps> = ({
                       <span>{app.actionText}</span>
                       <ArrowRight size={14} />
                     </a>
+                  ) : app.id === 'admin-app' ? (
+                    <button onClick={onOpenAdminModal} className="btn-outline-dark w-full">
+                      <ShieldCheck size={15} />
+                      <span>{app.actionText}</span>
+                      <ArrowRight size={14} />
+                    </button>
                   ) : (
                     <a 
                       href={app.actionUrl} 

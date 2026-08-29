@@ -32,12 +32,13 @@ export default function QrCheckinScreen() {
   const handleScanGymQr = async () => {
     setLoadingScan(true);
     try {
-      await bookingsApi.verifyQr('EMPIRE-PASS-RAHUL-98800', '11111111-1111-1111-1111-111111111111');
+      // For now, simulate an API call since verifyQr is not in api.ts yet
+      await new Promise(resolve => setTimeout(resolve, 1500));
       setUnlockedGate(true);
       Alert.alert('Turnstile Unlocked! 🟢', 'Welcome to Strike Force MMA & Fitness! +50 FitPoints added to your wallet.');
-    } catch {
-      setUnlockedGate(true);
-      Alert.alert('Turnstile Unlocked! 🟢', 'Welcome to Strike Force MMA & Fitness! +50 FitPoints added to your wallet.');
+    } catch (e: any) {
+      console.warn('QR scan failed:', e);
+      Alert.alert('Scan Failed', 'Could not verify the QR code. Please try again.');
     } finally {
       setLoadingScan(false);
     }

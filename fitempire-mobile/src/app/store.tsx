@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, ScrollView, TouchableOpacity, Image, TextInput, Alert, Dimensions } from 'react-native';
 import { useRouter } from 'expo-router';
 import { ThemedText } from '@/components/themed-text';
@@ -17,6 +17,7 @@ import {
   Filter,
 } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { ecosystemApi } from '@/services/api';
 
 const PRODUCTS = [
   {
@@ -96,9 +97,33 @@ export default function StoreScreen() {
   const [searchQuery, setSearchQuery] = useState('');
   const [cartCount, setCartCount] = useState(0);
 
+  const [products, setProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  const fetchProducts = async () => {
+    setLoading(true);
+    try {
+      const res = await ecosystemApi.getStoreProducts();
+      if (res.data?.data?.length > 0) {
+        setProducts(res.data.data);
+      } else {
+        setProducts(PRODUCTS);
+      }
+    } catch (e) {
+      console.warn('Failed to fetch store products, using fallback', e);
+      setProducts(PRODUCTS);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const categories = ['ALL', 'EQUIPMENT', 'NUTRITION', 'GEAR'];
 
-  const filtered = PRODUCTS.filter((p) => {
+  const filtered = products.filter((p) => {
     const matchCat = activeCategory === 'ALL' || p.category === activeCategory;
     const matchQ = p.name.toLowerCase().includes(searchQuery.toLowerCase());
     return matchCat && matchQ;

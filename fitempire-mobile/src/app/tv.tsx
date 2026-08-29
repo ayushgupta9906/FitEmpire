@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, ScrollView, TouchableOpacity, Image, Alert, Dimensions } from 'react-native';
 import { useRouter } from 'expo-router';
 import { ThemedText } from '@/components/themed-text';
@@ -17,6 +17,7 @@ import {
   Volume2,
 } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { ecosystemApi } from '@/services/api';
 
 const { width } = Dimensions.get('window');
 
@@ -68,8 +69,29 @@ export default function TvScreen() {
   const scheme = useColorScheme() ?? 'dark';
   const colors = Colors[scheme === 'unspecified' ? 'dark' : scheme] ?? Colors.dark;
 
+  const [videos, setVideos] = useState<any[]>(VIDEO_CLASSES);
   const [activeVideo, setActiveVideo] = useState(VIDEO_CLASSES[0]);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    fetchVideos();
+  }, []);
+
+  const fetchVideos = async () => {
+    setLoading(true);
+    try {
+      const res = await ecosystemApi.getVideoClasses();
+      if (res.data?.data?.length > 0) {
+        setVideos(res.data.data);
+        setActiveVideo(res.data.data[0]);
+      }
+    } catch (e) {
+      console.warn('Failed to fetch tv videos, using fallback', e);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handlePlay = (video: any) => {
     setActiveVideo(video);
@@ -135,7 +157,7 @@ export default function TvScreen() {
         {/* Library List */}
         <ThemedText style={styles.sectionHeading}>STREAM WORKOUT SESSIONS</ThemedText>
         <View style={{ gap: 12 }}>
-          {VIDEO_CLASSES.map((item) => (
+          {videos.map((item) => (
             <TouchableOpacity
               key={item.id}
               style={[

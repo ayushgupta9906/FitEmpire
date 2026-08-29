@@ -107,7 +107,9 @@ export default function HomeScreen() {
   const [nearbyGyms, setNearbyGyms] = useState<any[]>(NEARBY_CENTERS);
   const [walletBalance, setWalletBalance] = useState('100');
   const [videoList, setVideoList] = useState<any[]>(VIDEO_WORKOUTS);
-
+  const [storeProducts, setStoreProducts] = useState<any[]>([]);
+  const [nutritionProducts, setNutritionProducts] = useState<any[]>([]);
+  const [compactProducts, setCompactProducts] = useState<any[]>([]);
   useEffect(() => {
     loadHomeData();
   }, []);
@@ -151,6 +153,27 @@ export default function HomeScreen() {
       }
     } catch (e) {
       console.warn('Home TV fetch fallback:', e);
+    }
+
+    // 4. Fetch store products
+    try {
+      const prodRes = await ecosystemApi.getStoreProducts();
+      const items = prodRes.data?.data || [];
+      if (items.length > 0) {
+        // Split into the 3 categories for the UI
+        setStoreProducts(items.filter((i: any) => i.category === 'EQUIPMENT').slice(0, 5));
+        setNutritionProducts(items.filter((i: any) => i.category === 'NUTRITION').slice(0, 5));
+        setCompactProducts(items.filter((i: any) => i.category === 'GEAR').slice(0, 5));
+      } else {
+        setStoreProducts(PRODUCTS_RECOMMENDED);
+        setNutritionProducts(PRODUCTS_NUTRITION);
+        setCompactProducts(PRODUCTS_COMPACT);
+      }
+    } catch (e) {
+      console.warn('Home Products fetch fallback:', e);
+      setStoreProducts(PRODUCTS_RECOMMENDED);
+      setNutritionProducts(PRODUCTS_NUTRITION);
+      setCompactProducts(PRODUCTS_COMPACT);
     }
   };
 
@@ -392,12 +415,8 @@ export default function HomeScreen() {
         <View style={styles.sectionContainer}>
           <ThemedText style={styles.sectionHeaderTitle}>Recommended product</ThemedText>
 
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.horizontalScrollGap}
-          >
-            {PRODUCTS_RECOMMENDED.map((p) => (
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.horizontalScrollGap}>
+            {(storeProducts.length > 0 ? storeProducts : PRODUCTS_RECOMMENDED).map((p) => (
               <View
                 key={p.id}
                 style={[styles.productCard, { backgroundColor: colors.surface, borderColor: colors.border }]}
@@ -425,12 +444,8 @@ export default function HomeScreen() {
         <View style={styles.sectionContainer}>
           <ThemedText style={styles.sectionHeaderTitle}>Stronger gut, Stronger you</ThemedText>
 
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.horizontalScrollGap}
-          >
-            {PRODUCTS_NUTRITION.map((p) => (
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.horizontalScrollGap}>
+            {(nutritionProducts.length > 0 ? nutritionProducts : PRODUCTS_NUTRITION).map((p) => (
               <View
                 key={p.id}
                 style={[styles.productCard, { backgroundColor: colors.surface, borderColor: colors.border }]}
@@ -458,12 +473,8 @@ export default function HomeScreen() {
         <View style={styles.sectionContainer}>
           <ThemedText style={styles.sectionHeaderTitle}>Compact fitness finds</ThemedText>
 
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.horizontalScrollGap}
-          >
-            {PRODUCTS_COMPACT.map((p) => (
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.horizontalScrollGap}>
+            {(compactProducts.length > 0 ? compactProducts : PRODUCTS_COMPACT).map((p) => (
               <View
                 key={p.id}
                 style={[styles.productCard, { backgroundColor: colors.surface, borderColor: colors.border }]}

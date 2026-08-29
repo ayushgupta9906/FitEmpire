@@ -123,10 +123,8 @@ export default function BookingScreen() {
         },
       ]);
     } catch (e: any) {
-      console.warn(e);
-      Alert.alert('Workout Confirmed 🎉', 'Your workout slot is booked! View your digital entry pass.', [
-        { text: 'View Digital Pass →', onPress: () => router.replace('/(tabs)/ticket' as any) },
-      ]);
+      console.warn('Booking error:', e.response?.data || e.message || e);
+      Alert.alert('Booking Failed', e.response?.data?.message || 'Could not confirm booking. Please try again.');
     } finally {
       setLoadingSubmit(false);
     }

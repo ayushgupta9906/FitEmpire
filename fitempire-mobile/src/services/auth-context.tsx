@@ -62,8 +62,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const res = await authApi.requestOtp(phone);
       return res.data?.data || null;
     } catch (e) {
-      console.warn('requestOtp fallback to dev OTP:', e);
-      return '123456';
+      console.warn('requestOtp API failed:', e);
+      throw e;
     }
   };
 
@@ -83,22 +83,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       fetchUserProfile();
       return userData;
     } catch (apiErr: any) {
-      if (code === '123456' || !apiErr.response) {
-        const demoUser = {
-          id: 'demo-member-001',
-          email: 'rahul.fit@fitempire.in',
-          firstName: 'Rahul',
-          lastName: 'Sharma',
-          phone: phone,
-          role: 'CUSTOMER',
-        };
-        await AsyncStorage.setItem('fitempire_access_token', 'demo_member_jwt_token');
-        await AsyncStorage.setItem('fitempire_refresh_token', 'demo_member_refresh_token');
-        await AsyncStorage.setItem('fitempire_user', JSON.stringify(demoUser));
-        setUser(demoUser);
-        setIsAuthenticated(true);
-        return demoUser;
-      }
+      console.warn('verifyOtp API failed:', apiErr);
       throw apiErr;
     }
   };

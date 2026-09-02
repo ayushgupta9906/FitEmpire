@@ -120,7 +120,7 @@ export default function MyBookingsScreen() {
   const colors = Colors[scheme === 'unspecified' ? 'dark' : scheme] ?? Colors.dark;
 
   const [activeCategory, setActiveCategory] = useState('all');
-  const [bookingsList, setBookingsList] = useState<BookingRecord[]>(PAST_BOOKINGS);
+  const [bookingsList, setBookingsList] = useState<BookingRecord[]>([]);
   const [upcomingBooking, setUpcomingBooking] = useState<any>(null);
   const [loading, setLoading] = useState(false);
 
@@ -151,8 +151,9 @@ export default function MyBookingsScreen() {
         }));
         setBookingsList(mapped);
       }
+      // If no bookings, list stays empty — we show an empty state in the UI
     } catch (e) {
-      console.warn('Bookings API error, using demo records:', e);
+      console.warn('Bookings API error:', e);
     } finally {
       setLoading(false);
     }
@@ -214,21 +215,21 @@ export default function MyBookingsScreen() {
           {/* 3 Metrics Row */}
           <View style={styles.metricsRow}>
             <View style={styles.metricColumn}>
-              <ThemedText style={styles.metricNumber}>209</ThemedText>
+              <ThemedText style={styles.metricNumber}>{bookingsList.length}</ThemedText>
               <ThemedText style={styles.metricLabel}>Bookings</ThemedText>
             </View>
 
             <View style={styles.metricDivider} />
 
             <View style={styles.metricColumn}>
-              <ThemedText style={styles.metricNumber}>148</ThemedText>
+              <ThemedText style={styles.metricNumber}>{bookingsList.filter(b => b.status === 'Attended' || b.status === 'Scheduled').length}</ThemedText>
               <ThemedText style={styles.metricLabel}>Confirmed</ThemedText>
             </View>
 
             <View style={styles.metricDivider} />
 
             <View style={styles.metricColumn}>
-              <ThemedText style={styles.metricNumber}>61</ThemedText>
+              <ThemedText style={styles.metricNumber}>{bookingsList.filter(b => b.status === 'Cancelled').length}</ThemedText>
               <ThemedText style={styles.metricLabel}>Cancelled</ThemedText>
             </View>
           </View>
@@ -238,48 +239,57 @@ export default function MyBookingsScreen() {
         <View style={styles.sectionContainer}>
           <ThemedText style={styles.sectionHeaderLabel}>UPCOMING BOOKINGS</ThemedText>
 
-          <TouchableOpacity
-            style={styles.upcomingCard}
-            activeOpacity={0.9}
-            onPress={() => router.push('/ticket' as any)}
-          >
-            {/* Top Brand & Category Header */}
-            <View style={styles.upcomingBrandHeader}>
-              <ThemedText style={styles.upcomingBrandText}>🏋️ FITEMPIRE®</ThemedText>
-            </View>
-
-            <View style={styles.upcomingCenterContent}>
-              <ThemedText style={styles.upcomingWorkoutTitle}>GYM WORKOUT</ThemedText>
-              <ThemedText style={styles.upcomingWorkoutTime}>TODAY, 06:00 PM</ThemedText>
-              <View style={styles.durationRow}>
-                <Clock size={12} color="#94A3B8" />
-                <ThemedText style={styles.durationText}>90 min</ThemedText>
+          {upcomingBooking ? (
+            <TouchableOpacity
+              style={styles.upcomingCard}
+              activeOpacity={0.9}
+              onPress={() => router.push('/ticket' as any)}
+            >
+              <View style={styles.upcomingBrandHeader}>
+                <ThemedText style={styles.upcomingBrandText}>🏋️ FITEMPIRE®</ThemedText>
               </View>
-
-              {/* Status Pill */}
-              <View style={styles.scheduledPill}>
-                <ThemedText style={styles.scheduledPillText}>📅 Scheduled</ThemedText>
-              </View>
-            </View>
-
-            {/* Bottom Venue Footer Bar */}
-            <View style={styles.upcomingVenueFooter}>
-              <Image
-                source={{
-                  uri: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=100&auto=format&fit=crop',
-                }}
-                style={styles.upcomingVenueAvatar}
-              />
-              <View style={{ flex: 1 }}>
-                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
-                  <ThemedText style={styles.upcomingVenueName}>Iron Culture Gym</ThemedText>
-                  <CheckCircle size={14} color="#3B82F6" fill="#3B82F6" />
+              <View style={styles.upcomingCenterContent}>
+                <ThemedText style={styles.upcomingWorkoutTitle}>{(upcomingBooking.bookingType || 'GYM WORKOUT').toUpperCase()}</ThemedText>
+                <ThemedText style={styles.upcomingWorkoutTime}>
+                  {upcomingBooking.bookingDate || 'TODAY'}, {upcomingBooking.startTime ? upcomingBooking.startTime.substring(0, 5) : 'Anytime'}
+                </ThemedText>
+                <View style={styles.durationRow}>
+                  <Clock size={12} color="#94A3B8" />
+                  <ThemedText style={styles.durationText}>90 min</ThemedText>
                 </View>
-                <ThemedText style={styles.upcomingVenueLoc}>Sector 168, Sector 168</ThemedText>
+                <View style={styles.scheduledPill}>
+                  <ThemedText style={styles.scheduledPillText}>📅 {upcomingBooking.status || 'Scheduled'}</ThemedText>
+                </View>
               </View>
-              <QrCode size={20} color="#EF4444" />
+              <View style={styles.upcomingVenueFooter}>
+                <Image
+                  source={{ uri: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=100&auto=format&fit=crop' }}
+                  style={styles.upcomingVenueAvatar}
+                />
+                <View style={{ flex: 1 }}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+                    <ThemedText style={styles.upcomingVenueName}>{upcomingBooking.gymName || 'FitEmpire Partner Gym'}</ThemedText>
+                    <CheckCircle size={14} color="#3B82F6" fill="#3B82F6" />
+                  </View>
+                  <ThemedText style={styles.upcomingVenueLoc}>{upcomingBooking.branchName || 'Main Arena'}</ThemedText>
+                </View>
+                <QrCode size={20} color="#EF4444" />
+              </View>
+            </TouchableOpacity>
+          ) : (
+            <View style={{ alignItems: 'center', paddingVertical: 24 }}>
+              <ThemedText style={{ fontSize: 40, marginBottom: 8 }}>🏋️</ThemedText>
+              <ThemedText style={{ fontSize: 14, color: '#94A3B8', textAlign: 'center' }}>
+                No upcoming bookings.{"\n"}Book a gym session to get started!
+              </ThemedText>
+              <TouchableOpacity
+                style={{ marginTop: 12, backgroundColor: '#EF4444', paddingHorizontal: 20, paddingVertical: 10, borderRadius: 12 }}
+                onPress={() => router.push('/(tabs)/explore' as any)}
+              >
+                <ThemedText style={{ color: '#FFF', fontWeight: '700', fontSize: 14 }}>Explore Gyms</ThemedText>
+              </TouchableOpacity>
             </View>
-          </TouchableOpacity>
+          )}
         </View>
 
         {/* Section: PREVIOUS BOOKINGS */}

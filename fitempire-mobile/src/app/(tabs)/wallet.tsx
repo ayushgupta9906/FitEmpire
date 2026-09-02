@@ -15,17 +15,9 @@ export default function WalletScreen() {
   const theme = useTheme();
   const colors = Colors[scheme === 'unspecified' ? 'dark' : scheme] ?? Colors.dark;
   
-  const [balance, setBalance] = useState('100.00');
-  const [points, setPoints] = useState(500);
-  const [transactions, setTransactions] = useState<any[]>([
-    {
-      id: 'tx-1',
-      description: 'Welcome Bonus Reward Coins',
-      createdAt: new Date().toISOString(),
-      type: 'CREDIT',
-      amount: 100.00,
-    },
-  ]);
+  const [balance, setBalance] = useState('0.00');
+  const [points, setPoints] = useState(0);
+  const [transactions, setTransactions] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [topUpModal, setTopUpModal] = useState(false);
   const [amountInput, setAmountInput] = useState('');
@@ -35,8 +27,8 @@ export default function WalletScreen() {
     try {
       const walletRes = await walletApi.getWalletInfo();
       if (walletRes.data?.data) {
-        setBalance(Number(walletRes.data.data.balance || 100).toFixed(2));
-        setPoints(walletRes.data.data.rewardPoints || 500);
+        setBalance(Number(walletRes.data.data.balance || 0).toFixed(2));
+        setPoints(walletRes.data.data.rewardPoints || 0);
       }
       
       const txRes = await walletApi.getTransactions(0, 10);
@@ -77,22 +69,9 @@ export default function WalletScreen() {
       setTopUpModal(false);
       setAmountInput('');
       Alert.alert('Success 🎉', `₹${num} added to your FitEmpire Wallet!`);
-    } catch (e) {
-      // Fallback local update
-      setBalance(prev => (parseFloat(prev) + num).toFixed(2));
-      setTransactions(prev => [
-        {
-          id: `tx-${Date.now()}`,
-          description: 'Wallet Top Up (Instant UPI)',
-          createdAt: new Date().toISOString(),
-          type: 'CREDIT',
-          amount: num,
-        },
-        ...prev,
-      ]);
-      setTopUpModal(false);
-      setAmountInput('');
-      Alert.alert('Success 🎉', `₹${num} added to your FitEmpire Wallet!`);
+    } catch (e: any) {
+      const errMsg = e?.response?.data?.message || e?.message || 'Top-up failed. Please try again later.';
+      Alert.alert('Top-Up Failed', errMsg);
     }
   };
 

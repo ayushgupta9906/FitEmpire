@@ -35,7 +35,8 @@ import {
   Flame,
   Users,
 } from 'lucide-react-native';
-import { membershipsApi, walletApi } from '@/services/api';
+import { membershipsApi, walletApi, paymentsApi } from '@/services/api';
+import { useAuth } from '@/services/auth-context';
 
 const { width } = Dimensions.get('window');
 
@@ -218,33 +219,43 @@ export default function MembershipScreen() {
   const colors = Colors[scheme === 'unspecified' ? 'dark' : scheme] ?? Colors.dark;
 
   const [activeMemberships, setActiveMemberships] = useState<any[]>([]);
+  const [plansList, setPlansList] = useState<PlanItem[]>(PLANS_CATALOG);
   const [loadingActive, setLoadingActive] = useState(false);
   const [processingPlanId, setProcessingPlanId] = useState<string | null>(null);
   const [isFrozen, setIsFrozen] = useState(false);
+  const { user } = useAuth();
+  const memberSince = user?.createdAt
+    ? new Date(user.createdAt).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
+    : 'New Member';
   const [membershipDetails, setMembershipDetails] = useState<any>({
-    tier: 'FITEMPIRE PRO UNLIMITED',
-    expiresOn: '02 Apr, 2027',
-    memberSince: 'Jul 2025',
-    status: 'ACTIVE',
+    tier: 'NO ACTIVE PLAN',
+    expiresOn: '--',
+    memberSince: memberSince,
+    status: 'INACTIVE',
   });
 
   useEffect(() => {
     fetchActiveStatus();
+    fetchPlans();
   }, []);
 
   const fetchActiveStatus = async () => {
     setLoadingActive(true);
     try {
       const res = await membershipsApi.getMyActiveMemberships();
-      const list = res.data?.data || [];
+      const data = res.data?.data;
+      const list = Array.isArray(data) ? data : (data && data.id ? [data] : []);
       setActiveMemberships(list);
       if (list.length > 0) {
         const m = list[0];
+        const expDate = m.endDate
+          ? new Date(m.endDate).toLocaleDateString('en-US', { day: '2-digit', month: 'short', year: 'numeric' })
+          : '--';
         setMembershipDetails({
           id: m.id,
           tier: m.planName || 'FITEMPIRE ALL-ACCESS PRO',
-          expiresOn: m.endDate || '31 Dec, 2026',
-          memberSince: 'Aug 2025',
+          expiresOn: expDate,
+          memberSince: memberSince,
           status: m.status || 'ACTIVE',
         });
         setIsFrozen(m.status === 'SUSPENDED');
@@ -253,6 +264,33 @@ export default function MembershipScreen() {
       console.warn('Membership fetch error:', e);
     } finally {
       setLoadingActive(false);
+    }
+  };
+
+  const fetchPlans = async () => {
+    try {
+      const res = await membershipsApi.getPlans();
+      const data = res.data?.data;
+      const apiPlans = Array.isArray(data) ? data : (data?.content || []);
+      if (apiPlans.length > 0) {
+        const mapped: PlanItem[] = apiPlans.map((p: any) => ({
+          id: p.id,
+          name: p.name || p.planName || 'FitEmpire Plan',
+          badge: p.badge || 'FITNESS PLAN',
+          badgeBg: p.badgeBg || '#6366F1',
+          duration: p.durationDays ? `${p.durationDays} Days Access` : p.duration || '30 Days',
+          price: p.price ? `\u20b9${p.price}` : '\u20b9999',
+          numericPrice: Number(p.price || 999),
+          perMonth: p.pricePerMonth ? `\u20b9${p.pricePerMonth} / mo` : '',
+          vsFitpass: p.description || p.vsFitpass || '',
+          benefits: p.features || p.benefits || [],
+          popular: p.popular || p.recommended || false,
+        }));
+        setPlansList(mapped);
+      }
+      // If API returns empty, keep PLANS_CATALOG defaults
+    } catch (e) {
+      console.warn('Plans fetch error, using defaults:', e);
     }
   };
 
@@ -324,28 +362,31 @@ export default function MembershipScreen() {
           onPress: async () => {
             setProcessingPlanId(plan.id);
             try {
-              // Simulate instant confirmation / wallet recharge
-              setTimeout(() => {
-                setProcessingPlanId(null);
-                setMembershipDetails({
-                  tier: plan.name,
-                  expiresOn: 'Valid for ' + plan.duration,
-                  memberSince: 'Today',
-                  status: 'ACTIVE',
-                });
-                setIsFrozen(false);
-                Alert.alert(
-                  'Membership Activated 🎉',
-                  `Your ${plan.name} is now live! Your digital entry pass is ready to scan at any partner gym.`,
-                  [
-                    { text: 'Go to Gym Pass', onPress: () => router.push('/(tabs)/ticket' as any) },
-                    { text: 'Done', style: 'cancel' },
-                  ]
-                );
-              }, 800);
-            } catch (e) {
+              const orderRes = await paymentsApi.createOrder(plan.id);
+              const orderData = orderRes.data?.data;
+              // If payment gateway integration exists, use orderId from response
+              // For now, treat successful order creation as purchase confirmation
               setProcessingPlanId(null);
-              Alert.alert('Payment Error', 'Unable to complete transaction. Please try again.');
+              setMembershipDetails({
+                tier: plan.name,
+                expiresOn: 'Valid for ' + plan.duration,
+                memberSince: memberSince,
+                status: 'ACTIVE',
+              });
+              setIsFrozen(false);
+              fetchActiveStatus();
+              Alert.alert(
+                'Membership Activated 🎉',
+                `Your ${plan.name} is now live! Your digital entry pass is ready to scan at any partner gym.`,
+                [
+                  { text: 'Go to Gym Pass', onPress: () => router.push('/(tabs)/ticket' as any) },
+                  { text: 'Done', style: 'cancel' },
+                ]
+              );
+            } catch (e: any) {
+              setProcessingPlanId(null);
+              const errMsg = e?.response?.data?.message || e?.message || 'Unable to complete transaction. Please try again.';
+              Alert.alert('Payment Error', errMsg);
             }
           },
         },
@@ -491,7 +532,7 @@ export default function MembershipScreen() {
 
           {/* Interactive Plan Cards */}
           <View style={{ gap: 12, marginTop: 12 }}>
-            {PLANS_CATALOG.map((plan) => {
+            {plansList.map((plan) => {
               const isProcessing = processingPlanId === plan.id;
               return (
                 <View

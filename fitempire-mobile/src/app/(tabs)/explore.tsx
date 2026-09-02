@@ -213,7 +213,7 @@ export default function ExploreScreen() {
   const [filterRating4Plus, setFilterRating4Plus] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchActive, setSearchActive] = useState(false);
-  const [venuesList, setVenuesList] = useState<VenueItem[]>(VENUES);
+  const [venuesList, setVenuesList] = useState<VenueItem[]>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -226,22 +226,35 @@ export default function ExploreScreen() {
       const res = await gymsApi.getActive(0, 30);
       const gymData = res.data?.data?.content || [];
       if (gymData.length > 0) {
-        const mapped: VenueItem[] = gymData.map((g: any, index: number) => ({
-          id: g.id,
-          name: g.name,
-          sportId: index % 3 === 0 ? 'all' : index % 3 === 1 ? 'badminton' : 'swimming',
-          location: g.branches?.[0]?.city ? `${g.branches[0].city}` : selectedLocation,
-          distance: `${(1.2 + (index * 0.4)).toFixed(1)} km`,
-          image: g.coverImageUrl || VENUES[index % VENUES.length].image,
-          avatarLogo: VENUES[index % VENUES.length].avatarLogo,
-          verified: true,
-          rating: g.avgRating ? Number(g.avgRating) : 4.8,
-          openStatus: 'Open Now',
-        }));
+        const sportKeys = SPORT_CATEGORIES.map(s => s.id);
+        const mapped: VenueItem[] = gymData.map((g: any, index: number) => {
+          // Map gym category/type to sport categories, or default to 'all'
+          const gymCategory = (g.category || g.type || '').toLowerCase();
+          const matchedSport = sportKeys.find(s => gymCategory.includes(s)) || 'all';
+          const branch = g.branches?.[0];
+          const locationStr = branch 
+            ? [branch.addressLine1, branch.city].filter(Boolean).join(', ')
+            : g.city || 'Partner Location';
+          return {
+            id: g.id,
+            name: g.name,
+            sportId: matchedSport,
+            location: locationStr,
+            distance: branch?.distanceKm ? `${Number(branch.distanceKm).toFixed(1)} km` : '',
+            image: g.coverImageUrl || VENUES[index % VENUES.length].image,
+            avatarLogo: g.logoUrl || VENUES[index % VENUES.length].avatarLogo,
+            verified: g.verified !== false,
+            rating: g.avgRating ? Number(g.avgRating) : 0,
+            openStatus: g.isOpen === false ? 'Closed' : 'Open Now',
+          };
+        });
         setVenuesList(mapped);
+      } else {
+        setVenuesList(VENUES);
       }
     } catch (e) {
       console.warn('Explore gyms fetch error:', e);
+      setVenuesList(VENUES);
     } finally {
       setLoading(false);
     }

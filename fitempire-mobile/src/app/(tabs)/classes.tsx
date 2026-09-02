@@ -64,7 +64,7 @@ export default function ClassesScreen() {
   const theme = useTheme();
   const colors = Colors[scheme === 'unspecified' ? 'dark' : scheme] ?? Colors.dark;
 
-  const [classesList, setClassesList] = useState<any[]>(DEFAULT_CLASSES);
+  const [classesList, setClassesList] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [bookedIds, setBookedIds] = useState<string[]>([]);
@@ -81,10 +81,12 @@ export default function ClassesScreen() {
       if (res.data?.data && res.data.data.length > 0) {
         setClassesList(res.data.data);
       } else {
+        // API returned empty — use curated default classes as seed data
         setClassesList(DEFAULT_CLASSES);
       }
     } catch (e) {
       console.warn('Failed to load classes from API, using default classes:', e);
+      // Use defaults as fallback so the screen isn't empty on first launch
       setClassesList(DEFAULT_CLASSES);
     } finally {
       setLoading(false);

@@ -15,6 +15,7 @@ import { ThemedText } from '@/components/themed-text';
 import { Colors, BottomTabInset } from '@/constants/theme';
 import { useColorScheme } from 'react-native';
 import { useAuth } from '@/services/auth-context';
+import { membershipsApi, walletApi } from '@/services/api';
 import {
   ArrowLeft,
   Edit3,
@@ -44,6 +45,50 @@ export default function ProfileScreen() {
   const { user, logout } = useAuth();
   const scheme = useColorScheme() ?? 'dark';
   const colors = Colors[scheme === 'unspecified' ? 'dark' : scheme] ?? Colors.dark;
+
+  const [activeMembership, setActiveMembership] = useState<any>(null);
+  const [walletBalance, setWalletBalance] = useState(0);
+
+  useEffect(() => {
+    loadProfileData();
+  }, []);
+
+  const loadProfileData = async () => {
+    try {
+      const memRes = await membershipsApi.getMyActiveMemberships();
+      const active = memRes.data?.data;
+      if (Array.isArray(active) && active.length > 0) {
+        setActiveMembership(active[0]);
+      } else if (active && active.id) {
+        setActiveMembership(active);
+      }
+    } catch (e) {
+      console.warn('Profile: membership fetch error', e);
+    }
+    try {
+      const wRes = await walletApi.getWalletInfo();
+      if (wRes.data?.data?.balance !== undefined) {
+        setWalletBalance(Number(wRes.data.data.balance));
+      }
+    } catch (e) {
+      console.warn('Profile: wallet fetch error', e);
+    }
+  };
+
+  const displayName = user?.firstName
+    ? `${user.firstName}${user.lastName ? ' ' + user.lastName : ''}`
+    : 'FitEmpire Member';
+  const userInitial = (user?.firstName || 'F')[0].toUpperCase();
+  const heightCm = user?.heightCm || 0;
+  const weightKg = user?.weightKg || 0;
+  const heightFt = heightCm > 0 ? `${Math.floor(heightCm / 30.48)}'${Math.round((heightCm % 30.48) / 2.54)}"` : '--';
+  const bmi = heightCm > 0 && weightKg > 0 ? (weightKg / ((heightCm / 100) ** 2)).toFixed(1) : '--';
+  const memberSince = user?.createdAt
+    ? new Date(user.createdAt).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
+    : 'New Member';
+  const membershipExpiry = activeMembership?.endDate
+    ? new Date(activeMembership.endDate).toLocaleDateString('en-US', { day: '2-digit', month: 'short', year: 'numeric' })
+    : null;
 
   const handleLogout = async () => {
     if (Platform.OS === 'web') {
@@ -99,38 +144,39 @@ export default function ProfileScreen() {
         {/* User Identity & Avatar */}
         <View style={styles.userHeaderSection}>
           <View style={styles.avatarContainer}>
-            <Image
-              source={{
-                uri: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200&auto=format&fit=crop',
-              }}
-              style={styles.avatarImage}
-            />
+            {user?.avatarUrl ? (
+              <Image source={{ uri: user.avatarUrl }} style={styles.avatarImage} />
+            ) : (
+              <View style={[styles.avatarImage, { backgroundColor: '#6C63FF', alignItems: 'center', justifyContent: 'center' }]}>
+                <ThemedText style={{ fontSize: 28, fontWeight: '900', color: '#FFF' }}>{userInitial}</ThemedText>
+              </View>
+            )}
             <View style={styles.verifiedCheckBadge}>
               <CheckCircle size={14} color="#EF4444" fill="#EF4444" />
             </View>
           </View>
 
-          <ThemedText style={styles.userName}>Ayush Gupta</ThemedText>
-          <ThemedText style={styles.userIdText}>🛡️ ID — 19880072520</ThemedText>
+          <ThemedText style={styles.userName}>{displayName}</ThemedText>
+          <ThemedText style={styles.userIdText}>🛡️ {user?.phone || user?.email || 'FitEmpire Member'}</ThemedText>
 
           {/* 3 Body Metrics Row */}
           <View style={styles.metricsRow}>
             <View style={styles.metricCol}>
-              <ThemedText style={styles.metricValue}>5'9"</ThemedText>
+              <ThemedText style={styles.metricValue}>{heightFt}</ThemedText>
               <ThemedText style={styles.metricLabel}>Height (ft)</ThemedText>
             </View>
 
             <View style={styles.metricDivider} />
 
             <View style={styles.metricCol}>
-              <ThemedText style={styles.metricValue}>80.0</ThemedText>
+              <ThemedText style={styles.metricValue}>{weightKg > 0 ? weightKg.toFixed(1) : '--'}</ThemedText>
               <ThemedText style={styles.metricLabel}>Weight (kg)</ThemedText>
             </View>
 
             <View style={styles.metricDivider} />
 
             <View style={styles.metricCol}>
-              <ThemedText style={styles.metricValue}>26.0</ThemedText>
+              <ThemedText style={styles.metricValue}>{bmi}</ThemedText>
               <ThemedText style={styles.metricLabel}>BMI</ThemedText>
             </View>
           </View>
@@ -144,14 +190,18 @@ export default function ProfileScreen() {
         >
           <View style={styles.memberSinceBadge}>
             <ThemedText style={styles.memberSinceText}>MEMBER SINCE </ThemedText>
-            <ThemedText style={styles.memberSinceDate}>Jul 2025</ThemedText>
+            <ThemedText style={styles.memberSinceDate}>{memberSince}</ThemedText>
           </View>
 
-          <ThemedText style={styles.upgradeGoldTitle}>UPGRADE TO UNLIMITED ✨</ThemedText>
-          <ThemedText style={styles.membershipExpiryText}>⏱ Membership ends on 02 Apr, 2027</ThemedText>
+          <ThemedText style={styles.upgradeGoldTitle}>
+            {activeMembership ? `${activeMembership.planName || 'ACTIVE PLAN'} ✨` : 'GET A MEMBERSHIP ✨'}
+          </ThemedText>
+          <ThemedText style={styles.membershipExpiryText}>
+            {membershipExpiry ? `⏱ Membership ends on ${membershipExpiry}` : '⏱ No active membership'}
+          </ThemedText>
 
           <View style={[styles.manageMembershipRow, { borderTopColor: colors.border }]}>
-            <ThemedText style={styles.manageMembershipText}>Manage membership</ThemedText>
+            <ThemedText style={styles.manageMembershipText}>{activeMembership ? 'Manage membership' : 'Browse plans'}</ThemedText>
             <ChevronRight size={16} color="#94A3B8" />
           </View>
         </TouchableOpacity>
@@ -240,7 +290,7 @@ export default function ProfileScreen() {
             <View style={{ flex: 1, paddingRight: 8 }}>
               <ThemedText style={styles.menuTitle}>Empire Coins & Rewards</ThemedText>
               <ThemedText style={[styles.menuSubtitle, { color: '#10B981', fontWeight: '700' }]}>
-                Balance: 100 Coins
+                Balance: {walletBalance > 0 ? `₹${walletBalance.toFixed(0)}` : '₹0'}
               </ThemedText>
             </View>
             <ChevronRight size={18} color="#94A3B8" />

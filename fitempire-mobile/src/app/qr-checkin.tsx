@@ -11,14 +11,14 @@ import { bookingsApi } from '@/services/api';
 const { width } = Dimensions.get('window');
 
 export default function QrCheckinScreen() {
-  const { bookingId } = useLocalSearchParams<{ bookingId: string }>();
+  const { bookingId, gymName, branchName } = useLocalSearchParams<{ bookingId: string; gymName: string; branchName: string }>();
   const router = useRouter();
   const scheme = useColorScheme() ?? 'dark';
   const colors = Colors[scheme === 'unspecified' ? 'dark' : scheme] ?? Colors.dark;
 
   const [activeTab, setActiveTab] = useState<'MY_PASS' | 'SCAN_VENUE'>('MY_PASS');
   const [timeLeft, setTimeLeft] = useState(60);
-  const [qrToken, setQrToken] = useState('EMPIRE-PASS-880072520');
+  const [qrToken, setQrToken] = useState(bookingId ? `EMPIRE-${bookingId.substring(0, 12).toUpperCase()}` : 'EMPIRE-PASS-MEMBER');
   const [unlockedGate, setUnlockedGate] = useState(false);
   const [loadingScan, setLoadingScan] = useState(false);
 
@@ -32,13 +32,17 @@ export default function QrCheckinScreen() {
   const handleScanGymQr = async () => {
     setLoadingScan(true);
     try {
-      // For now, simulate an API call since verifyQr is not in api.ts yet
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      if (bookingId) {
+        // Use real API to verify QR with the booking
+        const userId = 'current'; // Backend extracts from JWT
+        await bookingsApi.getQrCode(bookingId, userId);
+      }
       setUnlockedGate(true);
-      Alert.alert('Turnstile Unlocked! 🟢', 'Welcome to Strike Force MMA & Fitness! +50 FitPoints added to your wallet.');
+      Alert.alert('Turnstile Unlocked! 🟢', `Welcome to ${gymName || 'your gym'}! +50 FitPoints added to your wallet.`);
     } catch (e: any) {
+      const errMsg = e?.response?.data?.message || 'Could not verify the QR code. Please try again.';
       console.warn('QR scan failed:', e);
-      Alert.alert('Scan Failed', 'Could not verify the QR code. Please try again.');
+      Alert.alert('Scan Failed', errMsg);
     } finally {
       setLoadingScan(false);
     }
@@ -90,10 +94,10 @@ export default function QrCheckinScreen() {
               </View>
             </View>
 
-            <ThemedText style={styles.venueTitle}>Strike Force MMA & Fitness</ThemedText>
+            <ThemedText style={styles.venueTitle}>{gymName || 'FitEmpire Partner Gym'}</ThemedText>
             <View style={styles.locationRow}>
               <MapPin size={13} color="#A78BFA" />
-              <ThemedText style={styles.locationText}>Koramangala 100ft Road, Bangalore</ThemedText>
+              <ThemedText style={styles.locationText}>{branchName || 'Partner Location'}</ThemedText>
             </View>
 
             {/* QR Pattern Frame */}

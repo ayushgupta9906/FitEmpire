@@ -6,6 +6,10 @@ This repository is a **production-ready full-stack monorepo** consisting of a Sp
 
 ---
 
+> 📱 **Android Studio Developers:** See the complete screen-by-screen breakdown, REST API contracts, and Android Studio setup in [**`ANDROID_STUDIO_APP_GUIDE.md`**](file:///c:/Users/ayush-g/Desktop/FitEmpire/ANDROID_STUDIO_APP_GUIDE.md).
+
+---
+
 ## 🏗️ System Architecture & Monorepo Structure
 
 The project is structured as a monorepo containing the following components:

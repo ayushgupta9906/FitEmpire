@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +32,7 @@ public class WalletController {
 
     private UUID getUserIdFromPrincipal(UserDetails userDetails) {
         return userRepository.findByEmailAndDeletedFalse(userDetails.getUsername())
-                .orElseThrow(() -> new RuntimeException("Logged in user not found"))
+                .orElseThrow(() -> new com.fitempire.common.exception.ResourceNotFoundException("User not found"))
                 .getId();
     }
 
@@ -43,7 +44,8 @@ public class WalletController {
     }
 
     @PostMapping("/me/top-up")
-    @Operation(summary = "Top up wallet balance")
+    @Operation(summary = "Admin manual top up wallet balance (User top-ups require verified gateway payment)")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
     public ResponseEntity<ApiResponse<WalletTransactionDto>> topUpWallet(
             @AuthenticationPrincipal UserDetails userDetails,
             @Valid @RequestBody WalletTopUpRequest request) {
@@ -52,11 +54,11 @@ public class WalletController {
                 userId,
                 request.getAmount(),
                 WalletTxnType.TOPUP,
-                "Wallet Top Up via " + (request.getPaymentMethod() != null ? request.getPaymentMethod() : "UPI"),
+                "Admin Approved Wallet Adjustment: " + (request.getPaymentMethod() != null ? request.getPaymentMethod() : "MANUAL"),
                 null,
-                "WALLET_TOP_UP"
+                "ADMIN_ADJUSTMENT"
         );
-        return ResponseEntity.ok(ApiResponse.success("Wallet recharged successfully", txn));
+        return ResponseEntity.ok(ApiResponse.success("Wallet recharged successfully by admin", txn));
     }
 
     @GetMapping("/me/transactions")

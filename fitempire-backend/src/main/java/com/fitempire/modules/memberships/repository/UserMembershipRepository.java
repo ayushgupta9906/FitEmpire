@@ -30,6 +30,15 @@ public interface UserMembershipRepository extends JpaRepository<UserMembership, 
     List<UserMembership> findActiveMemberships(@Param("userId") UUID userId, @Param("today") LocalDate today);
 
     @Query("""
+        SELECT CASE WHEN COUNT(m) > 0 THEN true ELSE false END FROM UserMembership m
+        WHERE m.user.id = :userId
+        AND m.status = com.fitempire.modules.memberships.entity.MembershipStatus.ACTIVE
+        AND m.deleted = false
+        AND (m.endDate IS NULL OR m.endDate >= :date)
+        """)
+    boolean existsActivePassForUserOnDate(@Param("userId") UUID userId, @Param("date") LocalDate date);
+
+    @Query("""
         SELECT m FROM UserMembership m
         WHERE m.status = 'ACTIVE'
         AND m.deleted = false

@@ -82,8 +82,6 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/v1/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/v1/auth/oauth2/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/v1/admin/partners/register", "/v1/partners/register").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/v1/admin/users/reset-password-by-email").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/v1/media/upload", "/v1/upload/**").permitAll()
                         .requestMatchers("/uploads/**").permitAll()
 
                         // Public content endpoints (read-only gym/class/plan discovery)
@@ -171,7 +169,7 @@ public class SecurityConfig {
         }
 
         log.info("Configured CORS Allowed Origins: {}", origins);
-        config.setAllowedOriginPatterns(Arrays.asList("*"));
+        config.setAllowedOrigins(origins);
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(Arrays.asList("*"));
         config.setExposedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Refresh-Token"));

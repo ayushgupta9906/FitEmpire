@@ -28,14 +28,14 @@ fi
 echo "Configuring Production Environment..."
 cat << 'EOF' > "$APP_DIR/.env"
 # ---- Neon Cloud PostgreSQL ----
-DB_HOST=ep-lingering-sky-atwtj0vn-pooler.c-9.us-east-1.aws.neon.tech
-DB_PORT=5432
-DB_NAME=neondb
-DB_USER=neondb_owner
-DB_PASSWORD=[REDACTED_SECRET]
-SPRING_DATASOURCE_URL=jdbc:postgresql://ep-lingering-sky-atwtj0vn-pooler.c-9.us-east-1.aws.neon.tech:5432/neondb?sslmode=require
-SPRING_DATASOURCE_USERNAME=neondb_owner
-SPRING_DATASOURCE_PASSWORD=[REDACTED_SECRET]
+DB_HOST=${DB_HOST:-"ep-lingering-sky-atwtj0vn-pooler.c-9.us-east-1.aws.neon.tech"}
+DB_PORT=${DB_PORT:-"5432"}
+DB_NAME=${DB_NAME:-"neondb"}
+DB_USER=${DB_USER:-"neondb_owner"}
+DB_PASSWORD=${DB_PASSWORD:?"DB_PASSWORD must be provided via environment variable"}
+SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL:-"jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=require"}
+SPRING_DATASOURCE_USERNAME=${DB_USER}
+SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
 
 # ---- Spring Boot Profile ----
 SPRING_PROFILES_ACTIVE=dev

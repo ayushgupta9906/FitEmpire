@@ -1,0 +1,483 @@
+"Summary","Issue Type","Priority","Labels","Description"
+"Hibernate DDL-Auto Update Enabled in Production with Inactive Flyway Migrations","Improvement","Low","backend infrastructure","[SEVERITY & IMPACT]
+P3 - Architecture / Technical Debt. Risk of schema corruption and production drift.
+spring.jpa.hibernate.ddl-auto: update dynamically alters production database schemas without audit, validation, or rollback capability, while Flyway versioned migrations (flyway.enabled: false) are disabled.
+
+[AFFECTED FILES & LINES]
+- fitempire-backend/src/main/resources/application.yml (Lines 24, 54-55)
+
+[TECHNICAL ROOT CAUSE]
+Hibernate automatic update schema modifications can unexpectedly alter column types or lock tables during concurrent application restarts in clustered production deployments. Best practice demands disabling ddl-auto (or setting to validate) and delegating all DDL to version-controlled Flyway scripts.
+
+[STEPS TO REPRODUCE]
+1. Open fitempire-backend/src/main/resources/application.yml.
+2. Inspect line 24: ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO:update}.
+3. Inspect line 55: flyway.enabled: false.
+
+[EXPECTED BEHAVIOR]
+Production database schema changes must be driven exclusively by versioned Flyway migrations with ddl-auto set to validate or none.
+
+[ACTUAL BEHAVIOR]
+Hibernate runs unrestricted schema updates on production startup with Flyway disabled.
+
+[PROPOSED RESOLUTION]
+1. Set spring.jpa.hibernate.ddl-auto to validate in production profiles.
+2. Set spring.flyway.enabled to true and manage table alterations via src/main/resources/db/migration scripts."
+"Synchronous Database Query in JwtAuthenticationFilter on Every HTTP Request","Improvement","Low","backend security","[SEVERITY & IMPACT]
+P3 - Performance Degradation & DB Load.
+Defeats the core advantage of stateless JWT tokens. Every inbound API request triggers a blocking synchronous database query against the users table.
+
+[AFFECTED FILES & LINES]
+- fitempire-backend/src/main/java/com/fitempire/security/jwt/JwtAuthenticationFilter.java (Line 63)
+
+[TECHNICAL ROOT CAUSE]
+JwtAuthenticationFilter.doFilterInternal executes userDetailsService.loadUserByUsername(userEmail) on every request instead of extracting user roles and permissions directly from signed JWT claims or caching UserDetails in Redis.
+
+[STEPS TO REPRODUCE]
+1. Authenticate as a user and obtain a JWT bearer token.
+2. Send 100 concurrent requests to /api/v1/gyms.
+3. Monitor database query logs in Neon PostgreSQL.
+4. Observe 100 identical SELECT * FROM users WHERE email = ? queries executing concurrently.
+
+[EXPECTED BEHAVIOR]
+Cryptographically signed JWT tokens should be validated statelessly without database roundtrips for routine authenticated requests.
+
+[ACTUAL BEHAVIOR]
+Every single HTTP request performs a synchronous SQL query against the database.
+
+[PROPOSED RESOLUTION]
+Encode user authorities and userId into JWT claims during login, or cache UserDetails objects in Redis with a 15-minute TTL."
+"Missing Razorpay Webhook Controller Endpoint Causes Lost Payment Confirmations","Bug","High","backend payments","[SEVERITY & IMPACT]
+P1 - Financial & Fulfillment Failure.
+Customers get debited by their bank or UPI app, but if their mobile browser closes or cellular connection drops before client-side /verify callback finishes, FitEmpire never captures the payment or activates the pass.
+
+[AFFECTED FILES & LINES]
+- fitempire-backend/src/main/java/com/fitempire/modules/payments/controller/PaymentController.java
+
+[TECHNICAL ROOT CAUSE]
+PaymentController only implements /create-order and /verify. There is no /v1/payments/webhook endpoint with Razorpay webhook secret signature validation (X-Razorpay-Signature) to receive server-to-server payment notifications.
+
+[STEPS TO REPRODUCE]
+1. User initiates a pass purchase in the mobile app.
+2. User approves the payment in Google Pay / PhonePe.
+3. User immediately closes the app or encounters a network timeout before /v1/payments/verify executes.
+4. Razorpay successfully captures the funds, but FitEmpire backend never receives notice.
+5. Membership stays inactive while user money is deducted.
+
+[EXPECTED BEHAVIOR]
+Razorpay server sends order.paid and payment.captured webhook events to /v1/payments/webhook to guarantee payment fulfillment regardless of client connection status.
+
+[ACTUAL BEHAVIOR]
+FitEmpire lacks a webhook controller endpoint, causing orphaned charges and broken member fulfillments.
+
+[PROPOSED RESOLUTION]
+Implement an idempotent @PostMapping(""/webhook"") endpoint in PaymentController validating the X-Razorpay-Signature HMAC-SHA256 header and updating payment and membership status."
+"Geolocation Haversine Query Risks Arithmetic ACOS Crash and Sorts by Rating","Bug","Medium","backend search","[SEVERITY & IMPACT]
+P2 - Service Crash & Suboptimal Search UX in Nearby Gyms.
+When a user searches from coordinates nearly identical to a gym branch, IEEE-754 floating-point errors evaluate the inner trigonometric formula to 1.0000000000000002. In PostgreSQL, ACOS(> 1.0) throws an input is out of range error. Furthermore, results are sorted by rating rather than closest distance.
+
+[AFFECTED FILES & LINES]
+- fitempire-backend/src/main/java/com/fitempire/modules/gyms/repository/GymRepository.java (Lines 81-87)
+
+[TECHNICAL ROOT CAUSE]
+The ACOS calculation in findNearby lacks clamping (LEAST(1.0, GREATEST(-1.0, ...))). Additionally, the query clause specifies ORDER BY g.avgRating DESC instead of ordering by distance ascending.
+
+[STEPS TO REPRODUCE]
+1. Query /v1/gyms/nearby with user lat/lng matching a gym branch coordinate.
+2. Postgres throws org.postgresql.util.PSQLException: ERROR: input is out of range for acos().
+3. In normal queries, gyms 4.5 km away appear before gyms 100 meters away if their rating is slightly higher.
+
+[EXPECTED BEHAVIOR]
+Trigonometric calculation must be safe from precision overflow, and nearby gyms should be ordered by distance ascending.
+
+[ACTUAL BEHAVIOR]
+Occasional 500 crashes and incorrect sorting by rating instead of physical proximity.
+
+[PROPOSED RESOLUTION]
+Clamp the argument to ACOS between -1.0 and 1.0 in JPQL/native SQL, and sort by calculated distance ASC."
+"DatabaseSeeder Overwrites Production Admin and Partner Passwords on Every Container Boot","Bug","High","backend security","[SEVERITY & IMPACT]
+P1 - Critical Security Defect.
+Whenever the backend server restarts or auto-scales, custom passwords set by administrators or partners in production are forcibly overwritten and reset to default hardcoded credentials.
+
+[AFFECTED FILES & LINES]
+- fitempire-backend/src/main/java/com/fitempire/config/DatabaseSeeder.java (Lines 112-113, 141-142)
+
+[TECHNICAL ROOT CAUSE]
+admin.setPasswordHash(passwordEncoder.encode(""AdminPassword@123"")) and partner.setPasswordHash(...) are positioned outside the if (admin == null) conditional blocks, executing unconditionally on existing database records on every boot.
+
+[STEPS TO REPRODUCE]
+1. Admin logs into the system and changes their password to a secure custom password.
+2. Backend container restarts (e.g. CI/CD deployment or auto-scaling event).
+3. DatabaseSeeder executes during application startup.
+4. Admin attempts to log in with new password -> fails with 401 Unauthorized.
+5. Admin logs in with AdminPassword@123 -> succeeds.
+
+[EXPECTED BEHAVIOR]
+Existing admin and partner credentials must remain intact across application restarts.
+
+[ACTUAL BEHAVIOR]
+Passwords reset to hardcoded defaults unconditionally on every container boot.
+
+[PROPOSED RESOLUTION]
+Move password encoding and user saving strictly inside the if (admin == null) block, and disable DatabaseSeeder in production (@Profile(""!prod""))."
+"Mobile Pass Freeze Catch Block Swallows Network Failures with Fake Success Confirmation","Bug","High","mobile bookings","[SEVERITY & IMPACT]
+P1 - False Positive Confirmation & Financial Dispute.
+When freezing or unfreezing a pass fails on the backend, the mobile app catches the error and displays ""Pass Frozen ⏸️ Unused days are safely preserved!"", deceiving the user while their pass continues expiring on the server.
+
+[AFFECTED FILES & LINES]
+- fitempire-mobile/src/app/membership.tsx (Lines 314-317, 338-341)
+
+[TECHNICAL ROOT CAUSE]
+In handleToggleFreeze, both the freeze and unfreeze catch (e) blocks mutate local state (setIsFrozen) and trigger success alerts instead of alerting the user that the operation failed.
+
+[STEPS TO REPRODUCE]
+1. Turn off internet / enable Airplane mode on mobile phone.
+2. Navigate to Membership screen.
+3. Tap ""Pause Pass"" -> tap ""Pause Pass"" in confirmation dialog.
+4. An alert pops up saying ""Pass Frozen ⏸️ Your pass is paused. Unused days are safely preserved!"".
+5. Reconnect to internet and check server database -> pass status is still ACTIVE.
+
+[EXPECTED BEHAVIOR]
+If the API call fails, the client must retain the original pass state and display an error alert: ""Unable to pause pass. Please check connection.""
+
+[ACTUAL BEHAVIOR]
+App confirms pass freeze to the user even when the backend API request fails.
+
+[PROPOSED RESOLUTION]
+Remove state mutation and success alerts from catch blocks. Display an informative error alert: Alert.alert('Error', 'Failed to update membership status. Please try again.')."
+"Booking Cancellation Catch Block Suppresses Backend Errors and Falsifies Cancelled State","Bug","Medium","mobile bookings","[SEVERITY & IMPACT]
+P2 - State Desynchronization & No-Show Penalties.
+When a user attempts to cancel a workout slot past the allowable cancellation cutoff, the server rejects the request with HTTP 400. The app swallows the error, marks the booking as ""Cancelled"" locally, and tells the user it was cancelled, resulting in gym no-show penalties.
+
+[AFFECTED FILES & LINES]
+- fitempire-mobile/src/app/my-bookings.tsx (Lines 169-178)
+
+[TECHNICAL ROOT CAUSE]
+handleCancelBooking wraps bookingsApi.cancel in an empty catch (e) {} block and unconditionally executes setBookingsList updating status to Cancelled and alerts ""Your workout slot has been cancelled.""
+
+[STEPS TO REPRODUCE]
+1. Attempt to cancel a booking within the non-cancellable cutoff window (e.g. 1 hour before class).
+2. Backend returns HTTP 400 ""Cancellation cutoff passed"".
+3. Mobile app catch block ignores 400 response, updates local booking card to ""Cancelled"", and shows success dialog.
+4. Member stays booked on gym roster and is penalized for non-attendance.
+
+[EXPECTED BEHAVIOR]
+UI should display server error message and retain CONFIRMED status if cancellation is rejected.
+
+[ACTUAL BEHAVIOR]
+Error is swallowed silently and client presents false cancellation confirmation.
+
+[PROPOSED RESOLUTION]
+Move UI state updates and success alert into the try block. In the catch block, parse and display err.response?.data?.message to the user."
+"Health Risk Assessment (HRA) Onboarding Discards 4-Step Questionnaire Without Persistence","Bug","Medium","mobile profile","[SEVERITY & IMPACT]
+P2 - Data Loss & Broken Personalization.
+New users invest several minutes answering questions across 4 onboarding steps (height, weight, age, fitness goals, diet preferences), but all data is discarded on completion. Promised 100 FitPoints are also never credited.
+
+[AFFECTED FILES & LINES]
+- fitempire-mobile/src/app/onboarding-hra.tsx (Lines 64-67)
+
+[TECHNICAL ROOT CAUSE]
+handleFinish only executes Alert.alert('Profile Complete 🎉', '+100 FitPoints added to your wallet!...') and router.replace('/(tabs)') without issuing an HTTP POST to persist bio-metrics or credit reward points.
+
+[STEPS TO REPRODUCE]
+1. Complete onboarding HRA flow with custom height, weight, goal, and dietary preference.
+2. Tap ""Launch FitEmpire Home →"".
+3. Inspect user profile and wallet on server or client.
+4. User profile attributes remain empty and wallet balance is 0.
+
+[EXPECTED BEHAVIOR]
+Bio-metrics must be persisted to /api/v1/users/profile and onboarding welcome bonus credited to wallet.
+
+[ACTUAL BEHAVIOR]
+All onboarding survey input is discarded upon completion.
+
+[PROPOSED RESOLUTION]
+Call userApi.updateProfile({ age, gender, height, weight, goal, diet }) and trigger wallet reward credit prior to navigating to tabs."
+"Hardcoded Referral Code and Non-Functional Clipboard/Share Dialogs in Refer Screen","Bug","Medium","mobile referral","[SEVERITY & IMPACT]
+P2 - Broken Referral Program & Viral Growth Loop.
+All users in the mobile app share the exact same hardcoded referral code 'EMPIRE-RAHUL500'. Furthermore, tapping Copy does not copy text to OS clipboard, and tapping Share does not invoke native OS sharing.
+
+[AFFECTED FILES & LINES]
+- fitempire-mobile/src/app/refer.tsx (Lines 24-32)
+
+[TECHNICAL ROOT CAUSE]
+referralCode is defined as a static constant 'EMPIRE-RAHUL500'. handleCopy and handleShare only display Alert.alert without calling expo-clipboard or React Native Share.share().
+
+[STEPS TO REPRODUCE]
+1. Log in as a distinct user (e.g. Priya Patel).
+2. Open Refer & Earn screen from Profile.
+3. Code displayed is EMPIRE-RAHUL500 instead of user personal code.
+4. Tap ""Copy"" -> Alert says copied, but clipboard buffer is unaffected.
+5. Tap ""Share on WhatsApp"" -> Alert dialog appears instead of native share sheet.
+
+[EXPECTED BEHAVIOR]
+Screen should display user.referralCode, write to OS clipboard via Clipboard.setStringAsync, and trigger native sharing via Share.share.
+
+[ACTUAL BEHAVIOR]
+Static hardcoded code and inert alert dialogs.
+
+[PROPOSED RESOLUTION]
+Retrieve dynamic referralCode from auth context, integrate expo-clipboard, and invoke Share.share({ message, url })."
+"Notification Settings Toggles Are Ephemeral and Missing Push Token Registration","Bug","Medium","mobile settings","[SEVERITY & IMPACT]
+P2 - User Preference Loss & Inactive Push Channel.
+Toggling notification preferences (push alerts, nutritionist messages, gym visit reminders) has no persistent effect. Settings reset upon leaving the screen, and device push notification tokens are never registered.
+
+[AFFECTED FILES & LINES]
+- fitempire-mobile/src/app/settings-notifications.tsx (Lines 31-39)
+
+[TECHNICAL ROOT CAUSE]
+Notification toggles are managed purely in local React useState hooks without synchronization to AsyncStorage or /api/v1/users/notification-preferences.
+
+[STEPS TO REPRODUCE]
+1. Open Settings -> Notifications.
+2. Toggle off ""Promotions & Offers"" and ""Exercise Reminders"".
+3. Navigate back to Profile, then re-open Notifications.
+4. All switches revert to their initial default values.
+
+[EXPECTED BEHAVIOR]
+Toggles should persist locally and synchronize with user preference records on the backend. Device push tokens should register via expo-notifications.
+
+[ACTUAL BEHAVIOR]
+Toggles reset on navigation and push notification tokens are never stored.
+
+[PROPOSED RESOLUTION]
+Persist toggle values using AsyncStorage, sync changes to user settings API, and register device Expo push token on toggle enable."
+"Real-Time Desk Sync in Partner Attendance Lacks WebSocket or SSE Transport","Improvement","Low","frontend bookings","[SEVERITY & IMPACT]
+P3 - Usability & Multi-Terminal Sync Enhancement.
+Partner attendance page claims ""Live Desk Sync"", but updates only reflect on manual page reload or local window custom events within the same browser tab, failing multi-desk front-office setups.
+
+[AFFECTED FILES & LINES]
+- fitempire-partner/src/pages/AttendancePage.tsx (Lines 50-65)
+
+[TECHNICAL ROOT CAUSE]
+AttendancePage relies on window.addEventListener('fitempire:checkin'), which only captures events dispatched within the exact same browser tab and cannot receive check-ins from turnstile kiosks or secondary front desks.
+
+[STEPS TO REPRODUCE]
+1. Open partner portal attendance page on Desk Terminal 1.
+2. Check in a member via QR scanner on Turnstile Tablet 2.
+3. Desk Terminal 1 does not update attendance list without manual page reload.
+
+[EXPECTED BEHAVIOR]
+Check-ins should broadcast in real-time to all connected partner terminals via WebSocket (STOMP) or Server-Sent Events (SSE).
+
+[ACTUAL BEHAVIOR]
+Attendance feed requires manual refresh to see check-ins performed on other devices.
+
+[PROPOSED RESOLUTION]
+Subscribe to partner check-in event stream via WebSocket or SSE (/api/v1/partner/attendance/stream) and update table records dynamically on receipt."
+"Partner Batch Creation and Attendance Toggles Never Persist to Backend API","Bug","Medium","frontend classes","[SEVERITY & IMPACT]
+P2 - Data Loss in Partner Class Scheduling.
+Gym partners creating new workout batches or toggling member attendance lose all updates when reloading the page because actions are purely client-side React array mutations.
+
+[AFFECTED FILES & LINES]
+- fitempire-partner/src/pages/ClassesPage.tsx (Lines 81-98, 101-117)
+
+[TECHNICAL ROOT CAUSE]
+handleAddClass executes setClasses([newClass, ...classes]) and toggleMemberAttended mutates in-memory state without dispatching POST / PUT requests to partner class endpoints.
+
+[STEPS TO REPRODUCE]
+1. In partner portal, navigate to Classes page.
+2. Click ""Add Batch"", enter ""Zumba Power Hour, 07:00 PM, Coach Priya, 25 Capacity"" and submit.
+3. Batch appears in list.
+4. Refresh browser page (F5).
+5. Created batch is gone.
+
+[EXPECTED BEHAVIOR]
+Batch creation and attendance updates should persist to backend database via REST API.
+
+[ACTUAL BEHAVIOR]
+All modifications are ephemeral React state wiped on page reload.
+
+[PROPOSED RESOLUTION]
+Connect handleAddClass to partnerApi.createClass(payload) and toggleMemberAttended to partnerApi.updateAttendance(classId, memberId)."
+"Partner Gym Profile Save Action Executes Mock Timeout Without API Submission","Bug","Medium","frontend profile","[SEVERITY & IMPACT]
+P2 - Profile Configuration Not Saved.
+Gym owners updating operating hours, contact details, monthly pricing, or amenities receive a green ""Saved successfully"" indicator, but no data is sent to the backend database.
+
+[AFFECTED FILES & LINES]
+- fitempire-partner/src/pages/GymProfilePage.tsx (Lines 122-129)
+
+[TECHNICAL ROOT CAUSE]
+handleSave executes await new Promise(r => setTimeout(r, 800)) and sets savedSuccess = true without calling partnerApi.updateProfile() or any HTTP endpoint.
+
+[STEPS TO REPRODUCE]
+1. Open Partner Portal -> Gym Profile.
+2. Change Monthly Pricing to 2500 and toggle Sauna / Steam amenity.
+3. Click ""Save Profile"".
+4. Green success notification appears.
+5. Reload page -> Monthly Pricing and amenities revert to original values.
+
+[EXPECTED BEHAVIOR]
+Form data should be transmitted via PUT/PATCH request to update gym and branch records in PostgreSQL.
+
+[ACTUAL BEHAVIOR]
+Submission executes an 800ms mock delay and drops all modified fields.
+
+[PROPOSED RESOLUTION]
+Implement partnerApi.updateGymProfile(payload) and invoke it inside handleSave with appropriate success and error handling."
+"Spring Asynchronous Services Lack Dedicated ThreadPoolTaskExecutor Configuration","Improvement","Low","backend async","[SEVERITY & IMPACT]
+P3 - Thread Exhaustion & JVM Stability.
+Without a dedicated TaskExecutor bean, Spring Boot @EnableAsync defaults to SimpleAsyncTaskExecutor, creating an unpooled OS thread for every single asynchronous email, SMS, and notification execution.
+
+[AFFECTED FILES & LINES]
+- fitempire-backend/src/main/java/com/fitempire/service/NotificationService.java
+- fitempire-backend/src/main/java/com/fitempire/service/SmsService.java
+
+[TECHNICAL ROOT CAUSE]
+No ThreadPoolTaskExecutor bean is configured with core pool size, maximum pool size, queue capacity, and rejection policies to regulate asynchronous execution concurrency.
+
+[STEPS TO REPRODUCE]
+1. Trigger a broadcast notification to 2,500 users simultaneously.
+2. Monitor JVM thread count via JConsole or actuator/metrics.
+3. Thread count spikes to 2,500+ unpooled OS threads, risking OutOfMemoryError: unable to create native thread.
+
+[EXPECTED BEHAVIOR]
+Asynchronous tasks must run on a bounded thread pool with task queuing and graceful backpressure handling.
+
+[ACTUAL BEHAVIOR]
+Spring spawns unbounded individual threads on every async invocation.
+
+[PROPOSED RESOLUTION]
+Configure an AsyncConfig class with a ThreadPoolTaskExecutor bean (core: 10, max: 50, queueCapacity: 500, ThreadPoolExecutor.CallerRunsPolicy)."
+"Mobile Store Lacks Offline Cache and Optimistic UI for Weak Connectivity","Improvement","Low","mobile store","[SEVERITY & IMPACT]
+P3 - Mobile Usability & Retention Enhancement.
+Gym members accessing the supplement and merchandise store in basements or gym dead zones encounter blank screens or prolonged loading spinners.
+
+[AFFECTED FILES & LINES]
+- fitempire-mobile/src/app/store.tsx
+
+[TECHNICAL ROOT CAUSE]
+store.tsx relies exclusively on online network fetches without offline cache fallback via AsyncStorage or React Query persistent storage.
+
+[STEPS TO REPRODUCE]
+1. Open FitEmpire store on mobile device while connected.
+2. Enable Airplane mode.
+3. Exit and re-enter store.
+4. Screen displays empty state or connection failure error.
+
+[EXPECTED BEHAVIOR]
+Catalog categories, featured supplements, and merchandise should load from local cache with an ""Offline Mode"" banner.
+
+[ACTUAL BEHAVIOR]
+App displays empty screen when offline.
+
+[PROPOSED RESOLUTION]
+Cache fetched store catalogs in AsyncStorage or persist TanStack Query cache for instant offline rendering."
+"High-Resolution Images in Workout Video Library Lack Fast Image Caching","Improvement","Low","mobile media","[SEVERITY & IMPACT]
+P3 - Frame Drop & Memory Consumption on Budget Android Devices.
+Workout video class listings in FitEmpire TV use standard React Native Image with large Unsplash URLs, causing memory spikes and dropped frames during fast scrolling.
+
+[AFFECTED FILES & LINES]
+- fitempire-mobile/src/app/tv.tsx (Lines 2, 24-40)
+
+[TECHNICAL ROOT CAUSE]
+Standard React Native Image lacks native memory/disk caching, downsampling, and hardware-accelerated decoding provided by expo-image.
+
+[STEPS TO REPRODUCE]
+1. Open FitEmpire TV workout screen on budget Android test device (3GB RAM).
+2. Scroll rapidly through video catalog.
+3. Notice visible frame rate stutter (< 30 FPS) and elevated heap usage.
+
+[EXPECTED BEHAVIOR]
+Smooth 60 FPS scrolling with disk-cached WebP thumbnails and progressive loading.
+
+[ACTUAL BEHAVIOR]
+Frame drops and memory pressure on low-end Android hardware.
+
+[PROPOSED RESOLUTION]
+Replace react-native Image with expo-image configured with disk caching and low-resolution thumbnail placeholders."
+"Missing Envers Entity Revision Auditing on Financial and Pass Status Modifications","Improvement","Low","backend audit","[SEVERITY & IMPACT]
+P3 - Audit Trail & Compliance Defect.
+When administrators adjust wallet balances, process offline refunds, or alter membership validity dates, BaseEntity only records the latest modified timestamp and user, with no audit log of prior states.
+
+[AFFECTED FILES & LINES]
+- fitempire-backend/src/main/java/com/fitempire/common/entity/BaseEntity.java
+- fitempire-backend/src/main/resources/application.yml
+
+[TECHNICAL ROOT CAUSE]
+BaseEntity contains @LastModifiedDate and @LastModifiedBy, but the application lacks Hibernate Envers or dedicated audit delta tables to capture historic entity versions.
+
+[STEPS TO REPRODUCE]
+1. Admin modifies a customer wallet balance or extends membership end date.
+2. Query database table -> Previous value is overwritten, leaving no historic trace of original balance or reason for change.
+
+[EXPECTED BEHAVIOR]
+Changes to financial and membership entities should produce immutable revision logs (_AUD tables) detailing altered fields, author, and timestamp.
+
+[ACTUAL BEHAVIOR]
+Prior entity values are lost on update.
+
+[PROPOSED RESOLUTION]
+Integrate spring-data-envers and annotate Wallet, Payment, and Membership entities with @Audited."
+"Insecure Unauthenticated Password Reset Endpoint Exposed in Partner Login","Bug","High","frontend auth","[SEVERITY & IMPACT]
+P1 - Account Takeover Risk.
+Anyone visiting the partner portal login page can enter any gym partner email address and reset their password to Password@123 without OTP, email verification link, or old password check.
+
+[AFFECTED FILES & LINES]
+- fitempire-partner/src/pages/LoginPage.tsx (Lines 30-45)
+- fitempire-partner/src/api/index.ts (Lines 93-95)
+
+[TECHNICAL ROOT CAUSE]
+handleResetPassword invokes partnerApi.resetPasswordByEmail(email, 'Password@123') against /admin/users/reset-password-by-email directly from the public login screen.
+
+[STEPS TO REPRODUCE]
+1. Open partner portal login page in an incognito window.
+2. Type any partner email (e.g. partner@fitempire.tech).
+3. Click ""Reset to Default Password"".
+4. Prompt confirms password has been reset to Password@123.
+5. Attacker signs in with Password@123 and takes over the partner account.
+
+[EXPECTED BEHAVIOR]
+Password resets must require timed verification tokens sent via secure email or SMS OTP.
+
+[ACTUAL BEHAVIOR]
+Instant unauthenticated password overwrite with no validation.
+
+[PROPOSED RESOLUTION]
+Remove the public reset shortcut from LoginPage. Implement a secure forgot-password flow requiring email token verification."
+"Race Condition in Coupon Usage Limit During Concurrent Flash Sales","Bug","Medium","backend coupons","[SEVERITY & IMPACT]
+P2 - Financial Over-Discounting Risk.
+When a promotional coupon with a restricted usage limit (e.g. first 50 users receive ₹500 off) is targeted during high-traffic flash sales, concurrent checkout requests bypass the usage check, allowing usage to exceed limits.
+
+[AFFECTED FILES & LINES]
+- fitempire-backend/src/main/java/com/fitempire/modules/coupons/service/CouponService.java (Lines 118-120, 149-167)
+
+[TECHNICAL ROOT CAUSE]
+validateAndCalculateDiscount checks coupon.getUsedCount() >= coupon.getUsageLimit() without a pessimistic database lock or version check. Concurrent requests read stale usedCount values simultaneously before incrementing.
+
+[STEPS TO REPRODUCE]
+1. Create a coupon with usageLimit = 10.
+2. Send 50 concurrent checkout requests with the coupon code using k6 or Apache JMeter.
+3. Check coupon record in database -> usedCount exceeds 10 (e.g. 25-40 usages recorded).
+
+[EXPECTED BEHAVIOR]
+Coupon usage must be strictly constrained to usageLimit even under high concurrency.
+
+[ACTUAL BEHAVIOR]
+Concurrent requests bypass the check and inflate coupon usage beyond specified limit.
+
+[PROPOSED RESOLUTION]
+Acquire a pessimistic lock on the coupon row (@Lock(LockModeType.PESSIMISTIC_WRITE)) or execute atomic conditional increments: UPDATE coupons SET used_count = used_count + 1 WHERE id = :id AND used_count < usage_limit."
+"Android 12+ Splash Screen Theme Discrepancy Causes Bright Blue Flash on Launch","Improvement","Low","mobile ui","[SEVERITY & IMPACT]
+P3 - Visual Polish & Dark Mode Aesthetic.
+The mobile app cold launches with an electric blue (#208AEF) splash screen on Android 12+, contrasting harshly with the deep dark (#070B14) interface theme upon loading.
+
+[AFFECTED FILES & LINES]
+- fitempire-mobile/app.json (Lines 41-48)
+
+[TECHNICAL ROOT CAUSE]
+The expo-splash-screen configuration in app.json specifies backgroundColor: ""#208AEF"" instead of aligning with the app brand dark palette (#070B14).
+
+[STEPS TO REPRODUCE]
+1. Install release build on an Android 12+ device with system Dark Theme enabled.
+2. Cold launch FitEmpire app from the launcher.
+3. Screen flashes bright blue for 1 second before abruptly rendering the near-black UI.
+
+[EXPECTED BEHAVIOR]
+Seamless dark splash matching #070B14 theme with centered branding icon.
+
+[ACTUAL BEHAVIOR]
+Harsh bright blue screen flash jarring to user eyes in dark environments.
+
+[PROPOSED RESOLUTION]
+Update expo-splash-screen backgroundColor in app.json to #070B14 and configure dark splash styles."

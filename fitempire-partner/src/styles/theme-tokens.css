@@ -1,0 +1,18 @@
+:root {
+  --fe-bg-primary: #0F172A;
+  --fe-bg-secondary: #1E293B;
+  --fe-bg-tertiary: #334155;
+  --fe-accent: #6366F1;
+  --fe-accent-hover: #4F46E5;
+  --fe-text-primary: #F8FAFC;
+  --fe-text-secondary: #94A3B8;
+  --fe-success: #10B981;
+  --fe-danger: #EF4444;
+  --fe-warning: #F59E0B;
+}
+
+body {
+  background-color: var(--fe-bg-primary);
+  color: var(--fe-text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}

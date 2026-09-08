@@ -37,9 +37,9 @@ spring:
 
   # ── Database ──────────────────────────────────────────────
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://ep-lingering-sky-atwtj0vn-pooler.c-9.us-east-1.aws.neon.tech:5432/neondb?sslmode=require}
-    username: ${SPRING_DATASOURCE_USERNAME:neondb_owner}
-    password: ${SPRING_DATASOURCE_PASSWORD:npg_BsZ4re0zCHiS}
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/fitempire_dev}
+    username: ${SPRING_DATASOURCE_USERNAME:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD:postgres}
     driver-class-name: org.postgresql.Driver
     hikari:
       pool-name: FitEmpirePool

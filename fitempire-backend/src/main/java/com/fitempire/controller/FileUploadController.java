@@ -100,6 +100,13 @@ public class FileUploadController {
         return ResponseEntity.ok(ApiResponse.success("Photo uploaded successfully", result));
     }
 
+    private static final java.util.Set<String> ALLOWED_CONTENT_TYPES = java.util.Set.of(
+            "image/jpeg", "image/png", "image/webp", "image/gif", "application/pdf"
+    );
+    private static final java.util.Set<String> ALLOWED_EXTENSIONS = java.util.Set.of(
+            ".jpg", ".jpeg", ".png", ".webp", ".gif", ".pdf"
+    );
+
     /**
      * General Media Upload endpoint.
      * POST /api/v1/media/upload
@@ -115,6 +122,19 @@ public class FileUploadController {
                     .body(ApiResponse.error("File cannot be empty", "INVALID_FILE"));
         }
 
+        String contentType = file.getContentType();
+        if (contentType == null || !ALLOWED_CONTENT_TYPES.contains(contentType.toLowerCase())) {
+            return ResponseEntity.badRequest()
+                    .body(ApiResponse.error("File type not permitted. Allowed types: JPEG, PNG, WEBP, GIF, PDF", "INVALID_FILE_TYPE"));
+        }
+
+        String originalName = Optional.ofNullable(file.getOriginalFilename()).orElse("file.bin").toLowerCase();
+        String ext = originalName.contains(".") ? originalName.substring(originalName.lastIndexOf('.')) : "";
+        if (!ALLOWED_EXTENSIONS.contains(ext)) {
+            return ResponseEntity.badRequest()
+                    .body(ApiResponse.error("File extension not permitted. Allowed extensions: .jpg, .jpeg, .png, .webp, .gif, .pdf", "INVALID_FILE_EXTENSION"));
+        }
+
         String safeFolder = folder.replaceAll("[^a-zA-Z0-9_-]", "");
         if (safeFolder.isBlank()) safeFolder = "uploads";
 
@@ -124,8 +144,6 @@ public class FileUploadController {
         } catch (Exception e) {
             log.warn("S3 upload failed, using local disk fallback: {}", e.getMessage());
             try {
-                String originalName = Optional.ofNullable(file.getOriginalFilename()).orElse("file.bin");
-                String ext = originalName.contains(".") ? originalName.substring(originalName.lastIndexOf('.')) : ".bin";
                 String filename = UUID.randomUUID().toString() + ext;
                 Path uploadDir = Paths.get(uploadBaseDir, safeFolder);
                 Files.createDirectories(uploadDir);

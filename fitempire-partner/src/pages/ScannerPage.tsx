@@ -67,32 +67,10 @@ export const ScannerPage: React.FC = () => {
         })
       );
     } catch (err: any) {
-      console.warn('Scan API fallback:', err);
-      const fallbackData = {
-        memberName: 'Rahul Sharma',
-        phone: '+91 98800 72520',
-        passTier: 'FitEmpire All-Access Gold',
-        gymName: 'Strike Force MMA',
-        validUntil: '31 Dec 2026',
-        remainingDays: 142,
-        checkInsThisMonth: 15,
-        status: 'CHECKED_IN',
-        checkedInAt: new Date().toISOString(),
-      };
-      setScanResult(fallbackData);
-      setVerifiedSuccess(true);
-
-      window.dispatchEvent(
-        new CustomEvent('fitempire_checkin_event', {
-          detail: {
-            memberName: 'Rahul Sharma',
-            phone: '+91 98800 72520',
-            passTier: 'FitEmpire All-Access Gold',
-            gymName: 'Strike Force MMA',
-            time: 'Just now',
-          },
-        })
-      );
+      console.error('Turnstile verification failed:', err);
+      setScanResult(null);
+      setVerifiedSuccess(false);
+      setError(err.response?.data?.message || err.message || 'Verification failed. Pass is invalid or expired.');
     } finally {
       setLoading(false);
     }

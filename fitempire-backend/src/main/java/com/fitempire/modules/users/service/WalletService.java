@@ -74,7 +74,7 @@ public class WalletService {
             throw new BusinessException("Credit amount must be greater than zero.", "INVALID_AMOUNT", HttpStatus.BAD_REQUEST);
         }
 
-        Wallet wallet = walletRepository.findByUserId(userId)
+        Wallet wallet = walletRepository.findByUserIdForUpdate(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Wallet not found for user: " + userId));
 
         if (!wallet.isActive()) {
@@ -110,7 +110,7 @@ public class WalletService {
             throw new BusinessException("Debit amount must be greater than zero.", "INVALID_AMOUNT", HttpStatus.BAD_REQUEST);
         }
 
-        Wallet wallet = walletRepository.findByUserId(userId)
+        Wallet wallet = walletRepository.findByUserIdForUpdate(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Wallet not found for user: " + userId));
 
         if (!wallet.isActive()) {

@@ -12,6 +12,7 @@ import com.fitempire.modules.gyms.entity.Gym;
 import com.fitempire.modules.gyms.entity.GymBranch;
 import com.fitempire.modules.gyms.repository.GymBranchRepository;
 import com.fitempire.modules.gyms.repository.GymRepository;
+import com.fitempire.modules.memberships.repository.UserMembershipRepository;
 import com.fitempire.modules.users.entity.User;
 import com.fitempire.modules.users.repository.UserProfileRepository;
 import com.fitempire.modules.users.repository.UserRepository;
@@ -39,6 +40,7 @@ public class BookingService {
     private final UserRepository userRepository;
     private final GymRepository gymRepository;
     private final GymBranchRepository gymBranchRepository;
+    private final UserMembershipRepository userMembershipRepository;
 
     // ── Create Booking ───────────────────────────────────────────────────────
 
@@ -52,6 +54,28 @@ public class BookingService {
 
         GymBranch branch = gymBranchRepository.findById(request.getBranchId())
                 .orElseThrow(() -> new BusinessException("Branch not found", "BRANCH_NOT_FOUND", org.springframework.http.HttpStatus.NOT_FOUND));
+
+        // Verify active membership (Issue #9)
+        boolean hasActivePass = userMembershipRepository.existsActivePassForUserOnDate(userId, request.getBookingDate());
+        if (!hasActivePass) {
+            throw new BusinessException("Active membership required to book sessions", "NO_ACTIVE_MEMBERSHIP", org.springframework.http.HttpStatus.PAYMENT_REQUIRED);
+        }
+
+        // Verify slot capacity and prevent double-booking (Issue #8)
+        if (request.getStartTime() != null) {
+            boolean hasConflict = bookingRepository.existsByUserIdAndBookingDateAndStartTimeAndStatusNot(
+                    userId, request.getBookingDate(), request.getStartTime(), BookingStatus.CANCELLED);
+            if (hasConflict) {
+                throw new BusinessException("Conflicting booking exists for this date and time", "CONFLICTING_BOOKING", org.springframework.http.HttpStatus.CONFLICT);
+            }
+
+            long currentBookingsCount = bookingRepository.countByBranchIdAndBookingDateAndStartTimeAndStatusNot(
+                    branch.getId(), request.getBookingDate(), request.getStartTime(), BookingStatus.CANCELLED);
+            int maxCap = branch.getCapacity() > 0 ? branch.getCapacity() : 50;
+            if (currentBookingsCount >= maxCap) {
+                throw new BusinessException("Slot is fully booked", "SLOT_FULL", org.springframework.http.HttpStatus.BAD_REQUEST);
+            }
+        }
 
         Booking booking = new Booking();
         booking.setUser(user);
@@ -136,42 +160,16 @@ public class BookingService {
         String cleanToken = tokenOrCode != null ? tokenOrCode.trim() : "";
         log.info("Verifying QR check-in token [{}] for partner gym [{}]", cleanToken, partnerGymId);
 
-        Booking booking = bookingRepository.findByQrToken(cleanToken).orElse(null);
+        Booking booking = bookingRepository.findByQrToken(cleanToken)
+                .orElseThrow(() -> new BusinessException("QR Pass not found or expired", "INVALID_PASS", org.springframework.http.HttpStatus.NOT_FOUND));
 
-        if (booking == null) {
-            User user = userRepository.findByEmailAndDeletedFalse("testuser@fitempire.in")
-                    .orElseGet(() -> userRepository.findAll().stream().filter(User::isActive).findFirst()
-                            .orElseThrow(() -> new BusinessException("No active user found", "NO_USER", org.springframework.http.HttpStatus.NOT_FOUND)));
-
-            Gym gym = partnerGymId != null ? gymRepository.findById(partnerGymId).orElse(null) : null;
-            if (gym == null) {
-                List<Gym> allGyms = gymRepository.findAll();
-                gym = allGyms.isEmpty() ? null : allGyms.get(0);
-            }
-            if (gym == null) {
-                throw new BusinessException("Gym center not found", "NO_GYM", org.springframework.http.HttpStatus.NOT_FOUND);
-            }
-
-            List<GymBranch> branches = gymBranchRepository.findByGymIdAndDeletedFalse(gym.getId());
-            GymBranch branch = branches.isEmpty() ? null : branches.get(0);
-
-            booking = new Booking();
-            booking.setUser(user);
-            booking.setGym(gym);
-            booking.setBranch(branch);
-            booking.setBookingType(BookingType.GYM_ACCESS);
-            booking.setStatus(BookingStatus.CHECKED_IN);
-            booking.setBookingDate(LocalDate.now());
-            booking.setStartTime(LocalTime.now());
-            booking.setAmountPaid(new BigDecimal("299.00"));
-            booking.setQrToken(cleanToken.isEmpty() ? "PASS-" + System.currentTimeMillis() : cleanToken);
-            booking.setCheckedInAt(Instant.now());
-            booking = bookingRepository.save(booking);
-        } else {
-            booking.setCheckedInAt(Instant.now());
-            booking.setStatus(BookingStatus.CHECKED_IN);
-            booking = bookingRepository.save(booking);
+        if (booking.getStatus() == BookingStatus.CANCELLED) {
+            throw new BusinessException("Booking has been cancelled", "BOOKING_CANCELLED", org.springframework.http.HttpStatus.BAD_REQUEST);
         }
+
+        booking.setCheckedInAt(Instant.now());
+        booking.setStatus(BookingStatus.CHECKED_IN);
+        booking = bookingRepository.save(booking);
 
         final Booking finalBooking = booking;
         userProfileRepository.findByUserId(finalBooking.getUser().getId()).ifPresent(profile -> {

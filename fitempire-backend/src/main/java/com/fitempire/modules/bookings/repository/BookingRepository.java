@@ -27,5 +27,19 @@ public interface BookingRepository extends JpaRepository<Booking, UUID> {
 
     @Query("SELECT COUNT(b) FROM Booking b WHERE DATE(b.createdAt) = :date")
     long countAllByDate(@Param("date") java.time.LocalDate date);
+
+    @Query("SELECT COUNT(b) > 0 FROM Booking b WHERE b.user.id = :userId AND b.bookingDate = :bookingDate AND b.startTime = :startTime AND b.status != :status")
+    boolean existsByUserIdAndBookingDateAndStartTimeAndStatusNot(
+            @Param("userId") UUID userId,
+            @Param("bookingDate") java.time.LocalDate bookingDate,
+            @Param("startTime") java.time.LocalTime startTime,
+            @Param("status") BookingStatus status);
+
+    @Query("SELECT COUNT(b) FROM Booking b WHERE b.branch.id = :branchId AND b.bookingDate = :bookingDate AND b.startTime = :startTime AND b.status != :status")
+    long countByBranchIdAndBookingDateAndStartTimeAndStatusNot(
+            @Param("branchId") UUID branchId,
+            @Param("bookingDate") java.time.LocalDate bookingDate,
+            @Param("startTime") java.time.LocalTime startTime,
+            @Param("status") BookingStatus status);
 }
 

@@ -6,7 +6,7 @@ async function test() {
   const loginRes = await fetch(`${BASE}/auth/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email: 'admin@fitempire.in', password: '[REDACTED_SECRET]' })
+    body: JSON.stringify({ email: process.env.ADMIN_EMAIL || 'admin@fitempire.in', password: process.env.ADMIN_PASSWORD || 'AdminPassword@123' })
   });
   console.log('Login Status:', loginRes.status);
   const loginData = await loginRes.json();

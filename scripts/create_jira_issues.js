@@ -31,7 +31,7 @@ const isDryRun = args.includes('--dry-run');
 let domain = getArg('domain', '');
 let email = getArg('email', '');
 let token = getArg('token', '');
-let projectKey = getArg('project', 'FE');
+let projectKey = getArg('project', 'SCRUM');
 
 // Clean domain
 if (domain.startsWith('https://')) domain = domain.replace('https://', '');

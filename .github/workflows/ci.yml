@@ -11,7 +11,7 @@ env:
   NODE_VERSION: '20'
   REGISTRY: ghcr.io
   IMAGE_NAME_BACKEND: ${{ github.repository }}/fitempire-backend
-  IMAGE_NAME_ADMIN: ${{ github.repository }}/fitempire-admin
+  IMAGE_NAME_ADMIN: ${{ github.repository }}/fitempire-web
 
 jobs:
   # ────────────────────────────────────────────────────────────
@@ -104,18 +104,18 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
-          cache-dependency-path: fitempire-admin/package-lock.json
+          cache-dependency-path: fitempire-web/package-lock.json
 
       - name: Install Dependencies
-        working-directory: ./fitempire-admin
+        working-directory: ./fitempire-web
         run: npm ci
 
       - name: Lint
-        working-directory: ./fitempire-admin
+        working-directory: ./fitempire-web
         run: npm run lint
 
       - name: Build
-        working-directory: ./fitempire-admin
+        working-directory: ./fitempire-web
         env:
           VITE_API_BASE_URL: https://api.fitempire.in
         run: npm run build
@@ -124,7 +124,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: admin-dist
-          path: fitempire-admin/dist/
+          path: fitempire-web/dist/
           retention-days: 7
 
   # ────────────────────────────────────────────────────────────
@@ -190,7 +190,7 @@ jobs:
       - name: Build & Push Admin Image
         uses: docker/build-push-action@v5
         with:
-          context: ./fitempire-admin
+          context: ./fitempire-web
           push: true
           tags: ${{ steps.meta-admin.outputs.tags }}
           labels: ${{ steps.meta-admin.outputs.labels }}

@@ -18,7 +18,8 @@ The project is structured as a monorepo containing the following components:
 FitEmpire/
 ├── fitempire-backend/     # Java Spring Boot 3 API Server
 ├── fitempire-mobile/      # React Native Expo Mobile Application (Web, iOS, Android)
-├── fitempire-admin/       # React / Vite Admin Dashboard
+├── fitempire-partner/     # Gym partner web portal
+├── fitempire-web/         # React / Vite Admin Dashboard
 ├── fitempire-showcase/    # HTML Side-by-side Showcase Console
 └── start-all.bat          # Double-click script to run all services locally
 ```
@@ -42,7 +43,7 @@ FitEmpire/
 *   **State & Storage:** React Context, React Native Async Storage
 *   **Branding & UI:** Custom vector layouts, Lucide icons, and responsive desktop browser device wrappers
 
-### 3. Admin Dashboard (`fitempire-admin`)
+### 3. Admin Dashboard (`fitempire-web`)
 *   **Core:** React 19, Vite 8, TypeScript
 *   **Design System:** Material UI (MUI v9) styled with a premium dark theme
 *   **State Management:** Redux Toolkit (RTK)

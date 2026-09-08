@@ -23,7 +23,7 @@ echo "NPM Version:  $(npm -v)"
 
 # 2. Build Admin Console
 echo "Building Admin Console..."
-cd "$APP_DIR/fitempire-admin"
+cd "$APP_DIR/fitempire-web"
 npm install --legacy-peer-deps
 VITE_API_BASE_URL="/api" npm run build
 
@@ -36,7 +36,7 @@ VITE_API_URL="/api" npm run build
 # 4. Copy build artifacts to /var/www/
 echo "Deploying build artifacts to Nginx web root..."
 sudo mkdir -p /var/www/fitempire-admin /var/www/fitempire-partner
-sudo cp -r "$APP_DIR/fitempire-admin/dist/"* /var/www/fitempire-admin/
+sudo cp -r "$APP_DIR/fitempire-web/dist/"* /var/www/fitempire-admin/
 sudo cp -r "$APP_DIR/fitempire-partner/dist/"* /var/www/fitempire-partner/
 sudo chown -R www-data:www-data /var/www/fitempire-admin /var/www/fitempire-partner
 

@@ -39,7 +39,7 @@ echo "Backend started with PID $BACKEND_PID"
 cd ..
 
 echo "Starting Admin Portal on port 3000..."
-cd fitempire-admin
+cd fitempire-web
 npm run dev > admin.log 2>&1 &
 ADMIN_PID=$!
 echo "Admin Portal started with PID $ADMIN_PID"
@@ -56,4 +56,4 @@ echo "Mobile App started with PID $MOBILE_PID"
 cd ..
 
 echo "All services started!"
-echo "Check backend.log, fitempire-admin/admin.log, and fitempire-mobile/mobile.log for output."
+echo "Check backend.log, fitempire-web/admin.log, and fitempire-mobile/mobile.log for output."

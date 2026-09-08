@@ -24,7 +24,7 @@ Start-Process cmd.exe -ArgumentList "/k cd /d `"$rootDir\fitempire-backend`" && 
 Write-Host "  [1/4] Backend booting on http://localhost:8080/api (or Cloud: https://ayush150152-fitempire-api.hf.space)" -ForegroundColor Green
 
 # 2. Admin
-Start-Process cmd.exe -ArgumentList "/k cd /d `"$rootDir\fitempire-admin`" && npm.cmd run dev"
+Start-Process cmd.exe -ArgumentList "/k cd /d `"$rootDir\fitempire-web`" && npm.cmd run dev"
 Write-Host "  [2/4] Super Admin Dashboard booting on http://localhost:3000" -ForegroundColor Green
 
 # 3. Partner
